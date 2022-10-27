@@ -8,10 +8,13 @@ import momentPlugin from "@fullcalendar/moment";
 import timeGridPlugin from "@fullcalendar/timegrid";
 
 import Modal from "./Modal";
+import TodayModal from "./TodayModal";
 
 const Calendar = () => {
     //event data
     const [eventArr, setEventArr] = useState([]);
+    //today modal
+    const [todayModalOpen, setTodayModalOpen] = useState(false);
     //modal open
     const [modalOpen, setModalOpen] = useState(false);
     //selected Date
@@ -27,6 +30,13 @@ const Calendar = () => {
         console.log(`useEffect : ${[eventArr]}`);
     }, [eventArr]);
 
+    const closeTodayModal = () => {
+        setTodayModalOpen(false);
+    };
+    const openTodayModal = () => {
+        setTodayModalOpen(true);
+    };
+
     const closeModal = () => {
         setModalOpen(false);
     };
@@ -36,18 +46,18 @@ const Calendar = () => {
 
     //날짜 클릭 시
     const handleDateClick = (info) => {
-        openModal();
+        openTodayModal();
         console.log(info.dateStr);
         setDateInfo(info.dateStr);
     };
-    useEffect(() => {
-        //dataInfo가 변경된 렌더링에만 실행
-        if (!!dateInfo) {
-            //dataInfo가 존재한다면 콘솔 출력
-            console.log("dateInfo : ", dateInfo);
-        }
-        //dispatch()
-    }, [dateInfo]);
+    // useEffect(() => {
+    //     //dataInfo가 변경된 렌더링에만 실행
+    //     if (!!dateInfo) {
+    //         //dataInfo가 존재한다면 콘솔 출력
+    //         console.log("dateInfo : ", dateInfo);
+    //     }
+    //     //dispatch()
+    // }, [dateInfo]);
 
     //모달 저장 버튼 클릭시 이벤트
     const onSaveEvent = (e) => {
@@ -90,7 +100,6 @@ const Calendar = () => {
                     momentPlugin,
                     timeGridPlugin,
                 ]}
-                defaultView="dayGridMonth"
                 initialView="dayGridMonth"
                 headerToolbar={{
                     start: "",
@@ -102,8 +111,9 @@ const Calendar = () => {
                 events={eventArr}
                 contentHeight={600}
                 selectable={true}
-
+				
                 // select={function (e) {
+                //     handleDateClick();
                 //     const title = prompt("Event Title:");
                 //     if (title) {
                 //         this.addEvent({
@@ -125,7 +135,22 @@ const Calendar = () => {
                 //     return weekList[date.dow];
                 // }}
             />
-
+            <TodayModal
+                open={todayModalOpen}
+                close={closeTodayModal}
+                header={dateInfo}
+                eventlist={eventArr}
+            >
+                <div className="modal-main-div">
+                    <button
+                        type="button"
+                        className="modal-button"
+                        onClick={openModal}
+                    >
+                        일정 추가
+                    </button>
+                </div>
+            </TodayModal>
             <Modal open={modalOpen} close={closeModal} header={dateInfo}>
                 <div className="modal-main-div">
                     <div>
