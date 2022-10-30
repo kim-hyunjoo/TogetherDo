@@ -10,6 +10,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import Modal from "./Modal";
 import TodayModal from "./TodayModal";
 
+
 const Calendar = () => {
     //event data
     const [eventArr, setEventArr] = useState([]);
@@ -17,18 +18,21 @@ const Calendar = () => {
     const [todayModalOpen, setTodayModalOpen] = useState(false);
     //modal open
     const [modalOpen, setModalOpen] = useState(false);
+
     //selected Date
     const [dateInfo, setDateInfo] = useState("");
-
+    
     //useRefs
     const eventID = useRef(0);
     const startTimeRef = useRef("");
     const endTimeRef = useRef("");
     const eventRef = useRef("");
 
-    useEffect(() => {
-        console.log(`useEffect : ${[eventArr]}`);
-    }, [eventArr]);
+    
+
+ //   useEffect(() => {
+ //       console.log(`useEffect : ${[eventArr]}`);
+ //   }, [eventArr]);
 
     const closeTodayModal = () => {
         setTodayModalOpen(false);
@@ -43,6 +47,8 @@ const Calendar = () => {
     const openModal = () => {
         setModalOpen(true);
     };
+
+
 
     //날짜 클릭 시
     const handleDateClick = (info) => {
@@ -71,10 +77,11 @@ const Calendar = () => {
             start: startTime,
             end: endTime,
         };
-        //setEventID(eventID + 1);
+        
         eventID.current += 1;
         //calendar.addEvent({eventObj});
         setEventArr([...eventArr, eventObj]);
+        console.log(eventID.current);
     };
 
     // 이벤트(일정) 클릭 시
@@ -140,17 +147,13 @@ const Calendar = () => {
                 close={closeTodayModal}
                 header={dateInfo}
                 eventlist={eventArr}
-            >
-                <div className="modal-main-div">
-                    <button
-                        type="button"
-                        className="modal-button"
-                        onClick={openModal}
-                    >
-                        일정 추가
-                    </button>
-                </div>
-            </TodayModal>
+                openModal={openModal}
+                setEventArr = {setEventArr}
+                eventArr = {eventArr}
+            />
+
+            
+            
             <Modal open={modalOpen} close={closeModal} header={dateInfo}>
                 <div className="modal-main-div">
                     <div>
