@@ -64,6 +64,13 @@
     font-size: 13px;
   }
 
+  .modal.openTodayModal {
+    display: flex;
+    align-items: center;
+    /* 팝업이 열릴때 스르륵 열리는 효과 */
+    animation: modal-bg-show 0.3s;
+  }
+
   .modal.openModal {
     display: flex;
     align-items: center;
@@ -122,4 +129,31 @@
 .modal-textarea {
 	resize: none; 
 	width: 100%;
+}
+
+.modal-event-list {
+  display : grid;
+  justify-content: center;
+	grid-template-rows: 1fr 1fr;
+  padding : 10px;
+}
+
+.modal-event-object {
+  display : flex;
+  column-gap: 10px;
+}
+
+
+.delete-button {  
+  position: relative;
+  top : 8px;
+  display : flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  background-color: #acacac;
+  border-radius: 10px;
+  height : 20px;
+  width : 20px;
+  font-size: 13px;
 }
