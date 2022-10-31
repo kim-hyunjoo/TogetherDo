@@ -95,6 +95,15 @@ const TodayModal = (props) => {
         </div>
     </Modal>
 */
+    const deleteEvent=(id)=> {
+        eventArr.map((event) => console.log(`eventArr의 id : ${event.id}`))
+        const newEventArr = eventArr.filter(
+            (event) => event.id != id
+        );
+        console.log(newEventArr);
+        setEventArr(newEventArr);
+    };
+    
 
     const eventButtons = eventlist.filter((event)=>
     event.start.substring(0,10) === header).map((event) => {
@@ -102,7 +111,11 @@ const TodayModal = (props) => {
         const start = event.start.substring(11,16);
         const end = event.end.substring(11,16);
         return (
-            <Checkbox key={event.id} text = {`${start}-${end} ${event.title}`}></Checkbox>
+            <div className='modal-event-object'>
+                <Checkbox key={event.id} text = {`${start}-${end} ${event.title}`}></Checkbox>
+                <button className='delete-button' key={event.id} 
+                onClick={()=>deleteEvent(event.id)}>&times;</button>
+            </div>
         )
     });
 

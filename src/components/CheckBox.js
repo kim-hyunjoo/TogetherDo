@@ -37,6 +37,8 @@ const StyledInput = styled.input`
 `;
 
 const StyledP = styled.p`
-text-align: center;
+  
+  text-align: center;
   margin-left: 0.25rem;
+  margin-top : 0.4rem;
 `;
