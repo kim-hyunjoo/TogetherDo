@@ -22,11 +22,17 @@ const Calendar = () => {
     //selected Date
     const [dateInfo, setDateInfo] = useState("");
     
+    const [isYellowPicked , setIsYellowPicked] = useState(false);
+    const [isMintPicked , setIsMintPicked] = useState(false);
+    const [isPinkPicked , setIsPinkPicked] = useState(false);
+
     //useRefs
     const eventID = useRef(0);
     const startTimeRef = useRef("");
     const endTimeRef = useRef("");
     const eventRef = useRef("");
+    const eventColor = useRef("");
+    
 
     
 
@@ -71,11 +77,13 @@ const Calendar = () => {
         const endTime = `${dateInfo}T${endTimeRef.current.value}`;
         const eventContent = eventRef.current.value;
         const eventId = eventID.current;
+        const bgColor = eventColor.current;
         const eventObj = {
             id: eventId,
             title: eventContent,
             start: startTime,
             end: endTime,
+            backgroundColor : bgColor
         };
         
         eventID.current += 1;
@@ -97,6 +105,30 @@ const Calendar = () => {
         console.log(newEventArr);
         setEventArr(newEventArr);
     };
+    useEffect(()=> {
+        
+    },[eventColor.current])
+    const colorPicked = (color) => {
+        eventColor.current=`${color}`
+        if(color === 'rgb(255, 245, 154)') {
+            setIsYellowPicked(true);
+            setIsMintPicked(false);
+            setIsPinkPicked(false);
+        }
+             //아 어떤 컬러를 픽하느냐에 따라 다를듯 ㅠㅠ
+        else if (color === 'rgb(143, 255, 231)') {
+            setIsYellowPicked(false);
+            setIsMintPicked(true);
+            setIsPinkPicked(false);
+        }
+        else if (color === 'rgb(255, 185, 208)') {
+            setIsYellowPicked(false);
+            setIsMintPicked(false);
+            setIsPinkPicked(true);
+        }
+        //console.log(`${isYellowPicked}, ${isMintPicked}, ${isPinkPicked}`);
+
+    }
 
     return (
         <div className="calendar-contents">
@@ -157,17 +189,31 @@ const Calendar = () => {
             <Modal open={modalOpen} close={closeModal} header={dateInfo}>
                 <div className="modal-main-div">
                     <div>
-                        <span>시간 설정</span>
+                        <span>Color</span>
+                    </div>
+                    <div className ="modal-color-div">
+                        <div
+                        onClick={()=>colorPicked("rgb(255, 245, 154)")} 
+                        className = {isYellowPicked ? "modal-yellow-picked-div" :"modal-yellow-div"}></div>
+                        <div 
+                        onClick={()=>colorPicked("rgb(143, 255, 231)")} 
+                        className = {isMintPicked ? "modal-mint-picked-div" :"modal-mint-div"}></div>
+                        <div 
+                        onClick={()=>colorPicked("rgb(255, 185, 208)")} 
+                        className = {isPinkPicked ? "modal-pink-picked-div" :"modal-pink-div"}></div>
+                    </div>
+                    <div>
+                        <span>Time</span>
                     </div>
                     <div className="modal-time-div">
                         <input type="time" ref={startTimeRef} />
                         <input type="time" ref={endTimeRef} />
                     </div>
                     <div>
-                        <span>일정</span>
+                        <span>Input</span>
                     </div>
-                    <div>
-                        <textarea ref={eventRef} className="modal-textarea" />
+                    <div className="modal-input-div">
+                        <textarea ref={eventRef} placeholder="할일을 입력하세요" className="modal-textarea" />
                     </div>
                 </div>
                 <div className="modal-save-div">
