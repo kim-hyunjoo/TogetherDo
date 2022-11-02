@@ -112,7 +112,7 @@ const TodayModal = (props) => {
         const end = event.end.substring(11,16);
         return (
             <div className='modal-event-object'>
-                <Checkbox key={event.id} text = {`${start}-${end} ${event.title}`}></Checkbox>
+                <Checkbox style={{backgroundColor : event.backgroundColor}} key={event.id} text = {`${start}-${end} ${event.title}`}></Checkbox>
                 <button className='delete-button' key={event.id} 
                 onClick={()=>deleteEvent(event.id)}>&times;</button>
             </div>

@@ -83,7 +83,8 @@ const Calendar = () => {
             title: eventContent,
             start: startTime,
             end: endTime,
-            backgroundColor : bgColor
+            backgroundColor : bgColor,
+            borderColor : bgColor
         };
         
         eventID.current += 1;
@@ -95,7 +96,8 @@ const Calendar = () => {
     // 이벤트(일정) 클릭 시
     const handleEventClick = (info) => {
         console.log(info);
-
+        //삭제함수는 이동했음!
+/*
         const id = info.event._def.publicId; ////클릭한 일정 Id
         console.log(`클릭한 일정의 id : ${id}`);
         eventArr.map((event) => console.log(`eventArr의 id : ${event.id}`));
@@ -104,10 +106,12 @@ const Calendar = () => {
         );
         console.log(newEventArr);
         setEventArr(newEventArr);
+        */
     };
     useEffect(()=> {
         
     },[eventColor.current])
+
     const colorPicked = (color) => {
         eventColor.current=`${color}`
         if(color === 'rgb(255, 245, 154)') {
@@ -150,6 +154,8 @@ const Calendar = () => {
                 events={eventArr}
                 contentHeight={600}
                 selectable={true}
+                eventDisplay={'block'}
+                eventTextColor={'black'}
 				
                 // select={function (e) {
                 //     handleDateClick();
@@ -206,8 +212,8 @@ const Calendar = () => {
                         <span>Time</span>
                     </div>
                     <div className="modal-time-div">
-                        <input type="time" ref={startTimeRef} />
-                        <input type="time" ref={endTimeRef} />
+                        <input type="time" step="300" ref={startTimeRef} />
+                        <input type="time" step="300" ref={endTimeRef} />
                     </div>
                     <div>
                         <span>Input</span>
