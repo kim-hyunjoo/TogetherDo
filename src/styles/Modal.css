@@ -108,10 +108,40 @@
   	line-height: 16px;
 }
 
-.modal-save-div {
-	display: flex;
-	justify-content: center;
-	margin-top: 20px;
+.modal-color-div {
+  display: flex;
+  column-gap: 10px;
+}
+
+.modal-color-div > div {
+  width : 20px;
+  height : 20px;
+  border-radius: 50%; 
+}
+
+.modal-yellow-div {
+  background-color: rgb(255, 245, 154) ;
+}
+
+.modal-mint-div {
+ background-color : rgb(143, 255, 231);
+}
+
+.modal-pink-div{
+  background-color: rgb(255, 185, 208);
+}
+
+.modal-yellow-picked-div {
+  background-color: rgb(255, 245, 154) ;
+  border : 2px solid red;
+}
+.modal-mint-picked-div {
+  background-color : rgb(143, 255, 231);
+  border : 2px solid red;
+}
+.modal-pink-picked-div{
+  background-color: rgb(255, 185, 208);
+  border : 2px solid red;
 }
 
 .modal-main-div {
@@ -129,6 +159,12 @@
 .modal-textarea {
 	resize: none; 
 	width: 100%;
+}
+
+.modal-save-div {
+	display: flex;
+	justify-content: center;
+	margin-top: 20px;
 }
 
 .modal-event-list {
