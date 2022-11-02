@@ -212,8 +212,8 @@ const Calendar = () => {
                         <span>Time</span>
                     </div>
                     <div className="modal-time-div">
-                        <input type="time" ref={startTimeRef} />
-                        <input type="time" ref={endTimeRef} />
+                        <input type="time" step="300" ref={startTimeRef} />
+                        <input type="time" step="300" ref={endTimeRef} />
                     </div>
                     <div>
                         <span>Input</span>
