@@ -106,13 +106,14 @@ const TodayModal = (props) => {
     
 
     const eventButtons = eventlist.filter((event)=>
-    event.start.substring(0,10) === header).map((event) => {
+    event.start.substring(0,10) === header).map((event,i) => {
         
         const start = event.start.substring(11,16);
         const end = event.end.substring(11,16);
         return (
             <div className='modal-event-object'>
-                <Checkbox style={{backgroundColor : event.backgroundColor}} key={event.id} text = {`${start}-${end} ${event.title}`}></Checkbox>
+                {console.log(`event.id:${event.id}`)}
+                <Checkbox style={{backgroundColor : event.backgroundColor}} id={i} text = {`${start}-${end} ${event.title}`}></Checkbox>
                 <button className='delete-button' key={event.id} 
                 onClick={()=>deleteEvent(event.id)}>&times;</button>
             </div>
