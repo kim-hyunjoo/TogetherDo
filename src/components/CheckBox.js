@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 
-function Checkbox({ text }) {
+function Checkbox({ text, id }) {
   return (
     <StyledLabel htmlFor={text}>
-      <StyledInput type="checkbox" id={text} name={text} />
+      <StyledInput type="checkbox" id={id} name={text} />
       <StyledP>{text}</StyledP>
     </StyledLabel>
   );
