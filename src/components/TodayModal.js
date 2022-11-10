@@ -10,17 +10,13 @@ const TodayModal = (props) => {
     const [isYellowPicked , setIsYellowPicked] = useState(false);
     const [isMintPicked , setIsMintPicked] = useState(false);
     const [isPinkPicked , setIsPinkPicked] = useState(false);
-    const [defaultData, setDefaultData] = useState([{id : '', title : '', start : '', end : ''}]);
+    const [defaultData, setDefaultData] = useState({id : 0, title : '', start : '', end : ''});
 
     //console.log(`eventButtons함수..${eventlist}`);
     //시간 순서대로 출력해주는 기능 고려해보기
         //edit modal
     const [modalOpen, setModalOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
-    const [pickedEventTitle , setPickedEventTitle] = useState("");
-    const [pickedEventStart , setPickedEventStart] = useState("");
-    const [pickedEventEnd , setPickedEventEnd] = useState("");
-    const [pickedEventID, setPickedEventID] = useState(0);
 
     const startTimeRef = useRef("");
     const endTimeRef = useRef("");
@@ -36,85 +32,14 @@ const TodayModal = (props) => {
     const closeModal = () => {
         setModalOpen(false);
     };
-    const eventClick = (event) => {
-        setDefaultData({
-            id : event.id, 
-            title : event.title,
-            start : event.start.substring(11, 16),
-            end : event.end.substring(11, 16),
-        });
-        setModalOpen(true);
-        setEditMode(true);
-        
-        console.log("event.id 입니다.", event);
-        console.log("defaultData 입니다.", defaultData);
-    }
-    const buttonClicked = (event) => {
-        console.log(event);
-        setPickedEventTitle(event.title);
-        setPickedEventStart(event.start);
-        setPickedEventEnd(event.end);
-        setPickedEventID(event.id)
-        //openEditModal(); 
-    }
 
-    //모달 저장 버튼 클릭시 이벤트
-    const onSaveEvent = (e) => {
-        const startTime = `${header}T${startTimeRef.current.value}`;
-        const endTime = `${header}T${endTimeRef.current.value}`;
-        const eventContent = eventRef.current.value;
-        const eventId = eventID;
-        const bgColor = eventColor.current;
-        const eventObj = {
-            id: eventId,
-            title: eventContent,
-            start: startTime,
-            end: endTime,
-            backgroundColor : bgColor,
-            borderColor : bgColor
-        };
-        const newEventArr = eventArr.filter(
-            (event) => event.id != eventId
-        );
-        eventID.current += 1;
-        setEventArr([...newEventArr, eventObj]);
-    };
-
-    const deleteEvent=(id)=> {
-        eventArr.map((event) => console.log(`eventArr의 id : ${event.id}`))
-        const newEventArr = eventArr.filter(
-            (event) => event.id != id
-        );
-        console.log(newEventArr);
-        eventID.current += 1;
-        setEventArr(newEventArr);
-    };
-
-
-    const eventButtons = eventlist.filter((event)=>
-    event.start.substring(0,10) === header).map((event) => {      
-        const start = event.start.substring(11,16);
-        const end = event.end.substring(11,16);
-        return (
-            <div className='modal-event-object'>
-                <button style={{backgroundColor : event.backgroundColor}} onClick={()=>eventClick(event)}
-                key={event.id}> {`${start}-${end} ${event.title}`}</button>
-                <button className='delete-button' key={event.id} onClick={()=>deleteEvent(event.id)}>&times;</button>
-            </div>
-        )
-    });
-    useEffect(()=> {
-        
-    },[eventColor.current])
-
-    const colorPicked = (color) => {
+    const changeColor = (color) => {
         eventColor.current=`${color}`
         if(color === 'rgb(255, 245, 154)') {
             setIsYellowPicked(true);
             setIsMintPicked(false);
             setIsPinkPicked(false);
         }
-             //아 어떤 컬러를 픽하느냐에 따라 다를듯 ㅠㅠ
         else if (color === 'rgb(143, 255, 231)') {
             setIsYellowPicked(false);
             setIsMintPicked(true);
@@ -125,9 +50,89 @@ const TodayModal = (props) => {
             setIsMintPicked(false);
             setIsPinkPicked(true);
         }
-        //console.log(`${isYellowPicked}, ${isMintPicked}, ${isPinkPicked}`);
-
     }
+
+    const eventClick = (event) => {
+        setDefaultData({
+            ...defaultData,
+            id : event.id, 
+            title : event.title,
+            start : event.start.substring(11, 16),
+            end : event.end.substring(11, 16),
+        });
+        changeColor(event.backgroundColor)
+        setModalOpen(true);
+        setEditMode(true);
+        
+        console.log("event 입니다.", event);
+        console.log("defaultData 입니다.", defaultData);
+    }
+
+    //수정해서 저장하는거랑 그냥 일정 수가하는거랑 다른 save를 해야함
+
+    //모달 저장 버튼 클릭시 이벤트
+    const onSaveEvent = (editMode) => {
+        //editMode일때만 여러 컴포넌트가 보임
+        const startTime = `${header}T${startTimeRef.current.value}`;
+        const endTime = `${header}T${endTimeRef.current.value}`;
+        const eventContent = eventRef.current.value;
+        const eventId = editMode == true ? defaultData.id : eventID.current;
+        const bgColor = eventColor.current;
+        const eventObj = {
+            id: eventId,
+            title: eventContent,
+            start: startTime,
+            end: endTime,
+            backgroundColor : bgColor,
+            borderColor : bgColor
+        };
+
+        if(editMode == true){
+            console.log(`eventArr : ${eventArr}`)
+            
+            const newEventArr = eventArr.filter((event) => {
+                console.log(`selected event id : ${eventId}`)
+                console.log(`eventArr id : ${event.id}`)
+                return(event.id != eventId)
+                });
+            console.log(`newEventArr : ${newEventArr}`)
+            setEventArr([...newEventArr, eventObj]);
+        }
+        else {
+            setEventArr([...eventArr, eventObj]);
+            eventID.current +=1;
+            console.log(`uesRef eventid : ${eventID.current}`)
+        }
+        
+    };
+
+    const deleteEvent=(id)=> {
+        eventArr.map((event) => console.log(`eventArr의 id : ${event.id}`))
+        const newEventArr = eventArr.filter(
+            (event) => event.id != id
+        );
+        console.log(newEventArr);
+        setEventArr(newEventArr);
+    };
+    
+
+    const eventButtons = eventlist.filter((event)=>
+    event.start.substring(0,10) === header).map((event) => {      
+        const start = event.start.substring(11,16);
+        const end = event.end.substring(11,16);
+        return (
+            <div className='modal-event-object' key={event.id}>
+                <button style={{backgroundColor : event.backgroundColor}} onClick={()=>eventClick(event)}
+                key={event.id}> {`${start}-${end} ${event.title}`}</button>
+                <button className='delete-button' key={event.id} onClick={()=>deleteEvent(event.id)}>&times;</button>
+            </div>
+        )
+    });
+    useEffect(()=> {
+        
+    },[eventColor.current])
+
+    
 
     return (
         // 모달이 열릴때 openModal 클래스가 생성된다.
@@ -160,13 +165,13 @@ const TodayModal = (props) => {
                     </div>
                     <div className ="modal-color-div">
                         <div
-                        onClick={()=>colorPicked("rgb(255, 245, 154)")} 
+                        onClick={()=>changeColor("rgb(255, 245, 154)")} 
                         className = {isYellowPicked ? "modal-yellow-picked-div" :"modal-yellow-div"}></div>
                         <div 
-                        onClick={()=>colorPicked("rgb(143, 255, 231)")} 
+                        onClick={()=>changeColor("rgb(143, 255, 231)")} 
                         className = {isMintPicked ? "modal-mint-picked-div" :"modal-mint-div"}></div>
                         <div 
-                        onClick={()=>colorPicked("rgb(255, 185, 208)")} 
+                        onClick={()=>changeColor("rgb(255, 185, 208)")} 
                         className = {isPinkPicked ? "modal-pink-picked-div" :"modal-pink-div"}></div>
                     </div>
                     <div>
@@ -187,7 +192,7 @@ const TodayModal = (props) => {
                     <button
                         type="button"
                         className="modal-button"
-                        onClick={onSaveEvent}
+                        onClick={()=>onSaveEvent(editMode)}
                     >
                         저 장
                     </button>
@@ -199,13 +204,13 @@ const TodayModal = (props) => {
                     </div>
                     <div className ="modal-color-div">
                         <div
-                        onClick={()=>colorPicked("rgb(255, 245, 154)")} 
+                        onClick={()=>changeColor("rgb(255, 245, 154)")} 
                         className = {isYellowPicked ? "modal-yellow-picked-div" :"modal-yellow-div"}></div>
                         <div 
-                        onClick={()=>colorPicked("rgb(143, 255, 231)")} 
+                        onClick={()=>changeColor("rgb(143, 255, 231)")} 
                         className = {isMintPicked ? "modal-mint-picked-div" :"modal-mint-div"}></div>
                         <div 
-                        onClick={()=>colorPicked("rgb(255, 185, 208)")} 
+                        onClick={()=>changeColor("rgb(255, 185, 208)")} 
                         className = {isPinkPicked ? "modal-pink-picked-div" :"modal-pink-div"}></div>
                     </div>
                     <div>
@@ -226,7 +231,7 @@ const TodayModal = (props) => {
                     <button
                         type="button"
                         className="modal-button"
-                        onClick={onSaveEvent}
+                        onClick={()=>onSaveEvent(editMode)}
                     >
                         수 정
                     </button>
