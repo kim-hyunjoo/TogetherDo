@@ -63,7 +63,7 @@ const TodayModal = (props) => {
         const startTime = `${header}T${startTimeRef.current.value}`;
         const endTime = `${header}T${endTimeRef.current.value}`;
         const eventContent = eventRef.current.value;
-        const eventId = defaultData.id;
+        const eventId = eventID;
         const bgColor = eventColor.current;
         const eventObj = {
             id: eventId,
@@ -76,6 +76,7 @@ const TodayModal = (props) => {
         const newEventArr = eventArr.filter(
             (event) => event.id != eventId
         );
+        eventID.current += 1;
         setEventArr([...newEventArr, eventObj]);
     };
 
@@ -85,9 +86,10 @@ const TodayModal = (props) => {
             (event) => event.id != id
         );
         console.log(newEventArr);
+        eventID.current += 1;
         setEventArr(newEventArr);
     };
-    
+
 
     const eventButtons = eventlist.filter((event)=>
     event.start.substring(0,10) === header).map((event) => {      
