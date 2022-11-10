@@ -9,7 +9,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 
 import Modal from "./Modal";
 import TodayModal from "./TodayModal";
-
+   
 
 const Calendar = () => {
     //event data
