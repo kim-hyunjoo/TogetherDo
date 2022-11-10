@@ -12,13 +12,13 @@ const Modal = (props) => {
                 <section>
                     <header>
                         {header}
-                        <button className="close" onClick={close}>
+                        <button className="close" onClick={()=>close()}>
                             &times;
                         </button>
                     </header>
                     <main>{props.children}</main>
                     <footer>
-                        <button className="close" onClick={close}>
+                        <button className="close" onClick={()=>close()}>
                             close
                         </button>
                     </footer>
