@@ -146,7 +146,7 @@ const TodayModal = (props) => {
         const end = event.end.substring(11,16);
         return (
             <div className='modal-event-object' key={event.id}>
-                <input type="checkbox" onClick={(e) => handleSingleCheck(e.target.checked, event.id)} 
+                <input type="checkbox" key={event.id} onChange={(e) => handleSingleCheck(e.target.checked, event.id)} 
                 checked={checkItems.includes(event.id) ? true : false}></input>
                 <button style={{backgroundColor : event.backgroundColor}} onClick={()=>eventClick(event)}
                 key={event.id}> {`${start}-${end} ${event.title}`}</button>
@@ -208,9 +208,8 @@ const TodayModal = (props) => {
                     <div>
                         <span>Time</span>
                     </div>
-                    <div className="modal-time-div">
-                        
-                        <input type="time" step="300" m ref={startTimeRef}  defaultValue={editMode ? defaultData.start : null}/>
+                    <div className="modal-time-div">                      
+                        <input type="time" step="300" ref={startTimeRef} defaultValue={editMode ? defaultData.start : null}/>
                         <input type="time" step="300" ref={endTimeRef} defaultValue={editMode ? defaultData.end : null}/>
                     </div>
                     <div>
