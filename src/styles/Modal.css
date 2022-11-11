@@ -174,11 +174,22 @@
 	margin-top: 20px;
 }
 
+.modal-event-top {
+  display : flex;
+  justify-content: left;
+  border-bottom: 1px solid #dee2e6;
+  column-gap: 10px;
+  padding-left : 20px;
+  padding-bottom : 5px;
+}
+
 .modal-event-list {
   display : grid;
-  justify-content: center;
+  justify-content: left;
 	grid-template-rows: 1fr 1fr;
-  padding : 10px;
+  padding-left : 20px;
+  padding-top : 10px;
+  padding-bottom: 10px;
 }
 
 .modal-event-object {
@@ -189,7 +200,7 @@
 
 .delete-button {  
   position: relative;
-  top : 8px;
+  top : 3px;
   display : flex;
   justify-content: center;
   align-items: center;

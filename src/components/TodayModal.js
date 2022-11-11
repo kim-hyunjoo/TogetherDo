@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import Modal from "./Modal";
 import "../styles/Modal.css";
-import Checkbox from "./CheckBox";
 
 const TodayModal = (props) => {
     
@@ -11,7 +10,8 @@ const TodayModal = (props) => {
     const [isMintPicked , setIsMintPicked] = useState(false);
     const [isPinkPicked , setIsPinkPicked] = useState(false);
     const [defaultData, setDefaultData] = useState({id : 0, title : '', start : '', end : ''});
-
+    // 체크된 아이템을 담을 배열
+    const [checkItems, setCheckItems] = useState([]);
     //console.log(`eventButtons함수..${eventlist}`);
     //시간 순서대로 출력해주는 기능 고려해보기
         //edit modal
@@ -115,6 +115,30 @@ const TodayModal = (props) => {
         setEventArr(newEventArr);
     };
     
+     // 체크박스 단일 선택
+    const handleSingleCheck = (checked, id) => {
+        if (checked) {
+        // 단일 선택 시 체크된 아이템을 배열에 추가
+        setCheckItems(prev => [...prev, id]);
+        } else {
+        // 단일 선택 해제 시 체크된 아이템을 제외한 배열 (필터)
+        setCheckItems(checkItems.filter((el) => el !== id));
+        }
+    };
+    // 체크박스 전체 선택
+    const handleAllCheck = (checked) => {
+        if(checked) {
+        // 전체 선택 클릭 시 데이터의 모든 아이템(id)를 담은 배열로 checkItems 상태 업데이트
+        const idArray = [];
+        eventArr.forEach((el) => idArray.push(el.id));
+        setCheckItems(idArray);
+        }
+        else {
+        // 전체 선택 해제 시 checkItems 를 빈 배열로 상태 업데이트
+        setCheckItems([]);
+        }
+    }
+
 
     const eventButtons = eventlist.filter((event)=>
     event.start.substring(0,10) === header).map((event) => {      
@@ -122,15 +146,15 @@ const TodayModal = (props) => {
         const end = event.end.substring(11,16);
         return (
             <div className='modal-event-object' key={event.id}>
+                <input type="checkbox" onClick={(e) => handleSingleCheck(e.target.checked, event.id)} 
+                checked={checkItems.includes(event.id) ? true : false}></input>
                 <button style={{backgroundColor : event.backgroundColor}} onClick={()=>eventClick(event)}
                 key={event.id}> {`${start}-${end} ${event.title}`}</button>
                 <button className='delete-button' key={event.id} onClick={()=>deleteEvent(event.id)}>&times;</button>
             </div>
         )
     });
-    useEffect(()=> {
-        
-    },[eventColor.current])
+    
 
     
 
@@ -146,6 +170,13 @@ const TodayModal = (props) => {
                         </button>
                     </header>
                     <main>
+                        <div className="modal-event-top">
+                            <input type='checkbox' name='select-all' onChange={(e) => handleAllCheck(e.target.checked)}
+                            // 데이터 개수와 체크된 아이템의 개수가 다를 경우 선택 해제 (하나라도 해제 시 선택 해제)
+                            checked={(checkItems.length === eventArr.length && eventArr.filter((event)=>
+                                event.start.substring(0,10) === header).length !== 0) ? true : false}/>
+                            <label>TODO-LIST</label>
+                        </div>
                         <div className = "modal-event-list">
                           {eventButtons}
                         </div>
@@ -158,7 +189,7 @@ const TodayModal = (props) => {
                 </section>
             ) : null}
 
-            {editMode == false ? (<Modal open={modalOpen} close={closeModal} header={header}>
+            <Modal open={modalOpen} close={closeModal} header={header}>
                 <div className="modal-main-div">
                     <div>
                         <span>Color</span>
@@ -178,14 +209,15 @@ const TodayModal = (props) => {
                         <span>Time</span>
                     </div>
                     <div className="modal-time-div">
-                        <input type="time" step="300" ref={startTimeRef} />
-                        <input type="time" step="300" ref={endTimeRef} />
+                        
+                        <input type="time" step="300" m ref={startTimeRef}  defaultValue={editMode ? defaultData.start : null}/>
+                        <input type="time" step="300" ref={endTimeRef} defaultValue={editMode ? defaultData.end : null}/>
                     </div>
                     <div>
                         <span>Input</span>
                     </div>
                     <div className="modal-input-div">
-                        <textarea ref={eventRef} placeholder="할일을 입력하세요" className="modal-textarea" />
+                        <textarea ref={eventRef} placeholder="할일을 입력하세요" className="modal-textarea" defaultValue={editMode ? defaultData.title : null} />
                     </div>
                 </div>
                 <div className="modal-save-div">
@@ -194,49 +226,10 @@ const TodayModal = (props) => {
                         className="modal-button"
                         onClick={()=>onSaveEvent(editMode)}
                     >
-                        저 장
+                        {editMode ? "수 정" : "저 장"}
                     </button>
                 </div>
-            </Modal>) : (<Modal open={modalOpen} close={closeModal} header={header}>
-                <div className="modal-main-div">
-                    <div>
-                        <span>Color</span>
-                    </div>
-                    <div className ="modal-color-div">
-                        <div
-                        onClick={()=>changeColor("rgb(255, 245, 154)")} 
-                        className = {isYellowPicked ? "modal-yellow-picked-div" :"modal-yellow-div"}></div>
-                        <div 
-                        onClick={()=>changeColor("rgb(143, 255, 231)")} 
-                        className = {isMintPicked ? "modal-mint-picked-div" :"modal-mint-div"}></div>
-                        <div 
-                        onClick={()=>changeColor("rgb(255, 185, 208)")} 
-                        className = {isPinkPicked ? "modal-pink-picked-div" :"modal-pink-div"}></div>
-                    </div>
-                    <div>
-                        <span>Time</span>
-                    </div>
-                    <div className="modal-time-div">
-                        <input type="time" step="300" ref={startTimeRef} defaultValue = {defaultData.start} />
-                        <input type="time" step="300" ref={endTimeRef} defaultValue = {defaultData.end}/>
-                    </div>
-                    <div>
-                        <span>Input</span>
-                    </div>
-                    <div className="modal-input-div">
-                        <textarea ref={eventRef} placeholder="할일을 입력하세요" className="modal-textarea" defaultValue = {defaultData.title}/>
-                    </div>
-                </div>
-                <div className="modal-save-div">
-                    <button
-                        type="button"
-                        className="modal-button"
-                        onClick={()=>onSaveEvent(editMode)}
-                    >
-                        수 정
-                    </button>
-                </div>
-            </Modal>)}
+            </Modal>
         </div>
     );
 };
