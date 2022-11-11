@@ -14,6 +14,7 @@ import { format } from "date-fns";
 const Calendar = () => {
     //event data
     const [eventArr, setEventArr] = useState([]);
+    //event drag & drop시 선택도니 event ID 저장
     const [clickedID, setClickedID] = useState();
     //today modal
     const [todayModalOpen, setTodayModalOpen] = useState(false);
@@ -38,29 +39,28 @@ const Calendar = () => {
     const handleEventClick = (info) => {
         console.log("event click");
     };
-
+    // 이벤트(일정) 드래그 시작 시
     const handleEventDragStart = (info) => {
         console.log("event drag start");
         setClickedID(info.event._def.publicId);
     }
-
+    // 드래그 한 이벤트(일정)을 드롭할 시
     const handleEventDrop = (info) => {
         console.log("event drag end");
-        const selectedEvent = eventArr.find(el=>el.id==clickedID)
-        const dateInfo = format(info.event._instance.range.end, "YYYY-MM-DD"); // 21-10-11
+        const selectedEvent = eventArr.find(el=>el.id==clickedID) //사용자가 드래그 하고 있는 이벤트 객체를 가져옴
+        const dateInfo = format(info.event._instance.range.end, "YYYY-MM-DD"); //날짜 포맷 바꿔주기
         //event drop된 날짜로 데이터 변경해주기
         const startTime = `${dateInfo}T${selectedEvent.start.substring(11,16)}`;
         const endTime = `${dateInfo}T${selectedEvent.end.substring(11,16)}`;
 
         const eventObj = {
             ...selectedEvent,
-            start: startTime,
+            start: startTime, //날짜정보만 변경하면 되므로 start,end값만 변경
             end: endTime
         };
-        
+        //기존 이벤트(일정) 삭제 후 날짜정보 변경된 이벤트 넣기
         const newEventArr = eventArr.filter(event => event.id != selectedEvent.id);
-        setEventArr([...newEventArr, eventObj]);
-        
+        setEventArr([...newEventArr, eventObj]);       
     }
 
     return (
@@ -84,8 +84,9 @@ const Calendar = () => {
                 contentHeight={600}
                 selectable={true}
                 editable={true}
+                dayMaxEvents={true}
                 eventDragStart={handleEventDragStart}
-                eventDrop={handleEventDrop}
+                eventDrop={handleEventDrop}          
                 eventDisplay={'block'}
                 eventTextColor={'black'}
             />
@@ -93,7 +94,6 @@ const Calendar = () => {
                 open={todayModalOpen}
                 close={closeTodayModal}
                 header={dateInfo}
-                eventlist={eventArr}
                 setEventArr = {setEventArr}
                 eventArr = {eventArr}
             />
