@@ -6,25 +6,19 @@ import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
 import interactionPlugin from "@fullcalendar/interaction";
 import momentPlugin from "@fullcalendar/moment";
 import timeGridPlugin from "@fullcalendar/timegrid";
-
-import Modal from "./Modal";
 import TodayModal from "./TodayModal";
+import { format } from "date-fns";
+
    
 
 const Calendar = () => {
     //event data
     const [eventArr, setEventArr] = useState([]);
+    const [clickedID, setClickedID] = useState();
     //today modal
     const [todayModalOpen, setTodayModalOpen] = useState(false);
     //selected Date
     const [dateInfo, setDateInfo] = useState("");
-
-    //useRefs
-    const eventID = useRef(0);
-    const startTimeRef = useRef("");
-    const endTimeRef = useRef("");
-    const eventRef = useRef("");
-    const eventColor = useRef("");
 
     const closeTodayModal = () => {
         setTodayModalOpen(false);
@@ -39,19 +33,35 @@ const Calendar = () => {
         console.log(info.dateStr);
         setDateInfo(info.dateStr);
     };
-    // useEffect(() => {
-    //     //dataInfo가 변경된 렌더링에만 실행
-    //     if (!!dateInfo) {
-    //         //dataInfo가 존재한다면 콘솔 출력
-    //         console.log("dateInfo : ", dateInfo);
-    //     }
-    //     //dispatch()
-    // }, [dateInfo]);
 
     // 이벤트(일정) 클릭 시
     const handleEventClick = (info) => {
-        console.log(info);
+        console.log("event click");
     };
+
+    const handleEventDragStart = (info) => {
+        console.log("event drag start");
+        setClickedID(info.event._def.publicId);
+    }
+
+    const handleEventDrop = (info) => {
+        console.log("event drag end");
+        const selectedEvent = eventArr.find(el=>el.id==clickedID)
+        const dateInfo = format(info.event._instance.range.end, "YYYY-MM-DD"); // 21-10-11
+        //event drop된 날짜로 데이터 변경해주기
+        const startTime = `${dateInfo}T${selectedEvent.start.substring(11,16)}`;
+        const endTime = `${dateInfo}T${selectedEvent.end.substring(11,16)}`;
+
+        const eventObj = {
+            ...selectedEvent,
+            start: startTime,
+            end: endTime
+        };
+        
+        const newEventArr = eventArr.filter(event => event.id != selectedEvent.id);
+        setEventArr([...newEventArr, eventObj]);
+        
+    }
 
     return (
         <div className="calendar-contents">
@@ -73,6 +83,9 @@ const Calendar = () => {
                 events={eventArr}
                 contentHeight={600}
                 selectable={true}
+                editable={true}
+                eventDragStart={handleEventDragStart}
+                eventDrop={handleEventDrop}
                 eventDisplay={'block'}
                 eventTextColor={'black'}
             />
