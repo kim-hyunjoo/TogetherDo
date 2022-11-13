@@ -3,7 +3,7 @@ import Modal from "./Modal";
 import "../styles/Modal.css";
 
 const TodayModal = (props) => {   
-    const { open, close, header, setEventArr, eventArr, checkItems, setCheckItems } = props;
+    const { open, close, header, setEventArr, eventArr, checkItems, setCheckItems} = props;
     //색상커스텀 useState
     const [isYellowPicked , setIsYellowPicked] = useState(false);
     const [isMintPicked , setIsMintPicked] = useState(false);
@@ -184,10 +184,7 @@ const TodayModal = (props) => {
     }); 
 
 
-    useEffect(()=> {
-        console.log(checkItems);
-        
-    })
+    
     return (
         // 모달이 열릴때 openModal 클래스가 생성된다.
         <div className={open ? "openTodayModal modal" : "modal"}>

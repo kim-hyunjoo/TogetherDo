@@ -51,6 +51,7 @@ const Calendar = () => {
         console.log("event drag end");
         const selectedEvent = eventArr.find(el=>el.id==clickedID) //사용자가 드래그 하고 있는 이벤트 객체를 가져옴
         const dateInfo = format(info.event._instance.range.end, "YYYY-MM-DD"); //날짜 포맷 바꿔주기
+        setDateInfo(dateInfo);
         //event drop된 날짜로 데이터 변경해주기
         const startTime = `${dateInfo}T${selectedEvent.start.substring(11,16)}`;
         const endTime = `${dateInfo}T${selectedEvent.end.substring(11,16)}`;
@@ -67,11 +68,10 @@ const Calendar = () => {
         //체크박스도 같이 관리해줘야할듯...
         //체크박스리스트에서 이동한 이벤트객체 찾아서 dateInfo변경해주기
         checkItems.map(item => {
-            if (item.value == clickedID) {
-                item.dateInfo = dateInfo;
+            if (item.id == clickedID) {
+                item.dateInfo = dateInfo; 
             }
-        })
-        
+        })   
     }
 
     return (
