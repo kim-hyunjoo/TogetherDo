@@ -20,6 +20,8 @@ const Calendar = () => {
     const [todayModalOpen, setTodayModalOpen] = useState(false);
     //selected Date
     const [dateInfo, setDateInfo] = useState("");
+    // 체크된 아이템을 담을 배열 {dateInfo : 날짜, value : eventID}
+    const [checkItems, setCheckItems] = useState([]);
 
     const closeTodayModal = () => {
         setTodayModalOpen(false);
@@ -60,7 +62,16 @@ const Calendar = () => {
         };
         //기존 이벤트(일정) 삭제 후 날짜정보 변경된 이벤트 넣기
         const newEventArr = eventArr.filter(event => event.id != selectedEvent.id);
-        setEventArr([...newEventArr, eventObj]);       
+        setEventArr([...newEventArr, eventObj]); 
+        
+        //체크박스도 같이 관리해줘야할듯...
+        //체크박스리스트에서 이동한 이벤트객체 찾아서 dateInfo변경해주기
+        checkItems.map(item => {
+            if (item.value == clickedID) {
+                item.dateInfo = dateInfo;
+            }
+        })
+        
     }
 
     return (
@@ -96,6 +107,8 @@ const Calendar = () => {
                 header={dateInfo}
                 setEventArr = {setEventArr}
                 eventArr = {eventArr}
+                checkItems={checkItems}
+                setCheckItems={setCheckItems}
             />
         </div>
     );

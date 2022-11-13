@@ -3,15 +3,14 @@ import Modal from "./Modal";
 import "../styles/Modal.css";
 
 const TodayModal = (props) => {   
-    const { open, close, header, setEventArr, eventArr } = props;
+    const { open, close, header, setEventArr, eventArr, checkItems, setCheckItems } = props;
     //색상커스텀 useState
     const [isYellowPicked , setIsYellowPicked] = useState(false);
     const [isMintPicked , setIsMintPicked] = useState(false);
     const [isPinkPicked , setIsPinkPicked] = useState(false);
     //이벤트 수정할 때 (edit modal) 선택한 이벤트 객체를 저장
     const [defaultData, setDefaultData] = useState({id : 0, title : '', start : '', end : ''});
-    // 체크된 아이템을 담을 배열
-    const [checkItems, setCheckItems] = useState([]);
+
     //수정, 저장 버튼을 한번 눌렀을 시 비활성화하기 위한 useState
     const [disable, setDisable] = useState(false);
     //modal, edit modal
@@ -133,27 +132,35 @@ const TodayModal = (props) => {
     
      // 체크박스 단일 선택
     const handleSingleCheck = (checked, id) => {
+        console.log(checkItems);
         if (checked) {
-        // 단일 선택 시 체크된 아이템을 배열에 추가
-        setCheckItems(prev => [...prev, id]);
-        } else {
-        // 단일 선택 해제 시 체크된 아이템을 제외한 배열 (필터)
-        setCheckItems(checkItems.filter((el) => el !== id));
+            // 단일 선택 시 체크된 아이템을 배열에 추가
+            setCheckItems(prev => [...prev, { dateInfo : header, id : id}]);
+            } else {
+            // 단일 선택 해제 시 체크된 아이템을 제외한 배열 (필터)
+            setCheckItems(checkItems.filter((el) => el.id != id));
         }
     };
 
     // 체크박스 전체 선택
     const handleAllCheck = (checked) => {
-        if(checked) {
-        // 전체 선택 클릭 시 데이터의 모든 아이템(id)를 담은 배열로 checkItems 상태 업데이트
         const idArray = [];
-        eventArr.forEach((el) => idArray.push(el.id));
-        setCheckItems(idArray);
+        if(checked) {
+        // 전체 선택 클릭 시 해당 날짜(dateInfo) 모든 아이템(id)를 담은 배열로 checkItems 상태 업데이트  
+        const newEventArr = eventArr.filter(event => event.start.substring(0,10) == header); //오늘날짜인것들만..
+        console.log(newEventArr);
+        newEventArr.forEach((el) => idArray.push({ dateInfo : header, id : el.id}));
+        console.log(idArray);
+        setCheckItems([...checkItems, ...idArray]);
+        
         }
         else {
         // 전체 선택 해제 시 checkItems 를 빈 배열로 상태 업데이트
-        setCheckItems([]);
+        // 전체 선택 해제시 그날의 dateInfo에 해당하는 값 제거 
+        const newCheckItems = checkItems.filter(el=>el.dateInfo != header);
+        setCheckItems(newCheckItems);
         }
+
     }
 
     //날짜 클릭 시 해당 날짜의 일정 목록을 checkbox 및 button을 이용하여 todo-list 구현
@@ -165,7 +172,8 @@ const TodayModal = (props) => {
             <div className='modal-event-object' key={event.id}>
                 {/* 체크박스 */}
                 <input type="checkbox" key={event.id} onChange={(e) => handleSingleCheck(e.target.checked, event.id)} 
-                checked={checkItems.includes(event.id) ? true : false}></input>
+                checked={
+                    checkItems.map(item=> item.id).includes(event.id) ? true : false}></input>
                 {/* 이벤트 제목 */}
                 <button style={{backgroundColor : event.backgroundColor}} onClick={()=>eventClick(event)}
                 key={event.id}> {`${start}-${end} ${event.title}`}</button>
@@ -175,6 +183,11 @@ const TodayModal = (props) => {
         )
     }); 
 
+
+    useEffect(()=> {
+        console.log(checkItems);
+        
+    })
     return (
         // 모달이 열릴때 openModal 클래스가 생성된다.
         <div className={open ? "openTodayModal modal" : "modal"}>
@@ -189,13 +202,19 @@ const TodayModal = (props) => {
                     <main>
                         <div className="modal-event-top">
                             {/* 체크박스 all check */}
-                            <input type='checkbox' name='select-all' onChange={(e) => handleAllCheck(e.target.checked)}
+                            <input type='checkbox'  name='select-all' onChange={(e) => handleAllCheck(e.target.checked)}
                             // 데이터 개수와 체크된 아이템의 개수가 다를 경우 선택 해제 (하나라도 해제 시 선택 해제)
                             //해당날짜의 event가 하나도 없을 때 선택 해제
-                            checked={(checkItems.length === eventArr.length && eventArr.filter((event)=>
-                                event.start.substring(0,10) === header).length !== 0) ? true : false}/>
+                            //checkItems의 날짜가 header 이고 eventArr.dateInfo가 header인거의 length가 서로 다를때
+                            checked={( 
+                                (checkItems.filter(el=>el.dateInfo == header).length ==
+                                eventArr.filter(el=>el.start.substring(0,10) == header).length)
+                                && 
+                                (eventArr.filter((event)=>event.start.substring(0,10) === header).length !== 0)
+                                ) ? true : false}/>
                             <label>TODO-LIST</label>
                         </div>
+
                         <div className = "modal-event-list">
                           {eventButtons}
                         </div>
