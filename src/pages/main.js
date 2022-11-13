@@ -1,10 +1,11 @@
 import React from "react";
-import Calendar from "../components/Calendar";
+import "../styles/Layout.css";
+import FeedScreen from "../components/FeedScreen";
 
 const Main = () => (
-    <div>
-        <div className="calendar">
-            <Calendar />
+    <div className="mainscreen">
+        <div className= "left">
+            <FeedScreen />
         </div>
     </div>
 );

@@ -1,7 +1,21 @@
 .header {
-	
+	width: 100%;
+	height: 100px;
+	text-align: center;
 }
-
+.mainscreen{
+  	justify-content: space-between;
+}
+.left{
+	display: flex;
+}
+.right {
+	position: fixed;
+	background-color: #BCC0F2;
+	width: 260px;
+	top: 80px;
+	right: 5px; 
+}
 .footer {
 	width: 100%;
 	height: 100px;
