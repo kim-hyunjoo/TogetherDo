@@ -20,10 +20,10 @@ const Calendar = () => {
     const [todayModalOpen, setTodayModalOpen] = useState(false);
     //selected Date
     const [dateInfo, setDateInfo] = useState("");
-    // 체크된 아이템을 담을 배열 {dateInfo : 날짜, value : eventID}
+    // 체크된 아이템을 담을 배열 {dateInfo : 날짜, id : eventID}
     const [checkItems, setCheckItems] = useState([]);
     //진도율 체크
-    const [progress, setProgress] = useState({ dateInfo: "", completed: 0 });
+    const [progress, setProgress] = useState(0);
 
     const closeTodayModal = () => {
         setTodayModalOpen(false);
@@ -37,13 +37,14 @@ const Calendar = () => {
         const todayEvents = eventArr.filter(event=>event.start.substring(0,10) === dateInfo)
         const todayCheckItems = checkItems.filter(item => item.dateInfo === dateInfo)
         const completed = todayEvents.length == 0 ? 0 : (todayCheckItems.length/todayEvents.length)*100;
+        console.log(completed)
         return completed.toFixed();
     }
 
     //날짜 클릭 시
     const handleDateClick = (info) => {
         setDateInfo(info.dateStr); 
-        setProgress({completed : progressCal(info.dateStr)});
+        setProgress(progressCal(info.dateStr));
         openTodayModal();
     };
 
@@ -65,13 +66,13 @@ const Calendar = () => {
         //console.log(dateInfo);
 
         const selectedEvent = eventArr.find(el=>el.id==clickedID) //사용자가 드래그 하고 있는 이벤트 객체를 가져옴
-        let date = new Date(`${info.event._instance.range.start}`);
+        
+        //여기서 9시간을 빼주는 작업을 해줘야함
+        let date = new Date(`${info.event._instance.range.start}`); //info에서 drop된 날짜의 시간정보 가져오기
         console.log(`작업해주기 전 date 정보 : ${date}`);
-        date.setHours(date.getHours()-9);
+        date.setHours(date.getHours()-9); //9시간 빼주기
         console.log(`작업해준 후 date 정보 : ${date}`);
         const dateInfo = format(date, "YYYY-MM-DD"); //날짜 포맷 바꿔주기
-        //여기서 9시간을 빼주는 작업을 해줘야함
-        //console.log(info.event._instance.range.start);
         setDateInfo(dateInfo);
         console.log(`날짜 포맷 바꿔준 뒤 dateInfo : ${dateInfo}`);
         
