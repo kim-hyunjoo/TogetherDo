@@ -22,6 +22,8 @@ const Calendar = () => {
     const [dateInfo, setDateInfo] = useState("");
     // 체크된 아이템을 담을 배열 {dateInfo : 날짜, value : eventID}
     const [checkItems, setCheckItems] = useState([]);
+    //진도율 체크
+    const [progress, setProgress] = useState({ dateInfo: "", completed: 0 });
 
     const closeTodayModal = () => {
         setTodayModalOpen(false);
@@ -29,12 +31,20 @@ const Calendar = () => {
     const openTodayModal = () => {
         setTodayModalOpen(true);
     };
+    
+    //진도율 계산 = 해당 날짜의 체크된 item개수 / 해당 날짜의 모든 event 개수 * 100
+    const progressCal = (dateInfo) => {
+        const todayEvents = eventArr.filter(event=>event.start.substring(0,10) === dateInfo)
+        const todayCheckItems = checkItems.filter(item => item.dateInfo === dateInfo)
+        const completed = todayEvents.length == 0 ? 0 : (todayCheckItems.length/todayEvents.length)*100;
+        return completed;
+    }
 
     //날짜 클릭 시
     const handleDateClick = (info) => {
+        setDateInfo(info.dateStr); 
+        setProgress({completed : progressCal(info.dateStr)});
         openTodayModal();
-        console.log(info.dateStr);
-        setDateInfo(info.dateStr);
     };
 
     // 이벤트(일정) 클릭 시
@@ -50,8 +60,10 @@ const Calendar = () => {
     const handleEventDrop = (info) => {
         console.log("event drag end");
         const selectedEvent = eventArr.find(el=>el.id==clickedID) //사용자가 드래그 하고 있는 이벤트 객체를 가져옴
-        const dateInfo = format(info.event._instance.range.end, "YYYY-MM-DD"); //날짜 포맷 바꿔주기
+        const dateInfo = format(info.event._instance.range.start, "YYYY-MM-DD"); //날짜 포맷 바꿔주기
         setDateInfo(dateInfo);
+        console.log(dateInfo);
+        console.log(info)
         //event drop된 날짜로 데이터 변경해주기
         const startTime = `${dateInfo}T${selectedEvent.start.substring(11,16)}`;
         const endTime = `${dateInfo}T${selectedEvent.end.substring(11,16)}`;
@@ -109,6 +121,9 @@ const Calendar = () => {
                 eventArr = {eventArr}
                 checkItems={checkItems}
                 setCheckItems={setCheckItems}
+                progress={progress}
+                setProgress={setProgress}
+                progressCal= {progressCal}
             />
         </div>
     );
