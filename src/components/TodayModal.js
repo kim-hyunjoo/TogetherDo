@@ -172,9 +172,9 @@ const TodayModal = (props) => {
         const todayEvents = eventArr.filter(event=>event.start.substring(0,10) === header)
         const todayCheckItems = checkItems.filter(item => item.dateInfo === header)
         const completed = todayEvents.length == 0 ? 0 : (todayCheckItems.length/todayEvents.length)*100;
-        setProgress({completed})
+        setProgress({completed : completed.toFixed(1)})
         console.log(`오늘의 일정 개수 : ${todayEvents.length}, 오늘의 체크된 개수 : ${todayCheckItems.length}`)
-    }, [checkItems])
+    }, [checkItems, eventArr])
 
     //날짜 클릭 시 해당 날짜의 일정 목록을 checkbox 및 button을 이용하여 todo-list 구현
     const eventButtons = eventArr.filter((event)=> //header(해당날짜)와 비교하여 eventArr에 있는 이벤트 중 같은 날짜만 filter (이 작업을 안할경우 모든 eventArr객체가 나타나게 됨)
