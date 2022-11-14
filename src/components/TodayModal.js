@@ -188,7 +188,7 @@ const TodayModal = (props) => {
                 checked={
                     checkItems.map(item=> item.id).includes(event.id) ? true : false}></input>
                 {/* 이벤트 제목 */}
-                <button style={{backgroundColor : event.backgroundColor}} onClick={()=>eventClick(event)}
+                <button className='event-button' style={{backgroundColor : event.backgroundColor}} onClick={()=>eventClick(event)}
                 key={event.id}> {`${start}-${end} ${event.title}`}</button>
                 {/* 삭제버튼 */}
                 <button className='delete-button' key={event.id} onClick={()=>deleteEvent(event.id)}>&times;</button>

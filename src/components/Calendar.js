@@ -65,13 +65,13 @@ const Calendar = () => {
         //console.log(dateInfo);
 
         const selectedEvent = eventArr.find(el=>el.id==clickedID) //사용자가 드래그 하고 있는 이벤트 객체를 가져옴
-        let date = new Date(`${info.event._instance.range.start}`);
+        
+        //여기서 9시간을 빼주는 작업을 해줘야함
+        let date = new Date(`${info.event._instance.range.start}`); //info에서 drop된 날짜의 시간정보 가져오기
         console.log(`작업해주기 전 date 정보 : ${date}`);
-        date.setHours(date.getHours()-9);
+        date.setHours(date.getHours()-9); //9시간 빼주기
         console.log(`작업해준 후 date 정보 : ${date}`);
         const dateInfo = format(date, "YYYY-MM-DD"); //날짜 포맷 바꿔주기
-        //여기서 9시간을 빼주는 작업을 해줘야함
-        //console.log(info.event._instance.range.start);
         setDateInfo(dateInfo);
         console.log(`날짜 포맷 바꿔준 뒤 dateInfo : ${dateInfo}`);
         

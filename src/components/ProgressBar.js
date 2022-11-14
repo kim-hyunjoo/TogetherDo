@@ -3,10 +3,10 @@ import React from "react";
 const ProgressBar = ({completed}) => {
   const containerStyles = {
     height: 23,
-    width: '100%',
+    width: '90%',
     backgroundColor: "#e0e0de",
     borderRadius: 50,
-    marginTop: 20
+    marginTop: 5
   }
 
   const fillerStyles = {
