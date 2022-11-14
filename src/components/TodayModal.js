@@ -1,23 +1,26 @@
 import React, { useRef, useState, useEffect } from "react";
 import Modal from "./Modal";
 import "../styles/Modal.css";
-import Checkbox from "./CheckBox";
 
-//시간 순서대로 출력해주는 기능 고려해보기
-
-const TodayModal = (props) => {  
-    const { open, close, header, eventlist, setEventArr, eventArr } = props;
-    //useStates
+const TodayModal = (props) => {   
+    const { open, close, header, setEventArr, eventArr, checkItems, setCheckItems} = props;
+    //색상커스텀 useState
     const [isYellowPicked , setIsYellowPicked] = useState(false);
     const [isMintPicked , setIsMintPicked] = useState(false);
     const [isPinkPicked , setIsPinkPicked] = useState(false);
-    const [defaultData, setDefaultData] = useState({id : 0, title : '', start : '', end : ''});   
+    //이벤트 수정할 때 (edit modal) 선택한 이벤트 객체를 저장
+    const [defaultData, setDefaultData] = useState({id : 0, title : '', start : '', end : ''});
+
+    //수정, 저장 버튼을 한번 눌렀을 시 비활성화하기 위한 useState
+    const [disable, setDisable] = useState(false);
+    //modal, edit modal
     const [modalOpen, setModalOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
-    //useRefs
+
+    //이벤트 속성 값을 저장하기 위한 useRefs
     const startTimeRef = useRef("");
     const endTimeRef = useRef("");
-    const eventRef = useRef("");  
+    const eventRef = useRef("");   
     const eventID = useRef(0);
     const eventColor = useRef("");
     
@@ -27,8 +30,10 @@ const TodayModal = (props) => {
     };
     const closeModal = () => {
         setModalOpen(false);
+        setDisable(false);//저장,수정 버튼 활성화
     };
 
+    //색상커스텀
     const changeColor = (color) => {
         eventColor.current=`${color}`
         if(color === 'rgb(255, 245, 154)') {
@@ -48,7 +53,9 @@ const TodayModal = (props) => {
         }
     }
 
+    //이벤트를 수정하기 위해 모달 내에서 이벤트를 클릭했을 때 실행
     const eventClick = (event) => {
+        //선택한 이벤트를 useState에 저장
         setDefaultData({
             ...defaultData,
             id : event.id, 
@@ -56,20 +63,45 @@ const TodayModal = (props) => {
             start : event.start.substring(11, 16),
             end : event.end.substring(11, 16),
         });
+        //color정보는 따로 저장
         changeColor(event.backgroundColor)
         setModalOpen(true);
+        //Edit Modal 열기
         setEditMode(true);
         
         console.log("event 입니다.", event);
         console.log("defaultData 입니다.", defaultData);
     }
-
-    //모달 저장 버튼 클릭시 이벤트
+/*
+    useEffect(()=>{
+        startTimeRef.current = "";
+        endTimeRef.current = "";
+        eventRef.current = "";
+    }, [disable])
+*/
+    //모달 저장or수정 버튼 클릭시 이벤트
     const onSaveEvent = (editMode) => {
+        /*
+        //저장하려고 할 때 startTimeRef, endTimeRef, eventRef 하나라도 비어있을 시 경고창
+        console.log(startTimeRef.current);
+        if(startTimeRef.current === "") {
+            alert("시작 시간을 입력하세요")
+            return;
+        }
+        if(endTimeRef.current === "") {
+            alert("종료 시간을 입력하세요")
+            return;
+        }
+        if(eventRef.current === "") {
+            alert("일정을 입력하세요")
+            return;
+        }
+        */
         const startTime = `${header}T${startTimeRef.current.value}`;
         const endTime = `${header}T${endTimeRef.current.value}`;
         const eventContent = eventRef.current.value;
-        const eventId = editMode == true ? defaultData.id : eventID.current;
+        //edit mode의 경우 선택된 이벤트의 ID 그대로 저장, 아닐 경우 새로운 eventID 부여
+        const eventId = editMode == true ? defaultData.id : eventID.current; 
         const bgColor = eventColor.current;
         const eventObj = {
             id: eventId,
@@ -80,38 +112,79 @@ const TodayModal = (props) => {
             borderColor : bgColor
         };
 
-        if(editMode == true){
+        if(editMode == true){ //edit mode일 경우 기존에 선택된 이벤트 객체 삭제 후 저장
             const newEventArr = eventArr.filter(event => event.id != eventId);
             setEventArr([...newEventArr, eventObj]);
         }
-        else {
+        else { 
             setEventArr([...eventArr, eventObj]);
-            eventID.current +=1;
-        }     
+            eventID.current +=1; //새로 생성되는 이벤트에 부여할 eventID 갱신
+        } 
+
+        setDisable(true);//수정,저장 버튼 비활성화
     };
 
+    //이벤트 삭제
     const deleteEvent=(id)=> {
-        const newEventArr = eventArr.filter(event => event.id != id);
+        const newEventArr = eventArr.filter(event => event.id != id); //id를 이용하여 삭제
         setEventArr(newEventArr);
-    }; 
+    };
+    
+     // 체크박스 단일 선택
+    const handleSingleCheck = (checked, id) => {
+        console.log(checkItems);
+        if (checked) {
+            // 단일 선택 시 체크된 아이템을 배열에 추가
+            setCheckItems(prev => [...prev, { dateInfo : header, id : id}]);
+            } else {
+            // 단일 선택 해제 시 체크된 아이템을 제외한 배열 (필터)
+            setCheckItems(checkItems.filter((el) => el.id != id));
+        }
+    };
 
-    const eventButtons = eventlist.filter((event)=>
+    // 체크박스 전체 선택
+    const handleAllCheck = (checked) => {
+        const idArray = [];
+        if(checked) {
+        // 전체 선택 클릭 시 해당 날짜(dateInfo) 모든 아이템(id)를 담은 배열로 checkItems 상태 업데이트  
+        const newEventArr = eventArr.filter(event => event.start.substring(0,10) == header); //오늘날짜인것들만..
+        console.log(newEventArr);
+        newEventArr.forEach((el) => idArray.push({ dateInfo : header, id : el.id}));
+        console.log(idArray);
+        setCheckItems([...checkItems, ...idArray]);
+        
+        }
+        else {
+        // 전체 선택 해제 시 checkItems 를 빈 배열로 상태 업데이트
+        // 전체 선택 해제시 그날의 dateInfo에 해당하는 값 제거 
+        const newCheckItems = checkItems.filter(el=>el.dateInfo != header);
+        setCheckItems(newCheckItems);
+        }
+
+    }
+
+    //날짜 클릭 시 해당 날짜의 일정 목록을 checkbox 및 button을 이용하여 todo-list 구현
+    const eventButtons = eventArr.filter((event)=> //header(해당날짜)와 비교하여 eventArr에 있는 이벤트 중 같은 날짜만 filter (이 작업을 안할경우 모든 eventArr객체가 나타나게 됨)
     event.start.substring(0,10) === header).map((event) => {      
-        const start = event.start.substring(11,16);
-        const end = event.end.substring(11,16);
+        const start = event.start.substring(11,16); //시간정보만 가져오기
+        const end = event.end.substring(11,16); //시간정보만 가져오기
         return (
             <div className='modal-event-object' key={event.id}>
-                {/* 여기에 체크박스 구현하면 될듯? */}
+                {/* 체크박스 */}
+                <input type="checkbox" key={event.id} onChange={(e) => handleSingleCheck(e.target.checked, event.id)} 
+                checked={
+                    checkItems.map(item=> item.id).includes(event.id) ? true : false}></input>
+                {/* 이벤트 제목 */}
                 <button style={{backgroundColor : event.backgroundColor}} onClick={()=>eventClick(event)}
                 key={event.id}> {`${start}-${end} ${event.title}`}</button>
+                {/* 삭제버튼 */}
                 <button className='delete-button' key={event.id} onClick={()=>deleteEvent(event.id)}>&times;</button>
             </div>
         )
-    });
-    useEffect(()=> {
-        
-    },[eventColor.current])
+    }); 
 
+
+    
     return (
         // 모달이 열릴때 openModal 클래스가 생성된다.
         <div className={open ? "openTodayModal modal" : "modal"}>
@@ -124,6 +197,21 @@ const TodayModal = (props) => {
                         </button>
                     </header>
                     <main>
+                        <div className="modal-event-top">
+                            {/* 체크박스 all check */}
+                            <input type='checkbox'  name='select-all' onChange={(e) => handleAllCheck(e.target.checked)}
+                            // 데이터 개수와 체크된 아이템의 개수가 다를 경우 선택 해제 (하나라도 해제 시 선택 해제)
+                            //해당날짜의 event가 하나도 없을 때 선택 해제
+                            //checkItems의 날짜가 header 이고 eventArr.dateInfo가 header인거의 length가 서로 다를때
+                            checked={( 
+                                (checkItems.filter(el=>el.dateInfo == header).length ==
+                                eventArr.filter(el=>el.start.substring(0,10) == header).length)
+                                && 
+                                (eventArr.filter((event)=>event.start.substring(0,10) === header).length !== 0)
+                                ) ? true : false}/>
+                            <label>TODO-LIST</label>
+                        </div>
+
                         <div className = "modal-event-list">
                           {eventButtons}
                         </div>
@@ -136,7 +224,7 @@ const TodayModal = (props) => {
                 </section>
             ) : null}
 
-            {editMode == false ? (<Modal open={modalOpen} close={closeModal} header={header}>
+            <Modal open={modalOpen} close={closeModal} header={header}>
                 <div className="modal-main-div">
                     <div>
                         <span>Color</span>
@@ -155,15 +243,15 @@ const TodayModal = (props) => {
                     <div>
                         <span>Time</span>
                     </div>
-                    <div className="modal-time-div">
-                        <input type="time" step="300" ref={startTimeRef} />
-                        <input type="time" step="300" ref={endTimeRef} />
+                    <div className="modal-time-div">                      
+                        <input type="time" step="300" ref={startTimeRef} defaultValue={editMode ? defaultData.start : null}/>
+                        <input type="time" step="300" ref={endTimeRef} defaultValue={editMode ? defaultData.end : null}/>
                     </div>
                     <div>
                         <span>Input</span>
                     </div>
                     <div className="modal-input-div">
-                        <textarea ref={eventRef} placeholder="할일을 입력하세요" className="modal-textarea" />
+                        <textarea ref={eventRef} placeholder="할일을 입력하세요" className="modal-textarea" defaultValue={editMode ? defaultData.title : null} />
                     </div>
                 </div>
                 <div className="modal-save-div">
@@ -171,50 +259,13 @@ const TodayModal = (props) => {
                         type="button"
                         className="modal-button"
                         onClick={()=>onSaveEvent(editMode)}
+                        disabled={disable}
+                        style={{backgroundColor :`${disable? 'gray': 'green'}`}}
                     >
-                        저 장
+                        {editMode ? "수 정" : "저 장"}
                     </button>
                 </div>
-            </Modal>) : (<Modal open={modalOpen} close={closeModal} header={header}>
-                <div className="modal-main-div">
-                    <div>
-                        <span>Color</span>
-                    </div>
-                    <div className ="modal-color-div">
-                        <div
-                        onClick={()=>changeColor("rgb(255, 245, 154)")} 
-                        className = {isYellowPicked ? "modal-yellow-picked-div" :"modal-yellow-div"}></div>
-                        <div 
-                        onClick={()=>changeColor("rgb(143, 255, 231)")} 
-                        className = {isMintPicked ? "modal-mint-picked-div" :"modal-mint-div"}></div>
-                        <div 
-                        onClick={()=>changeColor("rgb(255, 185, 208)")} 
-                        className = {isPinkPicked ? "modal-pink-picked-div" :"modal-pink-div"}></div>
-                    </div>
-                    <div>
-                        <span>Time</span>
-                    </div>
-                    <div className="modal-time-div">
-                        <input type="time" step="300" ref={startTimeRef} defaultValue = {defaultData.start} />
-                        <input type="time" step="300" ref={endTimeRef} defaultValue = {defaultData.end}/>
-                    </div>
-                    <div>
-                        <span>Input</span>
-                    </div>
-                    <div className="modal-input-div">
-                        <textarea ref={eventRef} placeholder="할일을 입력하세요" className="modal-textarea" defaultValue = {defaultData.title}/>
-                    </div>
-                </div>
-                <div className="modal-save-div">
-                    <button
-                        type="button"
-                        className="modal-button"
-                        onClick={()=>onSaveEvent(editMode)}
-                    >
-                        수 정
-                    </button>
-                </div>
-            </Modal>)}
+            </Modal>
         </div>
     );
 };
