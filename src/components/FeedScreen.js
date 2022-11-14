@@ -1,27 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FeedSection from "./FeedSection";
 import Calendar from "./Calendar";
 import RightBar from "./RightBar";
 import "../styles/Layout.css";
 
 const FeedScreen = () => {
-    const [idNum, seeIdNum] = useState(0);
-    const names = [
-        {id : 0, userName : "아이유"},
-        {id : 1, userName : "지코"},
-        {id : 2, userName : "유저1"}
-    ];
-    // const idInc = names.map((names, idx) => {
-    //     return seeIdNum(idNum + 1);
-    // });
-    const userList = names.map(v => (<FeedSection key={v.id} id={v.userName} content={<Calendar/>}/>));
+    const [feedInfoList, setFeedInfoList] = useState([]);
+    useEffect(() => {
+        fetch('/data/UserData.json')
+          .then(response => response.json())
+          .then(result => setFeedInfoList(result));
+    }, []);
+
+    const userList = feedInfoList.map(v => (<FeedSection key={v.id} id={v.user_name} img={v.imageUrls} content={<Calendar/>}/>));
+    //const followList = feedInfoList.map
 	return (
         <div>
             <div>
                 {userList}
             </div>
             <div className= "right">
-                <RightBar />
+                <header>
+                    팔로우한 친구목록
+                </header>
+                <RightBar content={feedInfoList}/>
             </div>
         </div>
         
