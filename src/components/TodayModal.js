@@ -4,7 +4,7 @@ import ProgressBar from "./ProgressBar";
 import "../styles/Modal.css";
 
 const TodayModal = (props) => {   
-    const { open, close, header, setEventArr, eventArr, checkItems, setCheckItems, progress, setProgress, progressCal} = props;
+    const { open, close, header, setEventArr, eventArr, checkItems, setCheckItems, progress, setProgress} = props;
     //색상커스텀 useState
     const [isYellowPicked , setIsYellowPicked] = useState(false);
     const [isMintPicked , setIsMintPicked] = useState(false);
@@ -134,6 +134,8 @@ const TodayModal = (props) => {
     const deleteEvent=(id)=> {
         const newEventArr = eventArr.filter(event => event.id != id); //id를 이용하여 삭제
         setEventArr(newEventArr);
+        const newCheckItems = checkItems.filter(item => item.id != id)
+        setCheckItems(newCheckItems);
     };
     
      // 체크박스 단일 선택
@@ -172,7 +174,7 @@ const TodayModal = (props) => {
         const todayEvents = eventArr.filter(event=>event.start.substring(0,10) === header)
         const todayCheckItems = checkItems.filter(item => item.dateInfo === header)
         const completed = todayEvents.length == 0 ? 0 : (todayCheckItems.length/todayEvents.length)*100;
-        setProgress({completed : completed.toFixed(1)})
+        setProgress(completed.toFixed(1))
         console.log(`오늘의 일정 개수 : ${todayEvents.length}, 오늘의 체크된 개수 : ${todayCheckItems.length}`)
     }, [checkItems, eventArr])
 
@@ -183,10 +185,11 @@ const TodayModal = (props) => {
         const end = event.end.substring(11,16); //시간정보만 가져오기
         return (
             <div className='modal-event-object' key={event.id}>
-                {/* 체크박스 */}
-                <input type="checkbox" key={event.id} onChange={(e) => handleSingleCheck(e.target.checked, event.id)} 
-                checked={
-                    checkItems.map(item=> item.id).includes(event.id) ? true : false}></input>
+                {/* 체크박스, css효과를 주기 위해 label로 감쌈 */}
+                <label key={event.id} className="checkbox_container">
+                    <input type="checkbox" key={event.id} onChange={(e) => handleSingleCheck(e.target.checked, event.id)} 
+                    checked={checkItems.map(item=> item.id).includes(event.id) ? true : false}></input>
+                </label>
                 {/* 이벤트 제목 */}
                 <button className='event-button' style={{backgroundColor : event.backgroundColor}} onClick={()=>eventClick(event)}
                 key={event.id}> {`${start}-${end} ${event.title}`}</button>
@@ -230,7 +233,7 @@ const TodayModal = (props) => {
                         </div>
 
                         <div className = "modal-progress-bar">
-                        <ProgressBar completed={progress.completed} />
+                        <ProgressBar completed={progress} />
                         </div>
                     </main>
                     <footer>

@@ -20,10 +20,10 @@ const Calendar = () => {
     const [todayModalOpen, setTodayModalOpen] = useState(false);
     //selected Date
     const [dateInfo, setDateInfo] = useState("");
-    // 체크된 아이템을 담을 배열 {dateInfo : 날짜, value : eventID}
+    // 체크된 아이템을 담을 배열 {dateInfo : 날짜, id : eventID}
     const [checkItems, setCheckItems] = useState([]);
     //진도율 체크
-    const [progress, setProgress] = useState({ dateInfo: "", completed: 0 });
+    const [progress, setProgress] = useState(0);
 
     const closeTodayModal = () => {
         setTodayModalOpen(false);
@@ -37,13 +37,14 @@ const Calendar = () => {
         const todayEvents = eventArr.filter(event=>event.start.substring(0,10) === dateInfo)
         const todayCheckItems = checkItems.filter(item => item.dateInfo === dateInfo)
         const completed = todayEvents.length == 0 ? 0 : (todayCheckItems.length/todayEvents.length)*100;
+        console.log(completed)
         return completed.toFixed();
     }
 
     //날짜 클릭 시
     const handleDateClick = (info) => {
         setDateInfo(info.dateStr); 
-        setProgress({completed : progressCal(info.dateStr)});
+        setProgress(progressCal(info.dateStr));
         openTodayModal();
     };
 
