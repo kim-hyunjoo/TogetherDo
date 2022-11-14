@@ -11,7 +11,12 @@
     font-weight: bold;
 } */
 .header{
+    justify-content: space-between;
     background-color: transparent;
+    height: 100px;
+}
+.footer2 {
+    padding: 40px 40px;
 }
 .feedcontainer {
     flex: 1;
