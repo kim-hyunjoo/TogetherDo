@@ -7,7 +7,6 @@ import interactionPlugin from "@fullcalendar/interaction";
 import momentPlugin from "@fullcalendar/moment";
 import timeGridPlugin from "@fullcalendar/timegrid";
 
-import Modal from "./Modal";
 import TodayModal from "./TodayModal";
    
 
@@ -19,13 +18,6 @@ const Calendar = () => {
     //selected Date
     const [dateInfo, setDateInfo] = useState("");
 
-    //useRefs
-    const eventID = useRef(0);
-    const startTimeRef = useRef("");
-    const endTimeRef = useRef("");
-    const eventRef = useRef("");
-    const eventColor = useRef("");
-
     const closeTodayModal = () => {
         setTodayModalOpen(false);
     };
@@ -35,18 +27,9 @@ const Calendar = () => {
 
     //날짜 클릭 시
     const handleDateClick = (info) => {
-        openTodayModal();
-        console.log(info.dateStr);
+        openTodayModal(); //클릭한 날짜의 todo-list를 보여주는 today modal 오픈
         setDateInfo(info.dateStr);
     };
-    // useEffect(() => {
-    //     //dataInfo가 변경된 렌더링에만 실행
-    //     if (!!dateInfo) {
-    //         //dataInfo가 존재한다면 콘솔 출력
-    //         console.log("dateInfo : ", dateInfo);
-    //     }
-    //     //dispatch()
-    // }, [dateInfo]);
 
     // 이벤트(일정) 클릭 시
     const handleEventClick = (info) => {

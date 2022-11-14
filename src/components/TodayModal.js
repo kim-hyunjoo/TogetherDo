@@ -3,25 +3,21 @@ import Modal from "./Modal";
 import "../styles/Modal.css";
 import Checkbox from "./CheckBox";
 
-const TodayModal = (props) => {
-    
+//시간 순서대로 출력해주는 기능 고려해보기
+
+const TodayModal = (props) => {  
     const { open, close, header, eventlist, setEventArr, eventArr } = props;
-    
+    //useStates
     const [isYellowPicked , setIsYellowPicked] = useState(false);
     const [isMintPicked , setIsMintPicked] = useState(false);
     const [isPinkPicked , setIsPinkPicked] = useState(false);
-    const [defaultData, setDefaultData] = useState({id : 0, title : '', start : '', end : ''});
-
-    //console.log(`eventButtons함수..${eventlist}`);
-    //시간 순서대로 출력해주는 기능 고려해보기
-        //edit modal
+    const [defaultData, setDefaultData] = useState({id : 0, title : '', start : '', end : ''});   
     const [modalOpen, setModalOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
-
+    //useRefs
     const startTimeRef = useRef("");
     const endTimeRef = useRef("");
-    const eventRef = useRef("");
-    //useRefs
+    const eventRef = useRef("");  
     const eventID = useRef(0);
     const eventColor = useRef("");
     
@@ -68,11 +64,8 @@ const TodayModal = (props) => {
         console.log("defaultData 입니다.", defaultData);
     }
 
-    //수정해서 저장하는거랑 그냥 일정 수가하는거랑 다른 save를 해야함
-
     //모달 저장 버튼 클릭시 이벤트
     const onSaveEvent = (editMode) => {
-        //editMode일때만 여러 컴포넌트가 보임
         const startTime = `${header}T${startTimeRef.current.value}`;
         const endTime = `${header}T${endTimeRef.current.value}`;
         const eventContent = eventRef.current.value;
@@ -88,33 +81,19 @@ const TodayModal = (props) => {
         };
 
         if(editMode == true){
-            console.log(`eventArr : ${eventArr}`)
-            
-            const newEventArr = eventArr.filter((event) => {
-                console.log(`selected event id : ${eventId}`)
-                console.log(`eventArr id : ${event.id}`)
-                return(event.id != eventId)
-                });
-            console.log(`newEventArr : ${newEventArr}`)
+            const newEventArr = eventArr.filter(event => event.id != eventId);
             setEventArr([...newEventArr, eventObj]);
         }
         else {
             setEventArr([...eventArr, eventObj]);
             eventID.current +=1;
-            console.log(`uesRef eventid : ${eventID.current}`)
-        }
-        
+        }     
     };
 
     const deleteEvent=(id)=> {
-        eventArr.map((event) => console.log(`eventArr의 id : ${event.id}`))
-        const newEventArr = eventArr.filter(
-            (event) => event.id != id
-        );
-        console.log(newEventArr);
+        const newEventArr = eventArr.filter(event => event.id != id);
         setEventArr(newEventArr);
-    };
-    
+    }; 
 
     const eventButtons = eventlist.filter((event)=>
     event.start.substring(0,10) === header).map((event) => {      
@@ -122,6 +101,7 @@ const TodayModal = (props) => {
         const end = event.end.substring(11,16);
         return (
             <div className='modal-event-object' key={event.id}>
+                {/* 여기에 체크박스 구현하면 될듯? */}
                 <button style={{backgroundColor : event.backgroundColor}} onClick={()=>eventClick(event)}
                 key={event.id}> {`${start}-${end} ${event.title}`}</button>
                 <button className='delete-button' key={event.id} onClick={()=>deleteEvent(event.id)}>&times;</button>
@@ -131,8 +111,6 @@ const TodayModal = (props) => {
     useEffect(()=> {
         
     },[eventColor.current])
-
-    
 
     return (
         // 모달이 열릴때 openModal 클래스가 생성된다.
