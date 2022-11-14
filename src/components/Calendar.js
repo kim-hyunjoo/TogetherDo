@@ -37,7 +37,7 @@ const Calendar = () => {
         const todayEvents = eventArr.filter(event=>event.start.substring(0,10) === dateInfo)
         const todayCheckItems = checkItems.filter(item => item.dateInfo === dateInfo)
         const completed = todayEvents.length == 0 ? 0 : (todayCheckItems.length/todayEvents.length)*100;
-        return completed;
+        return completed.toFixed();
     }
 
     //날짜 클릭 시
@@ -59,11 +59,18 @@ const Calendar = () => {
     // 드래그 한 이벤트(일정)을 드롭할 시
     const handleEventDrop = (info) => {
         console.log("event drag end");
+        console.log(info);
+        //const dateInfo = format(info.event._instance.range.start, "YYYY-MM-DD"); //날짜 포맷 바꿔주기
+        //setDateInfo(dateInfo);
+        //console.log(dateInfo);
+
         const selectedEvent = eventArr.find(el=>el.id==clickedID) //사용자가 드래그 하고 있는 이벤트 객체를 가져옴
         const dateInfo = format(info.event._instance.range.start, "YYYY-MM-DD"); //날짜 포맷 바꿔주기
         setDateInfo(dateInfo);
         console.log(dateInfo);
-        console.log(info)
+        //console.log(info.event._instance.range.start);
+        //console.log(info);
+        
         //event drop된 날짜로 데이터 변경해주기
         const startTime = `${dateInfo}T${selectedEvent.start.substring(11,16)}`;
         const endTime = `${dateInfo}T${selectedEvent.end.substring(11,16)}`;
@@ -84,6 +91,7 @@ const Calendar = () => {
                 item.dateInfo = dateInfo; 
             }
         })   
+        
     }
 
     return (
@@ -109,7 +117,8 @@ const Calendar = () => {
                 editable={true}
                 dayMaxEvents={true}
                 eventDragStart={handleEventDragStart}
-                eventDrop={handleEventDrop}          
+                eventDrop={handleEventDrop}   
+
                 eventDisplay={'block'}
                 eventTextColor={'black'}
             />
