@@ -54,7 +54,7 @@
   .modal > section > footer {
     padding: 12px 16px;
     text-align: right;
-    height: 50px;
+    height: 55px;
   }
 
   .modal > section > footer button {
@@ -176,15 +176,33 @@
 }
 
 .modal-event-top {
+  display: flex;
+  column-gap: 120px;
+  border-bottom: 1px solid #dee2e6;
+  justify-content: left;
+  text-align: center;
+  
+}
+
+.select-box {
+  height: 30px;
+  border-radius: 7px;
+  text-align: center;
+}
+.checkbox-all {
   display : flex;
   justify-content: left;
   text-align: center;
   font-weight: bold;
-  border-bottom: 1px solid #dee2e6;
+  
   column-gap: 10px;
   padding-left : 20px;
   padding-bottom : 5px;
 }
+.checkbox-all > label {
+  padding-top : 7px;
+}
+
 .modal-event-list {
   display : grid;
   justify-content: left;
