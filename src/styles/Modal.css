@@ -27,10 +27,19 @@
 }
 
 .modal > section > header {
+  display : flex;
   position: relative;
   padding: 16px 64px 16px 16px;
+  align-items: center;
+  justify-content: center;
   background-color: #f1f1f1;
   font-weight: 700;
+}
+
+.lunar-header {
+  margin-left : 10px;
+  font-size : small;
+  color : rgb(112, 112, 112);
 }
 
 .modal > section > header button {
