@@ -20,10 +20,10 @@ const Calendar = () => {
     const [todayModalOpen, setTodayModalOpen] = useState(false);
     //selected Date
     const [dateInfo, setDateInfo] = useState("");
-    // 체크된 아이템을 담을 배열 {dateInfo : 날짜, value : eventID}
+    // 체크된 아이템을 담을 배열 {dateInfo : 날짜, id : eventID}
     const [checkItems, setCheckItems] = useState([]);
     //진도율 체크
-    const [progress, setProgress] = useState({ dateInfo: "", completed: 0 });
+    const [progress, setProgress] = useState(0);
 
     const closeTodayModal = () => {
         setTodayModalOpen(false);
@@ -37,14 +37,14 @@ const Calendar = () => {
         const todayEvents = eventArr.filter(event=>event.start.substring(0,10) === dateInfo)
         const todayCheckItems = checkItems.filter(item => item.dateInfo === dateInfo)
         const completed = todayEvents.length == 0 ? 0 : (todayCheckItems.length/todayEvents.length)*100;
-        return completed;
+        console.log(completed)
+        return completed.toFixed();
     }
 
     //날짜 클릭 시
     const handleDateClick = (info) => {
         setDateInfo(info.dateStr); 
-        console.log(info.dateStr)
-        setProgress({completed : progressCal(info.dateStr)});
+        setProgress(progressCal(info.dateStr));
         openTodayModal();
     };
 
@@ -60,11 +60,25 @@ const Calendar = () => {
     // 드래그 한 이벤트(일정)을 드롭할 시
     const handleEventDrop = (info) => {
         console.log("event drag end");
-        const selectedEvent = eventArr.find(el=>el.id===clickedID) //사용자가 드래그 하고 있는 이벤트 객체를 가져옴
-        const dateInfo = format(info.event._instance.range.start, "YYYY-MM-DD"); //날짜 포맷 바꿔주기
+        console.log(info);
+        //const dateInfo = format(info.event._instance.range.start, "YYYY-MM-DD"); //날짜 포맷 바꿔주기
+        //setDateInfo(dateInfo);
+        //console.log(dateInfo);
+
+        const selectedEvent = eventArr.find(el=>el.id==clickedID) //사용자가 드래그 하고 있는 이벤트 객체를 가져옴
+        
+        //여기서 9시간을 빼주는 작업을 해줘야함
+        let date = new Date(`${info.event._instance.range.start}`); //info에서 drop된 날짜의 시간정보 가져오기
+        console.log(`작업해주기 전 date 정보 : ${date}`);
+        date.setHours(date.getHours()-9); //9시간 빼주기
+        console.log(`작업해준 후 date 정보 : ${date}`);
+        const dateInfo = format(date, "YYYY-MM-DD"); //날짜 포맷 바꿔주기
         setDateInfo(dateInfo);
-        console.log(dateInfo);
-        console.log(info)
+        console.log(`날짜 포맷 바꿔준 뒤 dateInfo : ${dateInfo}`);
+        
+        //console.log(info.event._instance.range.start);
+        //console.log(info);
+        
         //event drop된 날짜로 데이터 변경해주기
         const startTime = `${dateInfo}T${selectedEvent.start.substring(11,16)}`;
         const endTime = `${dateInfo}T${selectedEvent.end.substring(11,16)}`;
@@ -75,7 +89,7 @@ const Calendar = () => {
             end: endTime
         };
         //기존 이벤트(일정) 삭제 후 날짜정보 변경된 이벤트 넣기
-        const newEventArr = eventArr.filter(event => event.id !== selectedEvent.id);
+        const newEventArr = eventArr.filter(event => event.id != selectedEvent.id);
         setEventArr([...newEventArr, eventObj]); 
         
         //체크박스도 같이 관리해줘야할듯...
@@ -85,11 +99,8 @@ const Calendar = () => {
                 item.dateInfo = dateInfo; 
             }
         })   
+        
     }
-
-    useEffect(()=> {
-        console.log(eventArr);
-    })
 
     return (
         <div className="calendar-contents">
@@ -106,7 +117,6 @@ const Calendar = () => {
                     center: "prev title next",
                     end: "today",
                 }}
-                timeZone='local'
                 dateClick={handleDateClick}
                 eventClick={handleEventClick}
                 events={eventArr}
@@ -115,7 +125,8 @@ const Calendar = () => {
                 editable={true}
                 dayMaxEvents={true}
                 eventDragStart={handleEventDragStart}
-                eventDrop={handleEventDrop}          
+                eventDrop={handleEventDrop}   
+
                 eventDisplay={'block'}
                 eventTextColor={'black'}
             />
@@ -129,6 +140,7 @@ const Calendar = () => {
                 setCheckItems={setCheckItems}
                 progress={progress}
                 setProgress={setProgress}
+                progressCal= {progressCal}
             />
         </div>
     );
