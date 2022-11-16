@@ -15,7 +15,7 @@ const Calendar = () => {
     //event data
     const [eventArr, setEventArr] = useState(() => {
         if (typeof window !== "undefined") {
-          const saved = window.localStorage.getItem("events");
+          const saved = localStorage.getItem("events");
           if (saved !== null) {
             console.log(JSON.parse(saved))
             return JSON.parse(saved);
@@ -38,7 +38,7 @@ const Calendar = () => {
     //ID값 갱신
     const [eventID, setEventID ]= useState(() => {
         if (typeof window !== "undefined") {
-          const saved = window.localStorage.getItem("eventID");
+          const saved = localStorage.getItem("eventID");
           if (saved !== null) {
             console.log(JSON.parse(saved))
             return JSON.parse(saved);
@@ -126,8 +126,8 @@ const Calendar = () => {
     }
 
     useEffect(()=> {
-        window.localStorage.setItem("events", JSON.stringify(eventArr));
-        window.localStorage.setItem("eventID", JSON.stringify(eventID));
+        localStorage.setItem("events", JSON.stringify(eventArr));
+        localStorage.setItem("eventID", JSON.stringify(eventID));
     },[eventArr, eventID])
 
     useEffect(() => {

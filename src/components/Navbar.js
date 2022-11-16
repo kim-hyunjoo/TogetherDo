@@ -26,6 +26,7 @@ const useStyles = makeStyles(() => ({
 		justifyContent: "space-between",
 	},
 	description: {
+        minWidth : "350px",
 		fontSize : "15px"
 	}
 }));
@@ -52,7 +53,7 @@ const Navbar = () => {
 			//className={} OK! className="" 아님!
             <Toolbar className={navbarContents}>
                 {TogetherDoDesc} {TogetherDoLogo} 
-                <div>{getMenuButtons()}</div>
+                <div style={{minWidth : "350px"}}>{getMenuButtons()}</div>
             </Toolbar>
         );
     };

@@ -1,0 +1,23 @@
+.container {
+    padding: 20
+}
+.title {
+    font-size: 16;
+    font-weight: bold;
+    
+}
+/* .content {
+    font-size: 13;
+    font-weight: bold;
+} */
+.header{
+    justify-content: space-between;
+    background-color: transparent;
+    height: 100px;
+}
+.footer2 {
+    padding: 40px 40px;
+}
+.feedcontainer {
+    flex: 1;
+}
