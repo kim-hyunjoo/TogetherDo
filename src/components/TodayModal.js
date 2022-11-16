@@ -18,12 +18,10 @@ const TodayModal = (props) => {
     const [modalOpen, setModalOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
     
-    //정렬 기능
-    //const selectList = ["time", "completed", "incomplete"];
-    const [selected, setSelected] = useState("");
+        
     useEffect(()=> {
         console.log("렌더링 됐습니다.");
-    })
+    },[progress])
 
     //이벤트 속성 값을 저장하기 위한 useRefs
     const startTimeRef = useRef("");
@@ -31,7 +29,7 @@ const TodayModal = (props) => {
     const eventRef = useRef("");   
     const eventID = useRef(0);
     const eventColor = useRef("");
-
+    
     const openModal = () => {
         setModalOpen(true);
         setEditMode(false);
@@ -80,23 +78,31 @@ const TodayModal = (props) => {
         console.log("event 입니다.", event);
         console.log("defaultData 입니다.", defaultData);
     }
-
+/*
+    useEffect(()=>{
+        startTimeRef.current = "";
+        endTimeRef.current = "";
+        eventRef.current = "";
+    }, [disable])
+*/
     //모달 저장or수정 버튼 클릭시 이벤트
     const onSaveEvent = (editMode) => {
+        /*
         //저장하려고 할 때 startTimeRef, endTimeRef, eventRef 하나라도 비어있을 시 경고창
-        if(startTimeRef.current.value == "") {
+        console.log(startTimeRef.current);
+        if(startTimeRef.current === "") {
             alert("시작 시간을 입력하세요")
             return;
         }
-        if(endTimeRef.current.value === "") {
+        if(endTimeRef.current === "") {
             alert("종료 시간을 입력하세요")
             return;
         }
-        if(eventRef.current.value === "") {
+        if(eventRef.current === "") {
             alert("일정을 입력하세요")
             return;
         }
-        
+        */
         const startTime = `${header}T${startTimeRef.current.value}`;
         const endTime = `${header}T${endTimeRef.current.value}`;
         const eventContent = eventRef.current.value;
@@ -169,96 +175,32 @@ const TodayModal = (props) => {
         const completed = todayEvents.length == 0 ? 0 : (todayCheckItems.length/todayEvents.length)*100;
         setProgress(completed.toFixed(1))
         console.log(`오늘의 일정 개수 : ${todayEvents.length}, 오늘의 체크된 개수 : ${todayCheckItems.length}`)
-        console.log(eventButtons)
     }, [checkItems, eventArr])
 
-    //header(해당날짜)와 비교하여 eventArr에 있는 이벤트 중 같은 날짜만 filter (이 작업을 안할경우 모든 eventArr객체가 나타나게 됨)
-    const todayEventArr = eventArr.filter((event)=>event.start.substring(0,10) === header);
-    
+
+
     //날짜 클릭 시 해당 날짜의 일정 목록을 checkbox 및 button을 이용하여 todo-list 구현
-    const eventButtons = todayEventArr.length == 0 ? "일정이 없습니다." : todayEventArr.map((event) => {      
+    const eventButtons = eventArr.filter((event)=> //header(해당날짜)와 비교하여 eventArr에 있는 이벤트 중 같은 날짜만 filter (이 작업을 안할경우 모든 eventArr객체가 나타나게 됨)
+    event.start.substring(0,10) === header).map((event) => {      
         const start = event.start.substring(11,16); //시간정보만 가져오기
         const end = event.end.substring(11,16); //시간정보만 가져오기
         return (
             <div className='modal-event-object' key={event.id}>
                 {/* 체크박스, css효과를 주기 위해 label로 감쌈 */}
-                <label className="checkbox_container">
+                <label key={event.id} className="checkbox_container">
                     <input type="checkbox" key={event.id} onChange={(e) => handleSingleCheck(e.target.checked, event.id)} 
                     checked={checkItems.map(item=> item.id).includes(event.id) ? true : false}></input>
                 </label>
                 {/* 이벤트 제목 */}
-                <button className='event-button' style={{backgroundColor : event.backgroundColor}} 
-                onClick={()=>eventClick(event)}> {`${start}-${end} ${event.title}`}</button>
+                <button className='event-button' style={{backgroundColor : event.backgroundColor}} onClick={()=>eventClick(event)}
+                key={event.id}> {`${start}-${end} ${event.title}`}</button>
                 {/* 삭제버튼 */}
-                <button className='delete-button' onClick={()=>deleteEvent(event.id)}>&times;</button>
+                <button className='delete-button' key={event.id} onClick={()=>deleteEvent(event.id)}>&times;</button>
             </div>
         )
     }); 
 
 
-    const handleSelectChange = (e) => {
-        console.log("select바뀜")
-        setSelected(e.target.value);
-    }
-
-    /*
-    useEffect(()=>{
-        //일정 시작시간에 맞춰 sorting하기
-        let eventSorting = [...eventArr];
-        eventSorting.sort((a, b) => new Date(a.start) - new Date(b.start))
-        setEventArr(eventSorting);
-    },[eventArr.length]) //언제언제 sorting을 해줘야하지... ㅠㅠ 아 그냥 select구현해서 항상 select되있게하면 실행되려나?
-*/
-
-    useEffect(()=>{
-        if(selected == "time") {
-            //일정 시작시간에 맞춰 sorting하기
-            let eventSorting = [...eventArr];
-            eventSorting.sort((a, b) => new Date(a.start) - new Date(b.start))
-            setEventArr(eventSorting);
-            //checkItem도 같이 여기서 정렬을 해줄까..? checkitem은 dateInfo랑 id값을가짐
-        }
-        else if(selected== "completed") {
-            //checkItem먼저 출력한 뒤, eventArr 엔 있는데 checkItem에 없는 애들 출력해줘야함....
-            //만약 이 상태에서 내가 체크를 하거나 해제하면 그거에 따라 바로 바뀌어야함..
-            let eventCompleted = [];
-            eventArr.filter(event=>{
-                if (checkItems.map(item=> item.id).includes(event.id)){
-                    eventCompleted.push(event)
-                }
-            })
-            let eventIncomplete = [];
-            eventArr.filter(event=>{
-                if (!checkItems.map(item=> item.id).includes(event.id)){
-                    eventIncomplete.push(event)
-                }
-            })
-            setEventArr([...eventCompleted, ...eventIncomplete])
-            console.log([...eventCompleted, ...eventIncomplete])
-        }
-        else if(selected == "incomplete") {
-            let eventCompleted = [];
-            eventArr.filter(event=>{
-                if (checkItems.map(item=> item.id).includes(event.id)){
-                    eventCompleted.push(event)
-                }
-            })
-            let eventIncomplete = [];
-            eventArr.filter(event=>{
-                if (!checkItems.map(item=> item.id).includes(event.id)){
-                    eventIncomplete.push(event)
-                }
-            })
-            setEventArr([...eventIncomplete, ...eventCompleted])
-            console.log([...eventIncomplete, ...eventCompleted])
-        }
-
-    },[selected, eventArr.length, checkItems.length])
-
-    useEffect(()=>{
-        setSelected("time");
-    }, [open])
-    
     return (
         // 모달이 열릴때 openModal 클래스가 생성된다.
         <div className={open ? "openTodayModal modal" : "modal"}>
@@ -273,7 +215,6 @@ const TodayModal = (props) => {
                     <main>
                         <div className="modal-event-top">
                             {/* 체크박스 all check */}
-                            <div className="checkbox-all">
                             <input type='checkbox'  name='select-all' onChange={(e) => handleAllCheck(e.target.checked)}
                             // 데이터 개수와 체크된 아이템의 개수가 다를 경우 선택 해제 (하나라도 해제 시 선택 해제)
                             //해당날짜의 event가 하나도 없을 때 선택 해제
@@ -285,13 +226,6 @@ const TodayModal = (props) => {
                                 (eventArr.filter((event)=>event.start.substring(0,10) === header).length !== 0)
                                 ) ? true : false}/>
                             <label>TODO-LIST</label>
-                            </div>
-                            <select className="select-box" value={selected} onChange={(e) => handleSelectChange(e)}>
-                                <option value="time">시간 순</option>
-                                <option value="completed">완료된 항목 순</option>
-                                <option value="incomplete">미완료된 항목 순</option>
-                            
-                            </select>
                         </div>
 
                         <div className = "modal-event-list">

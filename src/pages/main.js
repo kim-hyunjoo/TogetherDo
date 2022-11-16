@@ -1,13 +1,16 @@
 import React from "react";
 import "../styles/Layout.css";
-import FeedScreen from "../components/FeedScreen";
+import Calendar from "../components/Calendar";
 
-const Main = () => (
-    <div className="mainscreen">
-        <div className= "left">
-            <FeedScreen />
+const Main = () => {
+    
+    return (    
+    <div className="mainhomescreen">
+        <div className="homescreen">
+            <Calendar />
         </div>
     </div>
-);
+    )
+};
 
 export default Main;

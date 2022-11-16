@@ -29,3 +29,11 @@
 	padding-left: 50px;
 	padding-right: 50px;
 }
+.mainhomescreen{
+	text-align: center;
+	
+}
+.homescreen{
+	width: 1000px;
+	display: inline-block;
+}

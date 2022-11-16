@@ -13,7 +13,18 @@ import { format } from "date-fns";
 
 const Calendar = () => {
     //event data
-    const [eventArr, setEventArr] = useState([]);
+    const [eventArr, setEventArr] = useState(() => {
+        if (typeof window !== "undefined") {
+          const saved = localStorage.getItem("events");
+          if (saved !== null) {
+            console.log(JSON.parse(saved))
+            return JSON.parse(saved);
+          } else {
+            return [];
+          }
+        }
+      });
+      
     //event drag & drop시 선택도니 event ID 저장
     const [clickedID, setClickedID] = useState();
     //today modal
@@ -101,6 +112,18 @@ const Calendar = () => {
         })   
         
     }
+
+    useEffect(()=> {
+        localStorage.setItem("events", JSON.stringify(eventArr));
+    },[eventArr])
+
+
+    useEffect(() => {
+        const data = localStorage.getItem("events");
+        if (data) {
+          setEventArr(JSON.parse(data));
+        }
+      }, []);
 
     return (
         <div className="calendar-contents">
