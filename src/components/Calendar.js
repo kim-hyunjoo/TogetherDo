@@ -61,7 +61,7 @@ const Calendar = () => {
         const todayCheckItems = checkItems.filter(item => item.dateInfo === dateInfo)
         const completed = todayEvents.length == 0 ? 0 : (todayCheckItems.length/todayEvents.length)*100;
         console.log(completed)
-        return completed.toFixed();
+        return completed.toFixed(1);
     }
 
     //날짜 클릭 시
