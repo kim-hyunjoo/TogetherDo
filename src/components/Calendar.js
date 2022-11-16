@@ -58,6 +58,11 @@ const Calendar = () => {
         }
       });
 
+      
+    //정렬 기능
+    const [sortSelected, setSortSelected] = useState("");
+
+
     const closeTodayModal = () => {
         setTodayModalOpen(false);
     };
@@ -156,6 +161,7 @@ const Calendar = () => {
         }
       }, []);
 
+      
     return (
         <div className="calendar-contents">
             <FullCalendar
@@ -197,6 +203,8 @@ const Calendar = () => {
                 progressCal= {progressCal}
                 eventID = {eventID}
                 setEventID = {setEventID}
+                sortSelected={sortSelected}
+                setSortSelected={setSortSelected}
             />
         </div>
     );

@@ -4,7 +4,7 @@ import ProgressBar from "./ProgressBar";
 import "../styles/Modal.css";
 
 const TodayModal = (props) => {   
-    const { open, close, header, setEventArr, eventArr, checkItems, setCheckItems, progress, setProgress, eventID, setEventID} = props;
+    const { open, close, header, setEventArr, eventArr, checkItems, setCheckItems, progress, setProgress, eventID, setEventID, sortSelected, setSortSelected} = props;
     //색상커스텀 useState
     const [isYellowPicked , setIsYellowPicked] = useState(false);
     const [isBluePicked , setIsBluePicked] = useState(false);
@@ -19,8 +19,6 @@ const TodayModal = (props) => {
     const [modalOpen, setModalOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
     
-    //정렬 기능
-    const [selected, setSelected] = useState("");
         
     useEffect(()=> {
         console.log("렌더링 됐습니다.");
@@ -208,18 +206,18 @@ const TodayModal = (props) => {
 
     const handleSelectChange = (e) => {
         console.log("select바뀜")
-        setSelected(e.target.value);
+        setSortSelected(e.target.value);
     }
 
     useEffect(()=>{
-        if(selected == "time") {
+        if(sortSelected == "time") {
             //일정 시작시간에 맞춰 sorting하기
             let eventSorting = [...eventArr];
             eventSorting.sort((a, b) => new Date(a.start) - new Date(b.start))
             setEventArr(eventSorting);
             //checkItem도 같이 여기서 정렬을 해줄까..? checkitem은 dateInfo랑 id값을가짐
         }
-        else if(selected== "completed") {
+        else if(sortSelected== "completed") {
             //checkItem먼저 출력한 뒤, eventArr 엔 있는데 checkItem에 없는 애들 출력해줘야함....
             //만약 이 상태에서 내가 체크를 하거나 해제하면 그거에 따라 바로 바뀌어야함..
             let eventCompleted = [];
@@ -237,7 +235,7 @@ const TodayModal = (props) => {
             setEventArr([...eventCompleted, ...eventIncomplete])
             console.log([...eventCompleted, ...eventIncomplete])
         }
-        else if(selected == "incomplete") {
+        else if(sortSelected == "incomplete") {
             let eventCompleted = [];
             eventArr.filter(event=>{
                 if (checkItems.map(item=> item.id).includes(event.id)){
@@ -254,10 +252,10 @@ const TodayModal = (props) => {
             console.log([...eventIncomplete, ...eventCompleted])
         }
 
-    },[selected, eventArr.length, checkItems.length])
+    },[sortSelected, eventArr.length, checkItems.length])
 
     useEffect(()=>{
-        setSelected("time");
+        setSortSelected("time");
     }, [open])
 
     return (
@@ -287,7 +285,7 @@ const TodayModal = (props) => {
                                 ) ? true : false}/>
                             <label>TODO-LIST</label>
                             </div>
-                            <select className="select-box" value={selected} onChange={(e) => handleSelectChange(e)}>
+                            <select className="select-box" value={sortSelected} onChange={(e) => handleSelectChange(e)}>
                                 <option value="time">시간 순</option>
                                 <option value="completed">완료된 항목 순</option>
                                 <option value="incomplete">미완료된 항목 순</option>
