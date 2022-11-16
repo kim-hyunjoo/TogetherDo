@@ -32,7 +32,17 @@ const Calendar = () => {
     //selected Date
     const [dateInfo, setDateInfo] = useState("");
     // 체크된 아이템을 담을 배열 {dateInfo : 날짜, id : eventID}
-    const [checkItems, setCheckItems] = useState([]);
+    const [checkItems, setCheckItems] = useState(() => {
+        if (typeof window !== "undefined") {
+          const saved = localStorage.getItem("checkItems");
+          if (saved !== null) {
+            console.log(JSON.parse(saved))
+            return JSON.parse(saved);
+          } else {
+            return [];
+          }
+        }
+      });
     //진도율 체크
     const [progress, setProgress] = useState(0);
     //ID값 갱신
@@ -128,7 +138,8 @@ const Calendar = () => {
     useEffect(()=> {
         localStorage.setItem("events", JSON.stringify(eventArr));
         localStorage.setItem("eventID", JSON.stringify(eventID));
-    },[eventArr, eventID])
+        localStorage.setItem("checkItems", JSON.stringify(checkItems));
+    },[eventArr, eventID, checkItems])
 
     useEffect(() => {
         const data = localStorage.getItem("events");
@@ -138,6 +149,10 @@ const Calendar = () => {
         const id = localStorage.getItem("eventID");
         if(id) {
             setEventID(parseInt(id));
+        }
+        const check_data = localStorage.getItem("checkItems");
+        if (check_data) {
+          setCheckItems(JSON.parse(check_data));
         }
       }, []);
 
