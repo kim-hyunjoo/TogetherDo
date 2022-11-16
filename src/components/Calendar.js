@@ -43,6 +43,7 @@ const Calendar = () => {
     //날짜 클릭 시
     const handleDateClick = (info) => {
         setDateInfo(info.dateStr); 
+        console.log(info.dateStr)
         setProgress({completed : progressCal(info.dateStr)});
         openTodayModal();
     };
@@ -59,7 +60,7 @@ const Calendar = () => {
     // 드래그 한 이벤트(일정)을 드롭할 시
     const handleEventDrop = (info) => {
         console.log("event drag end");
-        const selectedEvent = eventArr.find(el=>el.id==clickedID) //사용자가 드래그 하고 있는 이벤트 객체를 가져옴
+        const selectedEvent = eventArr.find(el=>el.id===clickedID) //사용자가 드래그 하고 있는 이벤트 객체를 가져옴
         const dateInfo = format(info.event._instance.range.start, "YYYY-MM-DD"); //날짜 포맷 바꿔주기
         setDateInfo(dateInfo);
         console.log(dateInfo);
@@ -74,7 +75,7 @@ const Calendar = () => {
             end: endTime
         };
         //기존 이벤트(일정) 삭제 후 날짜정보 변경된 이벤트 넣기
-        const newEventArr = eventArr.filter(event => event.id != selectedEvent.id);
+        const newEventArr = eventArr.filter(event => event.id !== selectedEvent.id);
         setEventArr([...newEventArr, eventObj]); 
         
         //체크박스도 같이 관리해줘야할듯...
@@ -85,6 +86,10 @@ const Calendar = () => {
             }
         })   
     }
+
+    useEffect(()=> {
+        console.log(eventArr);
+    })
 
     return (
         <div className="calendar-contents">
@@ -101,6 +106,7 @@ const Calendar = () => {
                     center: "prev title next",
                     end: "today",
                 }}
+                timeZone='local'
                 dateClick={handleDateClick}
                 eventClick={handleEventClick}
                 events={eventArr}
@@ -123,7 +129,6 @@ const Calendar = () => {
                 setCheckItems={setCheckItems}
                 progress={progress}
                 setProgress={setProgress}
-                progressCal= {progressCal}
             />
         </div>
     );
