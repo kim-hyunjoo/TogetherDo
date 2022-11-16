@@ -4,7 +4,7 @@ import ProgressBar from "./ProgressBar";
 import "../styles/Modal.css";
 
 const TodayModal = (props) => {   
-    const { open, close, header, setEventArr, eventArr, checkItems, setCheckItems, progress, setProgress} = props;
+    const { open, close, header, setEventArr, eventArr, checkItems, setCheckItems, progress, setProgress, eventID, setEventID} = props;
     //색상커스텀 useState
     const [isYellowPicked , setIsYellowPicked] = useState(false);
     const [isMintPicked , setIsMintPicked] = useState(false);
@@ -29,7 +29,6 @@ const TodayModal = (props) => {
     const startTimeRef = useRef("");
     const endTimeRef = useRef("");
     const eventRef = useRef("");   
-    const eventID = useRef(0);
     const eventColor = useRef("");
 
     const openModal = () => {
@@ -101,7 +100,7 @@ const TodayModal = (props) => {
         const endTime = `${header}T${endTimeRef.current.value}`;
         const eventContent = eventRef.current.value;
         //edit mode의 경우 선택된 이벤트의 ID 그대로 저장, 아닐 경우 새로운 eventID 부여
-        const eventId = editMode == true ? defaultData.id : eventID.current; 
+        const eventId = editMode == true ? defaultData.id : eventID; 
         const bgColor = eventColor.current;
         const eventObj = {
             id: eventId,
@@ -118,7 +117,7 @@ const TodayModal = (props) => {
         }
         else { 
             setEventArr([...eventArr, eventObj]);
-            eventID.current +=1; //새로 생성되는 이벤트에 부여할 eventID 갱신
+            setEventID(parseInt(eventID) + 1); //새로 생성되는 이벤트에 부여할 eventID 갱신
         } 
         setDisable(true);//수정,저장 버튼 비활성화
     };

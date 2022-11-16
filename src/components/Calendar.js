@@ -35,6 +35,18 @@ const Calendar = () => {
     const [checkItems, setCheckItems] = useState([]);
     //진도율 체크
     const [progress, setProgress] = useState(0);
+    //ID값 갱신
+    const [eventID, setEventID ]= useState(() => {
+        if (typeof window !== "undefined") {
+          const saved = window.localStorage.getItem("eventID");
+          if (saved !== null) {
+            console.log(JSON.parse(saved))
+            return JSON.parse(saved);
+          } else {
+            return parseInt(0);
+          }
+        }
+      });
 
     const closeTodayModal = () => {
         setTodayModalOpen(false);
@@ -115,13 +127,17 @@ const Calendar = () => {
 
     useEffect(()=> {
         window.localStorage.setItem("events", JSON.stringify(eventArr));
-    },[eventArr])
-
+        window.localStorage.setItem("eventID", JSON.stringify(eventID));
+    },[eventArr, eventID])
 
     useEffect(() => {
         const data = localStorage.getItem("events");
         if (data) {
           setEventArr(JSON.parse(data));
+        }
+        const id = localStorage.getItem("eventID");
+        if(id) {
+            setEventID(parseInt(id));
         }
       }, []);
 
@@ -164,6 +180,8 @@ const Calendar = () => {
                 progress={progress}
                 setProgress={setProgress}
                 progressCal= {progressCal}
+                eventID = {eventID}
+                setEventID = {setEventID}
             />
         </div>
     );
