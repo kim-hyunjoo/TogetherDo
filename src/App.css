@@ -1,13 +1,15 @@
 .App {
   text-align: center;
 }
+
 @font-face {
-	font-family: "tenada";
-	src: url("./fonts/Tenada.ttf");
+	font-family: 'tway_air';
+	src: url("./fonts/tway_air.ttf");
 }
 
+
 .content-wrapper {
-	font-family: 'tenada';
+	font-family: 'ubuntu', 'tway_air';
 	font-weight: thin;
 }
 

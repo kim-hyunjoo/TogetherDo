@@ -15,7 +15,7 @@ const useStyles = makeStyles(() => ({
         paddingLeft: "80px",
     },
     logo: {
-        fontFamily: "tenada",
+        fontFamily: "ubuntu",
 		fontSize: "25px",
         fontWeight: 600,
         color: "#FFFEFE",
@@ -23,7 +23,7 @@ const useStyles = makeStyles(() => ({
         paddingRight: "60px",
     },
     menuButton: {
-        fontFamily: "tenada",
+        fontFamily: "ubuntu",
         fontWeight: 500,
         size: "18px",
         marginLeft: "30px",
@@ -33,6 +33,7 @@ const useStyles = makeStyles(() => ({
         justifyContent: "space-between",
     },
     description: {
+		marginTop: "10px",
         minWidth: "350px",
         fontSize: "15px",
     },
