@@ -7,10 +7,14 @@ import "../styles/Modal.css";
 const TodayModal = (props) => {   
     const { open, close, header, setEventArr, eventArr, checkItems, setCheckItems, progress, setProgress, eventID, setEventID, sortSelected, setSortSelected} = props;
     //색상커스텀 useState
-    const [isYellowPicked , setIsYellowPicked] = useState(false);
-    const [isBluePicked , setIsBluePicked] = useState(false);
     const [isPinkPicked , setIsPinkPicked] = useState(false);
+    const [isPurplePicked , setIsPurplePicked] = useState(false);
+    const [isBluePicked , setIsBluePicked] = useState(false);
+    const [isGrBluePicked , setIsGrBluePicked] = useState(false);
     const [isGreenPicked , setIsGreenPicked] = useState(false);
+    const [isYellowPicked , setIsYellowPicked] = useState(false);
+    const [isOrangePicked , setIsOrangePicked] = useState(false);
+    const [isGreyPicked , setIsGreyPicked] = useState(false);
     //이벤트 수정할 때 (edit modal) 선택한 이벤트 객체를 저장
     const [defaultData, setDefaultData] = useState({id : 0, title : '', start : '', end : ''});
 
@@ -43,32 +47,24 @@ const TodayModal = (props) => {
      //색상커스텀
      const changeColor = (color) => {
         eventColor.current=`${color}`
-        if(color === '#FFE400') {
-            setIsYellowPicked(true);
-            setIsBluePicked(false);
-            setIsPinkPicked(false);
-            setIsGreenPicked(false);
-        }
-        else if (color === '#368AFF') {
-            setIsYellowPicked(false);
-            setIsBluePicked(true);
-            setIsPinkPicked(false);
-            setIsGreenPicked(false);
+        setIsPinkPicked(false);
+        setIsPurplePicked(false);
+        setIsBluePicked(false);
+        setIsGrBluePicked(false);
+        setIsGreenPicked(false);
+        setIsYellowPicked(false);
+        setIsOrangePicked(false);
+        setIsGreyPicked(false);
 
-        }
-        else if (color === '#FFB2D9') {
-            setIsYellowPicked(false);
-            setIsBluePicked(false);
-            setIsPinkPicked(true);
-            setIsGreenPicked(false);
-
-        }
-        else if (color === '#2F9D27'){
-            setIsYellowPicked(false);
-            setIsBluePicked(false);
-            setIsPinkPicked(false);
-            setIsGreenPicked(true);
-        }
+        // 버튼색 : 핑크
+        if(color === '#f5c6e1') { setIsPinkPicked(true); }
+        else if (color === '#c59bef') { setIsPurplePicked(true); }
+        else if (color === '#90b9df'){setIsBluePicked(true); }
+        else if (color === '#86e3c6'){setIsGrBluePicked(true); }
+        else if (color === '#8cf1a4'){setIsGreenPicked(true); }
+        else if (color === '#e6ec8f'){setIsYellowPicked(true); }
+        else if (color === '#febd7b'){setIsOrangePicked(true); }
+        else if (color === '#BDBDBD'){setIsGreyPicked(true); }
     }
 
     //이벤트를 수정하기 위해 모달 내에서 이벤트를 클릭했을 때 실행
@@ -329,19 +325,33 @@ const TodayModal = (props) => {
                         <span>Color</span>
                     </div>
                     <div className ="modal-color-div">
-                        <div 
-                            onClick={()=>changeColor("#368AFF")} 
-                            className = {isBluePicked ? "modal-blue-picked-div" :"modal-blue-div"}></div>
-                        <div 
-                            onClick={()=>changeColor("#FFB2D9")} 
+                    <div 
+                            onClick={()=>changeColor("#f5c6e1")} 
                             className = {isPinkPicked ? "modal-pink-picked-div" :"modal-pink-div"}></div>
+                        <div 
+                            onClick={()=>changeColor("#c59bef")} 
+                            className = {isPurplePicked ? "modal-purple-picked-div" :"modal-purple-div"}></div>
+
+                        <div 
+                            onClick={()=>changeColor("#90b9df")} 
+                            className = {isBluePicked ? "modal-blue-picked-div" :"modal-blue-div"}></div>
+                         <div 
+                            onClick={()=>changeColor("#86e3c6")} 
+                            className = {isGrBluePicked ? "modal-grblue-picked-div" :"modal-grblue-div"}></div>
                         <div
-                            onClick={()=>changeColor("#FFE400")} 
+                            onClick={()=>changeColor("#8cf1a4")} 
+                            className = {isGreenPicked ? "modal-green-picked-div" :"modal-green-div"}></div>                        
+
+                        <div
+                            onClick={()=>changeColor("#e6ec8f")} 
                             className = {isYellowPicked ? "modal-yellow-picked-div" :"modal-yellow-div"}></div>                        
                         <div
-                            onClick={()=>changeColor("#2F9D27")} 
-                            className = {isGreenPicked ? "modal-green-picked-div" :"modal-green-div"}></div>                        
-                   
+                            onClick={()=>changeColor("#febd7b")} 
+                            className = {isOrangePicked ? "modal-orange-picked-div" :"modal-orange-div"}></div>                        
+                        <div
+                            onClick={()=>changeColor("#BDBDBD")} 
+                            className = {isGreyPicked ? "modal-grey-picked-div" :"modal-grey-div"}></div>                        
+
                     </div>
 
                     <div>
