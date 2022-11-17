@@ -184,10 +184,10 @@ const TodayModal = (props) => {
     }, [checkItems, eventArr])
 
 
+    const todayEventArr = eventArr.filter((event)=>event.start.substring(0,10) === header);
 
     //날짜 클릭 시 해당 날짜의 일정 목록을 checkbox 및 button을 이용하여 todo-list 구현
-    const eventButtons = eventArr.filter((event)=> //header(해당날짜)와 비교하여 eventArr에 있는 이벤트 중 같은 날짜만 filter (이 작업을 안할경우 모든 eventArr객체가 나타나게 됨)
-    event.start.substring(0,10) === header).map((event) => {      
+    const eventButtons = todayEventArr.length == 0 ? "일정이 없습니다." : todayEventArr.map((event) => {      
         const start = event.start.substring(11,16); //시간정보만 가져오기
         const end = event.end.substring(11,16); //시간정보만 가져오기
         return (
