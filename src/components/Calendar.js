@@ -14,14 +14,24 @@ import { Col, Row } from "reactstrap";
 
 const Calendar = () => {
     const [extraEvent, setExtraEvent] = useState();
-
+    const extraEventRef = useRef("");  
     const [extraEventArr, setExtraEventArr] = useState([
-    { title: "Event 1", id: 100, start : `2022-11-06T10:00`, end : `2022-11-06T11:00`, backgroundColor : 'grey', borderColor : 'grey' },
-    { title: "Event 2", id: 200, start : `2022-11-07T10:00`, end : `2022-11-06T11:00`, backgroundColor : 'grey', borderColor : 'grey'},
-    { title: "Event 3", id: 300, start : `2022-11-08T10:00`, end : `2022-11-06T11:00`, backgroundColor : 'grey', borderColor : 'grey' },
-    { title: "Event 4", id: 400, start : `2022-11-09T10:00`, end : `2022-11-06T11:00`, backgroundColor : 'grey', borderColor : 'grey' },
-    { title: "Event 5", id: 500, start : `2022-11-10T10:00`, end : `2022-11-06T11:00`, backgroundColor : 'grey', borderColor : 'grey' }
+    { title: "운동", id: 0, start : `2022-11-06T10:00`, end : `2022-11-06T11:00`, backgroundColor : 'grey', borderColor : 'grey' },
+    { title: "알바", id: 1, start : `2022-11-07T10:00`, end : `2022-11-06T11:00`, backgroundColor : 'grey', borderColor : 'grey'},
+    { title: "일기쓰기", id: 2, start : `2022-11-08T10:00`, end : `2022-11-06T11:00`, backgroundColor : 'grey', borderColor : 'grey' }
   ])
+
+  const [extraEventID, setExtraEventID] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("extraEventID");
+      if (saved !== null) {
+        console.log(JSON.parse(saved))
+        return JSON.parse(saved);
+      } else {
+        return parseInt(3);
+      }
+    }
+  });
     
     useEffect(()=> {
       let draggableEl = document.getElementById("external-events");
@@ -204,7 +214,8 @@ const Calendar = () => {
         localStorage.setItem("events", JSON.stringify(eventArr));
         localStorage.setItem("eventID", JSON.stringify(eventID));
         localStorage.setItem("checkItems", JSON.stringify(checkItems));
-    },[eventArr, eventID, checkItems])
+        localStorage.setItem("extraEventID", JSON.stringify(extraEventID))
+    },[eventArr, eventID, checkItems, extraEventID])
 
     useEffect(() => {
         const data = localStorage.getItem("events");
@@ -219,9 +230,39 @@ const Calendar = () => {
         if (check_data) {
           setCheckItems(JSON.parse(check_data));
         }
-      }, []);
+        const extra_id = localStorage.getItem("extraEventID");
+        if(extra_id) {
+          setExtraEventID(parseInt(extra_id));
+        }
+      }, []); 
 
-      
+      const extraEventDelete = (event) => {
+          console.log(event);
+          const newExtraEventArr = extraEventArr.filter(ex=>ex.id != event.id)
+          setExtraEventArr(newExtraEventArr)
+      }
+
+      const extraEventAdd = () => {
+        if(extraEventRef.current.value == "") {
+          alert("일정을 입력하세요")
+          return;
+        }
+
+        const newTitle = extraEventRef.current.value;
+        const eventObj = {
+          id: extraEventID,
+          title: newTitle,
+          start: `2022-11-06T10:00`,
+          end: `2022-11-06T11:00`,
+          backgroundColor : 'grey',
+          borderColor : 'grey'
+      };
+
+      setExtraEventArr([...extraEventArr, eventObj]);
+      setExtraEventID(parseInt(extraEventID)+1);
+      extraEventRef.current.value="";
+      }
+
     return (
         <div className="calendar-contents">
           <Row>
@@ -232,25 +273,33 @@ const Calendar = () => {
                 padding: "10px",
                 width: "80%",
                 height: "auto",
-                maxHeight: "-webkit-fill-available"
+                maxHeight: "-webkit-fill-available",
+                borderStyle :  'solid'
               }}
             >
               <p align="center">
-                <strong> Events</strong>
+                <strong>빠른 일정 추가</strong>
               </p>
+              <div className ="extra-event-list" style={{rowGap : '20px'}} >
               {extraEventArr.map(event => (
-                <div className="fc-event"
-                  key={event.id}
-                  title={event.title}
-                  id={event.id}
-                  start={event.start}
-                  end={event.end}
-                  backgroundcolor={event.backgroundColor}
-                  bordercolor={event.borderColor}
-                >
+                <div key = {event.id} className="extra-event-obj" style={{display:'grid', gridTemplateColumns: '4fr 1fr'}}>
+                  <div className="fc-event" style = {{backgroundColor : 'grey', borderRadius: '5px', margin : '1em 0'}}
+                    key={event.id}
+                    title={event.title}
+                    id={event.id}
+                    start={event.start}
+                    end={event.end}
+                    backgroundcolor={event.backgroundColor}
+                    bordercolor={event.borderColor}
+                  >
                   {event.title}
-                </div>
+                  </div>
+                  <button className="close" onClick={()=>extraEventDelete(event)}>x</button>
+                  </div>
               ))}
+              <textarea style={{width: '100%', height: '3em', resize: 'none'}} ref={extraEventRef}/>
+              <button onClick={()=>extraEventAdd()}>추가</button>
+              </div>
             </div>
             </Col>
 
