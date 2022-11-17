@@ -34,6 +34,11 @@
 	
 }
 .homescreen{
-	width: 1000px;
-	display: inline-block;
+	width : 100%;
+	
+	padding-left : 40px;
+	padding-right : 40px;
+	padding-top : 20px;
+	padding-bottom: 80px;
+	column-gap: 40px;
 }

@@ -3,15 +3,54 @@ import "../styles/Calendar.css";
 import "../styles/Modal.css";
 import FullCalendar from "@fullcalendar/react"; // must go before plugins
 import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
-import interactionPlugin from "@fullcalendar/interaction";
+import interactionPlugin, {Draggable} from "@fullcalendar/interaction";
 import momentPlugin from "@fullcalendar/moment";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import TodayModal from "./TodayModal";
 import { format } from "date-fns";
+import { Col, Row } from "reactstrap";
 
    
 
 const Calendar = () => {
+    const [extraEvent, setExtraEvent] = useState();
+
+    const [extraEventArr, setExtraEventArr] = useState([
+    { title: "Event 1", id: 100, start : `2022-11-06T10:00`, end : `2022-11-06T11:00`, backgroundColor : 'grey', borderColor : 'grey' },
+    { title: "Event 2", id: 200, start : `2022-11-07T10:00`, end : `2022-11-06T11:00`, backgroundColor : 'grey', borderColor : 'grey'},
+    { title: "Event 3", id: 300, start : `2022-11-08T10:00`, end : `2022-11-06T11:00`, backgroundColor : 'grey', borderColor : 'grey' },
+    { title: "Event 4", id: 400, start : `2022-11-09T10:00`, end : `2022-11-06T11:00`, backgroundColor : 'grey', borderColor : 'grey' },
+    { title: "Event 5", id: 500, start : `2022-11-10T10:00`, end : `2022-11-06T11:00`, backgroundColor : 'grey', borderColor : 'grey' }
+  ])
+    
+    useEffect(()=> {
+      let draggableEl = document.getElementById("external-events");
+      new Draggable(draggableEl, {
+      itemSelector: ".fc-event",
+      eventData: function(eventEl) {
+        console.log(eventEl);
+        const eventObj = {
+          title : eventEl.getAttribute("title"),
+          id : eventID,
+          backgroundColor : eventEl.getAttribute("backgroundColor"),
+          borderColor : eventEl.getAttribute("borderColor")
+        }  
+        console.log(eventObj);
+        setExtraEvent(eventObj);
+
+        return {
+          title : eventObj.title,
+          id : eventObj.id,
+          backgroundColor : eventObj.backgroundColor,
+          borderColor : eventObj.borderColor
+        }
+
+      }
+    })
+    },[])
+
+
+    
     //event data
     const [eventArr, setEventArr] = useState(() => {
         if (typeof window !== "undefined") {
@@ -57,6 +96,11 @@ const Calendar = () => {
           }
         }
       });
+      
+    //정렬 기능
+    const [sortSelected, setSortSelected] = useState("");
+
+
 
     const closeTodayModal = () => {
         setTodayModalOpen(false);
@@ -74,6 +118,26 @@ const Calendar = () => {
         return completed.toFixed(1);
     }
 
+    const handleExtraEventDrop = (info) => {
+      console.log(info)
+      console.log(extraEvent)
+
+      let date = new Date(`${info.date}`); //info에서 drop된 날짜의 시간정보 가져오기
+      const dateInfo = format(date, "YYYY-MM-DD"); //날짜 포맷 바꿔주기
+      console.log(dateInfo)
+
+      const newEvent = {...extraEvent, start : `${dateInfo}T10:00`, end : `${dateInfo}T11:00`}
+      console.log(newEvent)
+      setEventArr([...eventArr, newEvent]);
+      setEventID(parseInt(eventID) + 1);
+
+    }
+
+    const handleEventReceive = (info) => {
+      console.log(info)
+      info.event.remove()
+    }
+
     //날짜 클릭 시
     const handleDateClick = (info) => {
         setDateInfo(info.dateStr); 
@@ -83,7 +147,8 @@ const Calendar = () => {
 
     // 이벤트(일정) 클릭 시
     const handleEventClick = (info) => {
-        console.log("event click");
+        console.log(`이벤트 클릭`);
+        console.log(info)
     };
     // 이벤트(일정) 드래그 시작 시
     const handleEventDragStart = (info) => {
@@ -156,8 +221,40 @@ const Calendar = () => {
         }
       }, []);
 
+      
     return (
         <div className="calendar-contents">
+          <Row>
+          <Col lg={3} sm={3} md={3}>
+          <div
+              id="external-events"
+              style={{
+                padding: "10px",
+                width: "80%",
+                height: "auto",
+                maxHeight: "-webkit-fill-available"
+              }}
+            >
+              <p align="center">
+                <strong> Events</strong>
+              </p>
+              {extraEventArr.map(event => (
+                <div className="fc-event"
+                  key={event.id}
+                  title={event.title}
+                  id={event.id}
+                  start={event.start}
+                  end={event.end}
+                  backgroundcolor={event.backgroundColor}
+                  bordercolor={event.borderColor}
+                >
+                  {event.title}
+                </div>
+              ))}
+            </div>
+            </Col>
+
+          <Col lg={9} sm={9} md={9}>
             <FullCalendar
                 plugins={[
                     dayGridPlugin,
@@ -177,10 +274,12 @@ const Calendar = () => {
                 contentHeight={600}
                 selectable={true}
                 editable={true}
+                droppable={true}
                 dayMaxEvents={true}
                 eventDragStart={handleEventDragStart}
                 eventDrop={handleEventDrop}   
-
+                drop={handleExtraEventDrop}
+                eventReceive={handleEventReceive}
                 eventDisplay={'block'}
                 eventTextColor={'black'}
             />
@@ -197,7 +296,11 @@ const Calendar = () => {
                 progressCal= {progressCal}
                 eventID = {eventID}
                 setEventID = {setEventID}
+                sortSelected={sortSelected}
+                setSortSelected={setSortSelected}
             />
+            </Col>
+        </Row>
         </div>
     );
 };
