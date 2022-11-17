@@ -144,8 +144,10 @@ const TodayModal = (props) => {
     };
 
 	//중요 이벤트 설정
-    const handlePin = (id) => {
+    const handlePin = (id, important) => {
 		console.log("id = ", id);
+		console.log("important = ", important);
+
         if (important === false) {
             document.getElementById(`pin-${id}`).src = "images/pin.png";
             setImportant(!important);
@@ -225,15 +227,10 @@ const TodayModal = (props) => {
 				<img
                         alt="pin"
                         id={`pin-${event.id}`}
-                        src={
-							(important.id === event.id &&
-                            important.bool === false)
-                                ? "images/pin_black.png"
-                                : "images/pin.png"
-                        }
+                        src="images/pin_black.png"
                         width="40px"
                         height="40px"
-                        onClick={() => handlePin(event.id)}
+                        onClick={() => handlePin(event.id, important)}
                     />
 			</div>
         )
