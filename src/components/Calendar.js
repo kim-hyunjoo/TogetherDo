@@ -77,6 +77,19 @@ const Calendar = () => {
     }
   });
   
+   const [pinnedItems, setPinnedItems] = useState(() => {
+        if (typeof window !== "undefined") {
+          const saved = localStorage.getItem("pinnedItems");
+          if (saved !== null) {
+            console.log(JSON.parse(saved))
+            return JSON.parse(saved);
+          } else {
+            return [];
+          }
+        }
+      });
+      
+  
   const [clickedID, setClickedID] = useState(); //캘린더 내에서 event drag & drop시 선택된 event ID 저장
   const [todayModalOpen, setTodayModalOpen] = useState(false); //today modal
   const [dateInfo, setDateInfo] = useState("");//클릭된 날짜 정보(today Modal로 데이터 전달) 
@@ -110,10 +123,13 @@ const Calendar = () => {
     localStorage.setItem("events", JSON.stringify(eventArr));
     localStorage.setItem("eventID", JSON.stringify(eventID));
     localStorage.setItem("checkItems", JSON.stringify(checkItems));
-    localStorage.setItem("extraEventArr", JSON.stringify(extraEventArr))
-    localStorage.setItem("extraEventID", JSON.stringify(extraEventID))
-  },[eventArr, eventID, checkItems, extraEventID, extraEventArr])
-
+    localStorage.setItem("extraEventArr", JSON.stringify(extraEventArr));
+    localStorage.setItem("extraEventID", JSON.stringify(extraEventID));
+    localStorage.setItem("pinnedItems", JSON.stringify(pinnedItems));
+  },[eventArr, eventID, checkItems, extraEventID, extraEventArr, pinnedItems])
+      
+	 
+    
   useEffect(() => { //처음 렌더링 시 localStorage에서 값 불러오기
     const data = localStorage.getItem("events");
     if (data) setEventArr(JSON.parse(data));
@@ -129,6 +145,10 @@ const Calendar = () => {
 
     const extra_id = localStorage.getItem("extraEventID");
     if(extra_id) setExtraEventID(parseInt(extra_id));
+    
+    const pinned_data = localStorage.getItem("pinnedItems");
+        if (pinned_data) {
+          setPinnedItems(JSON.parse(pinned_data));
   }, []); 
 
   const closeTodayModal = () => {
@@ -224,13 +244,27 @@ const Calendar = () => {
       return;
     }
 
-    const newTitle = extraEventRef.current.value;
-    const eventObj = {
-      id: extraEventID,
-      title: newTitle,
-      backgroundColor : 'grey',
-      borderColor : 'grey'
-    };
+      const extraEventDelete = (event) => {
+          console.log(event);
+          const newExtraEventArr = extraEventArr.filter(ex=>ex.id != event.id)
+          setExtraEventArr(newExtraEventArr)
+      }
+
+      const extraEventAdd = () => {
+        if(extraEventRef.current.value == "") {
+          alert("일정을 입력하세요")
+          return;
+        }
+
+        const newTitle = extraEventRef.current.value;
+        const eventObj = {
+          id: extraEventID,
+          title: newTitle,
+          start: `2022-11-06T10:00`,
+          end: `2022-11-06T11:00`,
+          backgroundColor : 'grey',
+          borderColor : 'grey'
+      };
 
     setExtraEventArr([...extraEventArr, eventObj]); //extra EventArr에 추가
     setExtraEventID(parseInt(extraEventID)+1); //extra EventID 갱신
@@ -313,6 +347,8 @@ const Calendar = () => {
           setEventID = {setEventID}
           sortSelected={sortSelected}
           setSortSelected={setSortSelected}
+          pinnedItems={pinnedItems}
+				  setPinnedItems={setPinnedItems}
         />
       </Col>
     </Row>

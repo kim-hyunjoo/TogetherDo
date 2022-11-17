@@ -28,7 +28,7 @@ const App = () => {
                     <Route path="/mypage" element={<MyPage />} />
                 </Routes>
             </Content>
-            <Footer className="footer">
+            <Footer className="footer" style={{ background: "lightgray"}}>
                 TogetherDo ©2022 Created by ReactMaster
             </Footer>
         </Layout> : <Login setLoginChecked = {setLoginChecked}/>
