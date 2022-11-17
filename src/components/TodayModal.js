@@ -112,18 +112,21 @@ const TodayModal = (props) => {
         
         //저장하려고 할 때 startTimeRef, endTimeRef, eventRef 하나라도 비어있을 시 경고창
         //console.log(startTimeRef.current);
-        if(startTimeRef.current.value == "") {
-            alert("시작 시간을 입력하세요")
-            return;
+        if(noTime == false) {
+            if(startTimeRef.current.value == "") {
+                alert("시작 시간을 입력하세요")
+                return;
+            }
+            if(endTimeRef.current.value == "") {
+                alert("종료 시간을 입력하세요")
+                return;
+            }
+            if(eventRef.current.value == "") {
+                alert("일정을 입력하세요")
+                return;
+            }
         }
-        if(endTimeRef.current.value == "") {
-            alert("종료 시간을 입력하세요")
-            return;
-        }
-        if(eventRef.current.value == "") {
-            alert("일정을 입력하세요")
-            return;
-        }
+        
         const startTime = noTime ? `${header}` : `${header}T${startTimeRef.current.value}`;
         const endTime = noTime ? `${header}` : `${header}T${endTimeRef.current.value}`;
         const eventContent = eventRef.current.value;
@@ -216,7 +219,7 @@ const TodayModal = (props) => {
                 </label>
                 {/* 이벤트 제목 */}
                 <button className='event-button' style={{backgroundColor : event.backgroundColor}} onClick={()=>eventClick(event)}
-                key={event.id}>{`${start}-${end} ${event.title}`}</button>
+                key={event.id}>{(start=="") ? `${event.title}` : `${start}-${end} ${event.title}`}</button>
                 {/* 삭제버튼 */}
                 <button className='delete-button' onClick={()=>deleteEvent(event.id)}>&times;</button>
             </div>
