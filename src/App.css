@@ -7,10 +7,30 @@
 	src: url("./fonts/tway_air.ttf");
 }
 
+@font-face {
+	font-family: 'ubuntu-bold';
+	src: url("./fonts/Ubuntu-Bold.ttf");
+}
+
+
+@font-face {
+  font-family: 'ubuntu-light';
+	src: url("./fonts/Ubuntu-Light.ttf");
+}
+
+@font-face {
+  font-family: 'ubuntu-medium';
+	src: url("./fonts/Ubuntu-Medium.ttf");
+}
+
+@font-face {
+	font-family: 'ubuntu-regular';
+	src: url("./fonts/Ubuntu-Regular.ttf");
+}
 
 .content-wrapper {
-	font-family: 'ubuntu', 'tway_air';
-	font-weight: thin;
+  font-family: 'ubuntu-medium', 'tway_air';
+  font-weight: thin;
 }
 
 .navbar {
