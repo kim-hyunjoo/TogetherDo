@@ -1,0 +1,249 @@
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 99;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal button {
+  outline: none;
+  cursor: pointer;
+  border: 0;
+}
+
+.modal > section {
+  width: 90%;
+  max-width: 450px;
+  margin: 0 auto;
+  border-radius: 0.3rem;
+  background-color: #fff;
+  /* 팝업이 열릴때 스르륵 열리는 효과 */
+  animation: modal-show 0.3s;
+  overflow: hidden;
+}
+
+.modal > section > header {
+  display : flex;
+  position: relative;
+  padding: 16px 64px 16px 16px;
+  align-items: center;
+  justify-content: center;
+  background-color: #f1f1f1;
+  font-weight: 700;
+}
+
+.lunar-header {
+  margin-left : 10px;
+  font-size : small;
+  color : rgb(112, 112, 112);
+}
+
+.modal > section > header button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 30px;
+  font-size: 21px;
+  font-weight: 700;
+  text-align: center;
+  color: #999;
+  background-color: transparent;
+}
+
+.modal > section > main {
+  padding: 16px;
+  border-bottom: 1px solid #dee2e6;
+  border-top: 1px solid #dee2e6;
+}
+
+.modal > section > footer {
+  padding: 12px 16px;
+  text-align: right;
+  height: 55px;
+}
+
+.modal > section > footer button {
+  padding: 6px 12px;
+  color: #fff;
+  background-color: #6c757d;
+  border-radius: 5px;
+  font-size: 13px;
+}
+
+.modal.openTodayModal {
+  display: flex;
+  align-items: center;
+  /* 팝업이 열릴때 스르륵 열리는 효과 */
+  animation: modal-bg-show 0.3s;
+}
+
+.modal.openEditModal {
+  display: flex;
+  align-items: center;
+  /* 팝업이 열릴때 스르륵 열리는 효과 */
+  animation: modal-bg-show 0.3s;
+}
+
+.modal.openModal {
+  display: flex;
+  align-items: center;
+  /* 팝업이 열릴때 스르륵 열리는 효과 */
+  animation: modal-bg-show 0.3s;
+}
+
+@keyframes modal-show {
+  from {
+    opacity: 0;
+    margin-top: -50px;
+  }
+  to {
+    opacity: 1;
+    margin-top: 0;
+  }
+}
+
+@keyframes modal-bg-show {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-button {	
+background-color: green;
+padding: 5px 10px;
+ color: white;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 16px;
+}
+
+.modal-color-div {
+display: flex;
+column-gap: 10px;
+}
+
+.modal-color-div > div {
+width : 20px;
+height : 20px;
+border-radius: 50%; 
+}
+
+
+.modal-pink-div{ background-color: #f5c6e1; }
+.modal-purple-div{ background-color: #c59bef }
+.modal-blue-div { background-color : #90b9df; }
+.modal-grblue-div { background-color : #86e3c6; }
+.modal-green-div{  background-color: #8cf1a4 ; }
+.modal-yellow-div { background-color: #e6ec8f; }
+.modal-orange-div{ background-color: #febd7b}
+.modal-grey-div{ background-color: #BDBDBD;}
+
+.modal-pink-picked-div{ background-color: #f5c6e1;   border : 2px solid #2c2c2c;}
+.modal-purple-picked-div{ background-color: #c59bef;   border : 2px solid #2c2c2c;}
+.modal-blue-picked-div { background-color : #90b9df;   border : 2px solid #2c2c2c;}
+.modal-grblue-picked-div { background-color : #86e3c6; border : 2px solid #2c2c2c;}
+.modal-green-picked-div{  background-color: #8cf1a4; border : 2px solid #2c2c2c;}
+.modal-yellow-picked-div { background-color: #e6ec8f; border : 2px solid #2c2c2c;}
+.modal-orange-picked-div{ background-color: #febd7b; border : 2px solid #2c2c2c;}
+.modal-grey-picked-div{ background-color: #BDBDBD; border : 2px solid #2c2c2c;}
+
+.modal-main-div {
+display: grid;
+justify-content: center;
+grid-template-columns: 1fr 2fr;
+row-gap: 10px;
+}
+
+.modal-time-div {
+display: flex;
+gap: 10px;
+}
+
+.modal-textarea {
+resize: none; 
+width: 100%;
+}
+
+.modal-save-div {
+display: flex;
+justify-content: center;
+margin-top: 20px;
+}
+
+.modal-event-top {
+display: flex;
+column-gap: 120px;
+border-bottom: 1px solid #dee2e6;
+justify-content: left;
+text-align: center;
+
+}
+
+.select-box {
+height: 30px;
+border-radius: 7px;
+text-align: center;
+}
+.checkbox-all {
+display : flex;
+justify-content: left;
+text-align: center;
+font-weight: bold;
+
+column-gap: 10px;
+padding-left : 20px;
+padding-bottom : 5px;
+}
+.checkbox-all > label {
+padding-top : 7px;
+}
+
+.modal-event-list {
+display : grid;
+justify-content: left;
+grid-template-rows: 1fr 1fr;
+padding-left : 20px;
+padding-top : 20px;
+padding-bottom: 20px;
+row-gap: 10px;
+}
+
+.modal-event-object {
+display : flex;
+column-gap: 10px;
+}
+
+.event-button {
+border-radius: 5px;
+}
+
+.modal-progress-bar {
+display : flex;
+justify-content: center;
+
+column-gap: 10px;
+padding-left : 2px;
+padding-bottom : 5px;
+}
+
+.delete-button {  
+position: relative;
+top : 3px;
+display : flex;
+justify-content: center;
+align-items: center;
+color: #fff;
+background-color: #acacac;
+border-radius: 10px;
+height : 20px;
+width : 20px;
+font-size: 13px;
+}
