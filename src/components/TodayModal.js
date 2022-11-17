@@ -109,20 +109,21 @@ const TodayModal = (props) => {
 */
     //모달 저장or수정 버튼 클릭시 이벤트
     const onSaveEvent = (editMode) => {
-        
         //저장하려고 할 때 startTimeRef, endTimeRef, eventRef 하나라도 비어있을 시 경고창
         //console.log(startTimeRef.current);
-        if(startTimeRef.current.value == "") {
-            alert("시작 시간을 입력하세요")
-            return;
-        }
-        if(endTimeRef.current.value == "") {
-            alert("종료 시간을 입력하세요")
-            return;
-        }
-        if(eventRef.current.value == "") {
-            alert("일정을 입력하세요")
-            return;
+        if(noTime == false) {
+            if(startTimeRef.current.value == "") {
+                alert("시작 시간을 입력하세요")
+                return;
+            }
+            if(endTimeRef.current.value == "") {
+                alert("종료 시간을 입력하세요")
+                return;
+            }
+            if(eventRef.current.value == "") {
+                alert("일정을 입력하세요")
+                return;
+            }
         }
         const startTime = noTime ? `${header}` : `${header}T${startTimeRef.current.value}`;
         const endTime = noTime ? `${header}` : `${header}T${endTimeRef.current.value}`;
