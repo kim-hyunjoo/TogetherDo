@@ -7,6 +7,7 @@ import {
 } from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
 import React from "react";
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(() => ({
     navbar: {
@@ -75,9 +76,11 @@ const Navbar = () => {
     );
 
     const TogetherDoLogo = (
-        <Typography variant="h6" component="h1" className={logo}>
-            TogetherDo
-        </Typography>
+        <Link to="/" style={{ textDecoration: 'none' }}>
+            <Typography variant="h6" component="h1" className={logo}>
+                TogetherDo
+            </Typography>
+        </Link>
     );
 
     const getMenuButtons = () => {
