@@ -333,7 +333,7 @@ const TodayModal = (props) => {
             let pinnedEvent = eventSorting.filter(
                 (el) => pinnedItems.filter((pin) => pin.id == el.id).length == 1
             );
-			let unPinnedEvent = eventSorting.filter(
+            let unPinnedEvent = eventSorting.filter(
                 (el) => pinnedItems.filter((pin) => pin.id == el.id).length == 0
             );
             pinnedEvent.sort((a, b) => new Date(a.start) - new Date(b.start));
@@ -344,35 +344,64 @@ const TodayModal = (props) => {
         } else if (sortSelected == "completed") {
             //checkItem먼저 출력한 뒤, eventArr 엔 있는데 checkItem에 없는 애들 출력해줘야함....
             //만약 이 상태에서 내가 체크를 하거나 해제하면 그거에 따라 바로 바뀌어야함..
-            let eventCompleted = [];
-            eventArr.filter((event) => {
-                if (checkItems.map((item) => item.id).includes(event.id)) {
-                    eventCompleted.push(event);
-                }
-            });
-            let eventIncomplete = [];
-            eventArr.filter((event) => {
-                if (!checkItems.map((item) => item.id).includes(event.id)) {
-                    eventIncomplete.push(event);
-                }
-            });
-            setEventArr([...eventCompleted, ...eventIncomplete]);
-            console.log([...eventCompleted, ...eventIncomplete]);
+
+            let eventSorting = [...eventArr];
+            //핀되어있는 요소
+            let pinnedAndChecked = eventSorting.filter(
+                (el) =>
+                    pinnedItems.filter((pin) => pin.id == el.id).length == 1 &&
+                    checkItems.filter((check) => check.id == el.id).length == 1
+            );
+            let pinnedAndUnchecked = eventSorting.filter(
+                (el) =>
+                    pinnedItems.filter((pin) => pin.id == el.id).length == 1 &&
+                    checkItems.filter((check) => check.id == el.id).length == 0
+            );
+            let unpinnedAndchecked = eventSorting.filter(
+                (el) =>
+                    pinnedItems.filter((pin) => pin.id == el.id).length == 0 &&
+                    checkItems.filter((check) => check.id == el.id).length == 1
+            );
+            let unpinnedAndUnchecked = eventSorting.filter(
+                (el) =>
+                    pinnedItems.filter((pin) => pin.id == el.id).length == 0 &&
+                    checkItems.filter((check) => check.id == el.id).length == 0
+            );
+            setEventArr([
+                ...pinnedAndChecked,
+                ...pinnedAndUnchecked,
+                ...unpinnedAndchecked,
+                ...unpinnedAndUnchecked,
+            ]);
         } else if (sortSelected == "incomplete") {
-            let eventCompleted = [];
-            eventArr.filter((event) => {
-                if (checkItems.map((item) => item.id).includes(event.id)) {
-                    eventCompleted.push(event);
-                }
-            });
-            let eventIncomplete = [];
-            eventArr.filter((event) => {
-                if (!checkItems.map((item) => item.id).includes(event.id)) {
-                    eventIncomplete.push(event);
-                }
-            });
-            setEventArr([...eventIncomplete, ...eventCompleted]);
-            console.log([...eventIncomplete, ...eventCompleted]);
+            let eventSorting = [...eventArr];
+            //핀되어있는 요소
+            let pinnedAndChecked = eventSorting.filter(
+                (el) =>
+                    pinnedItems.filter((pin) => pin.id == el.id).length == 1 &&
+                    checkItems.filter((check) => check.id == el.id).length == 1
+            );
+            let pinnedAndUnchecked = eventSorting.filter(
+                (el) =>
+                    pinnedItems.filter((pin) => pin.id == el.id).length == 1 &&
+                    checkItems.filter((check) => check.id == el.id).length == 0
+            );
+            let unpinnedAndchecked = eventSorting.filter(
+                (el) =>
+                    pinnedItems.filter((pin) => pin.id == el.id).length == 0 &&
+                    checkItems.filter((check) => check.id == el.id).length == 1
+            );
+            let unpinnedAndUnchecked = eventSorting.filter(
+                (el) =>
+                    pinnedItems.filter((pin) => pin.id == el.id).length == 0 &&
+                    checkItems.filter((check) => check.id == el.id).length == 0
+            );
+            setEventArr([
+                ...pinnedAndUnchecked,
+                ...pinnedAndChecked,
+                ...unpinnedAndUnchecked,
+                ...unpinnedAndchecked,
+            ]);
         }
     }, [sortSelected, eventArr.length, checkItems.length, pinnedItems.length]);
 
