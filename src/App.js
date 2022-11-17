@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import "./App.css";
 import "./styles/Layout.css";
 import "antd/dist/antd.css";
@@ -10,9 +10,14 @@ import Navbar from "./components/Navbar";
 import { Layout } from "antd";
 import { Footer, Header } from "antd/lib/layout/layout";
 import { Route, Routes } from "react-router-dom";
+import Login from "./pages/login";
 
-const App = () => (
-    <div>
+const App = () => {
+    const [loginChecked, setLoginChecked] = useState(false);
+    return(
+        
+        <div>
+        {loginChecked ?
         <Layout className="layout">
             <Header className="header">
                 <Navbar />
@@ -28,8 +33,11 @@ const App = () => (
             <Footer className="footer">
                 TogetherDo ©2022 Created by ReactMaster
             </Footer>
-        </Layout>
-    </div>
-);
+        </Layout> : <Login setLoginChecked = {setLoginChecked}/>
+        }
+        </div>
+    )
+}
+
 
 export default App;

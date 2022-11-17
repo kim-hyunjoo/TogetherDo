@@ -12,8 +12,12 @@ const TodayModal = (props) => {
     //이벤트 수정할 때 (edit modal) 선택한 이벤트 객체를 저장
     const [defaultData, setDefaultData] = useState({id : 0, title : '', start : '', end : ''});
 
+    //노타임
+    const [noTime, setNoTime] = useState(false);
+
     //수정, 저장 버튼을 한번 눌렀을 시 비활성화하기 위한 useState
     const [disable, setDisable] = useState(false);
+    const [noTimeDisable, setNoTimeDisable] = useState(false);
     //modal, edit modal
     const [modalOpen, setModalOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
@@ -78,6 +82,17 @@ const TodayModal = (props) => {
         console.log("event 입니다.", event);
         console.log("defaultData 입니다.", defaultData);
     }
+
+    const noTimeClicked = () => {
+        if (noTime === false) {
+            setNoTime(true);
+            setNoTimeDisable(true);
+        } else {
+            setNoTime(false);
+            setNoTimeDisable(false);
+        }
+        console.log(noTime);
+    } 
 /*
     useEffect(()=>{
         startTimeRef.current = "";
@@ -103,8 +118,8 @@ const TodayModal = (props) => {
             return;
         }
         */
-        const startTime = `${header}T${startTimeRef.current.value}`;
-        const endTime = `${header}T${endTimeRef.current.value}`;
+        const startTime = noTime ? `${header}` : `${header}T${startTimeRef.current.value}`;
+        const endTime = noTime ? `${header}` : `${header}T${endTimeRef.current.value}`;
         const eventContent = eventRef.current.value;
         //edit mode의 경우 선택된 이벤트의 ID 그대로 저장, 아닐 경우 새로운 eventID 부여
         const eventId = editMode == true ? defaultData.id : eventID.current; 
@@ -127,6 +142,8 @@ const TodayModal = (props) => {
             eventID.current +=1; //새로 생성되는 이벤트에 부여할 eventID 갱신
         } 
         setDisable(true);//수정,저장 버튼 비활성화
+        setNoTime(false);
+        setNoTimeDisable(false);
     };
 
     //이벤트 삭제
@@ -193,7 +210,7 @@ const TodayModal = (props) => {
                 </label>
                 {/* 이벤트 제목 */}
                 <button className='event-button' style={{backgroundColor : event.backgroundColor}} onClick={()=>eventClick(event)}
-                key={event.id}> {`${start}-${end} ${event.title}`}</button>
+                key={event.id}>{`${start}-${end} ${event.title}`}</button>
                 {/* 삭제버튼 */}
                 <button className='delete-button' key={event.id} onClick={()=>deleteEvent(event.id)}>&times;</button>
             </div>
@@ -264,8 +281,9 @@ const TodayModal = (props) => {
                         <span>Time</span>
                     </div>
                     <div className="modal-time-div">                      
-                        <input type="time" step="300" ref={startTimeRef} defaultValue={editMode ? defaultData.start : null}/>
-                        <input type="time" step="300" ref={endTimeRef} defaultValue={editMode ? defaultData.end : null}/>
+                        <input type="time" step="300" ref={startTimeRef} defaultValue={editMode ? defaultData.start : null} disabled={noTimeDisable}/>
+                        <input type="time" step="300" ref={endTimeRef} defaultValue={editMode ? defaultData.end : null} disabled={noTimeDisable}/>
+                        <input type="button" onClick={()=>noTimeClicked()} value = "시간X"/>
                     </div>
                     <div>
                         <span>Input</span>

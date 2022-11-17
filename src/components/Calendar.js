@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/Calendar.css";
 import "../styles/Modal.css";
 import FullCalendar from "@fullcalendar/react"; // must go before plugins
@@ -9,7 +9,6 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import TodayModal from "./TodayModal";
 import { format } from "date-fns";
 
-   
 
 const Calendar = () => {
     //event data
@@ -112,7 +111,6 @@ const Calendar = () => {
         })   
         
     }
-
     useEffect(()=> {
         localStorage.setItem("events", JSON.stringify(eventArr));
     },[eventArr])
