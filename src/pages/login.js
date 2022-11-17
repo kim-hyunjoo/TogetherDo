@@ -26,8 +26,8 @@ const Login = (props) => {
 
 	const loginClicked = () => {
 		if(loginInfo == userList) {
-			setLoginChecked(true);
 		}
+		setLoginChecked(true);
 	};
 	const createAccount = () => {
 

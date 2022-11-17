@@ -5,7 +5,7 @@ import {solarToLunar} from "../module/LunarCalendar";
 import "../styles/Modal.css";
 
 const TodayModal = (props) => {   
-    const { open, close, header, setEventArr, eventArr, checkItems, setCheckItems, progress, setProgress, eventID, setEventID, sortSelected, setSortSelected} = props;
+    const { open, close, header, setEventArr, eventArr, checkItems, setCheckItems, progress, setProgress, eventID, setEventID} = props;
     //색상커스텀 useState
     const [isPinkPicked , setIsPinkPicked] = useState(false);
     const [isPurplePicked , setIsPurplePicked] = useState(false);
@@ -15,19 +15,19 @@ const TodayModal = (props) => {
     const [isYellowPicked , setIsYellowPicked] = useState(false);
     const [isOrangePicked , setIsOrangePicked] = useState(false);
     const [isGreyPicked , setIsGreyPicked] = useState(false);
+
+
     //이벤트 수정할 때 (edit modal) 선택한 이벤트 객체를 저장
     const [defaultData, setDefaultData] = useState({id : 0, title : '', start : '', end : ''});
 
-    //노타임
-    const [noTime, setNoTime] = useState(false);
-
     //수정, 저장 버튼을 한번 눌렀을 시 비활성화하기 위한 useState
     const [disable, setDisable] = useState(false);
-    const [noTimeDisable, setNoTimeDisable] = useState(false);
     //modal, edit modal
     const [modalOpen, setModalOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
     
+    //정렬 기능
+    const [selected, setSelected] = useState("");
         
     useEffect(()=> {
         console.log("렌더링 됐습니다.");
@@ -59,7 +59,7 @@ const TodayModal = (props) => {
         setIsYellowPicked(false);
         setIsOrangePicked(false);
         setIsGreyPicked(false);
-
+        
         // 버튼색 : 핑크
         if(color === '#f5c6e1') { setIsPinkPicked(true); }
         else if (color === '#c59bef') { setIsPurplePicked(true); }
@@ -69,7 +69,9 @@ const TodayModal = (props) => {
         else if (color === '#e6ec8f'){setIsYellowPicked(true); }
         else if (color === '#febd7b'){setIsOrangePicked(true); }
         else if (color === '#BDBDBD'){setIsGreyPicked(true); }
-    };
+
+
+    }
 
     //이벤트를 수정하기 위해 모달 내에서 이벤트를 클릭했을 때 실행
     const eventClick = (event) => {
@@ -90,23 +92,7 @@ const TodayModal = (props) => {
         console.log("event 입니다.", event);
         console.log("defaultData 입니다.", defaultData);
     }
-    const noTimeClicked = () => {
-        if (noTime === false) {
-            setNoTime(true);
-            setNoTimeDisable(true);
-        } else {
-            setNoTime(false);
-            setNoTimeDisable(false);
-        }
-        console.log(noTime);
-    }
-/*
-    useEffect(()=>{
-        startTimeRef.current = "";
-        endTimeRef.current = "";
-        eventRef.current = "";
-    }, [disable])
-*/
+
     //모달 저장or수정 버튼 클릭시 이벤트
     const onSaveEvent = (editMode) => {
         
@@ -124,8 +110,9 @@ const TodayModal = (props) => {
             alert("일정을 입력하세요")
             return;
         }
-        const startTime = noTime ? `${header}` : `${header}T${startTimeRef.current.value}`;
-        const endTime = noTime ? `${header}` : `${header}T${endTimeRef.current.value}`;
+        
+        const startTime = `${header}T${startTimeRef.current.value}`;
+        const endTime = `${header}T${endTimeRef.current.value}`;
         const eventContent = eventRef.current.value;
         //edit mode의 경우 선택된 이벤트의 ID 그대로 저장, 아닐 경우 새로운 eventID 부여
         const eventId = editMode == true ? defaultData.id : eventID; 
@@ -148,8 +135,6 @@ const TodayModal = (props) => {
             setEventID(parseInt(eventID) + 1); //새로 생성되는 이벤트에 부여할 eventID 갱신
         } 
         setDisable(true);//수정,저장 버튼 비활성화
-        setNoTime(false);
-        setNoTimeDisable(false);
     };
 
     //이벤트 삭제
@@ -201,10 +186,10 @@ const TodayModal = (props) => {
     }, [checkItems, eventArr])
 
 
-    const todayEventArr = eventArr.filter((event)=>event.start.substring(0,10) === header);
 
     //날짜 클릭 시 해당 날짜의 일정 목록을 checkbox 및 button을 이용하여 todo-list 구현
-    const eventButtons = todayEventArr.length == 0 ? "일정이 없습니다." : todayEventArr.map((event) => {      
+    const eventButtons = eventArr.filter((event)=> //header(해당날짜)와 비교하여 eventArr에 있는 이벤트 중 같은 날짜만 filter (이 작업을 안할경우 모든 eventArr객체가 나타나게 됨)
+    event.start.substring(0,10) === header).map((event) => {      
         const start = event.start.substring(11,16); //시간정보만 가져오기
         const end = event.end.substring(11,16); //시간정보만 가져오기
         return (
@@ -215,8 +200,7 @@ const TodayModal = (props) => {
                     checked={checkItems.map(item=> item.id).includes(event.id) ? true : false}></input>
                 </label>
                 {/* 이벤트 제목 */}
-                <button className='event-button' style={{backgroundColor : event.backgroundColor}} onClick={()=>eventClick(event)}
-                key={event.id}>{`${start}-${end} ${event.title}`}</button>
+                <button className='event-button' style={{backgroundColor : event.backgroundColor}} onClick={()=>eventClick(event)}> {`${start}-${end} ${event.title}`}</button>
                 {/* 삭제버튼 */}
                 <button className='delete-button' onClick={()=>deleteEvent(event.id)}>&times;</button>
             </div>
@@ -225,18 +209,18 @@ const TodayModal = (props) => {
 
     const handleSelectChange = (e) => {
         console.log("select바뀜")
-        setSortSelected(e.target.value);
+        setSelected(e.target.value);
     }
 
     useEffect(()=>{
-        if(sortSelected == "time") {
+        if(selected == "time") {
             //일정 시작시간에 맞춰 sorting하기
             let eventSorting = [...eventArr];
             eventSorting.sort((a, b) => new Date(a.start) - new Date(b.start))
             setEventArr(eventSorting);
             //checkItem도 같이 여기서 정렬을 해줄까..? checkitem은 dateInfo랑 id값을가짐
         }
-        else if(sortSelected== "completed") {
+        else if(selected== "completed") {
             //checkItem먼저 출력한 뒤, eventArr 엔 있는데 checkItem에 없는 애들 출력해줘야함....
             //만약 이 상태에서 내가 체크를 하거나 해제하면 그거에 따라 바로 바뀌어야함..
             let eventCompleted = [];
@@ -254,7 +238,7 @@ const TodayModal = (props) => {
             setEventArr([...eventCompleted, ...eventIncomplete])
             console.log([...eventCompleted, ...eventIncomplete])
         }
-        else if(sortSelected == "incomplete") {
+        else if(selected == "incomplete") {
             let eventCompleted = [];
             eventArr.filter(event=>{
                 if (checkItems.map(item=> item.id).includes(event.id)){
@@ -271,10 +255,10 @@ const TodayModal = (props) => {
             console.log([...eventIncomplete, ...eventCompleted])
         }
 
-    },[sortSelected, eventArr.length, checkItems.length])
+    },[selected, eventArr.length, checkItems.length])
 
     useEffect(()=>{
-        setSortSelected("time");
+        setSelected("time");
         let eventSorting = [...eventArr];
         eventSorting.sort((a, b) => new Date(a.start) - new Date(b.start))
         setEventArr(eventSorting);
@@ -316,7 +300,7 @@ const TodayModal = (props) => {
                                 ) ? true : false}/>
                             <label>TODO-LIST</label>
                             </div>
-                            <select className="select-box" value={sortSelected} onChange={(e) => handleSelectChange(e)}>
+                            <select className="select-box" value={selected} onChange={(e) => handleSelectChange(e)}>
                                 <option value="time">시간 순</option>
                                 <option value="completed">완료된 항목 순</option>
                                 <option value="incomplete">미완료된 항목 순</option>
@@ -353,7 +337,7 @@ const TodayModal = (props) => {
                         <div 
                             onClick={()=>changeColor("#c59bef")} 
                             className = {isPurplePicked ? "modal-purple-picked-div" :"modal-purple-div"}></div>
-
+                        
                         <div 
                             onClick={()=>changeColor("#90b9df")} 
                             className = {isBluePicked ? "modal-blue-picked-div" :"modal-blue-div"}></div>
@@ -363,7 +347,7 @@ const TodayModal = (props) => {
                         <div
                             onClick={()=>changeColor("#8cf1a4")} 
                             className = {isGreenPicked ? "modal-green-picked-div" :"modal-green-div"}></div>                        
-
+                   
                         <div
                             onClick={()=>changeColor("#e6ec8f")} 
                             className = {isYellowPicked ? "modal-yellow-picked-div" :"modal-yellow-div"}></div>                        
@@ -373,16 +357,15 @@ const TodayModal = (props) => {
                         <div
                             onClick={()=>changeColor("#BDBDBD")} 
                             className = {isGreyPicked ? "modal-grey-picked-div" :"modal-grey-div"}></div>                        
-
+                        
                     </div>
 
                     <div>
                         <span>Time</span>
                     </div>
                     <div className="modal-time-div">                      
-                        <input type="time" step="300" ref={startTimeRef} defaultValue={editMode ? defaultData.start : null} disabled={noTimeDisable}/>
-                        <input type="time" step="300" ref={endTimeRef} defaultValue={editMode ? defaultData.end : null} disabled={noTimeDisable}/>
-                        <input type="button" onClick={()=>noTimeClicked()} value = "시간X"/>
+                        <input type="time" step="300" ref={startTimeRef} defaultValue={editMode ? defaultData.start : null}/>
+                        <input type="time" step="300" ref={endTimeRef} defaultValue={editMode ? defaultData.end : null}/>
                     </div>
                     <div>
                         <span>Input</span>

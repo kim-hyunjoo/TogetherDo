@@ -2,6 +2,17 @@
   text-align: center;
 }
 
+@font-face {
+	font-family: 'tway_air';
+	src: url("./fonts/tway_air.ttf");
+}
+
+
+.content-wrapper {
+	font-family: 'ubuntu', 'tway_air';
+	font-weight: thin;
+}
+
 .navbar {
 	background-color: #bcc0f2;
 }

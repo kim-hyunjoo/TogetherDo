@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import { useState } from "react";
 import "./App.css";
 import "./styles/Layout.css";
 import "antd/dist/antd.css";
@@ -11,11 +11,9 @@ import { Layout } from "antd";
 import { Footer, Header } from "antd/lib/layout/layout";
 import { Route, Routes } from "react-router-dom";
 import Login from "./pages/login";
-
 const App = () => {
     const [loginChecked, setLoginChecked] = useState(false);
-    return(
-        
+    return( 
         <div>
         {loginChecked ?
         <Layout className="layout">

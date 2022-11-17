@@ -1,34 +1,42 @@
-import { AppBar,makeStyles, Toolbar, Typography, Button } from "@material-ui/core";
+import {
+    AppBar,
+    makeStyles,
+    Toolbar,
+    Typography,
+    Button,
+} from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
 import React from "react";
 
 const useStyles = makeStyles(() => ({
     navbar: {
         backgroundColor: "#BCC0F2",
-		paddingRight: "80px",
-		paddingLeft: "80px"
+        paddingRight: "80px",
+        paddingLeft: "80px",
     },
     logo: {
-        fontFamily: "Work Sans, sans-serif",
+        fontFamily: "ubuntu",
+		fontSize: "25px",
         fontWeight: 600,
         color: "#FFFEFE",
         textAlign: "left",
-		paddingRight: "10px"
+        paddingRight: "60px",
     },
-	menuButton: {
-		fontFamily: "Open Sans, sans-serif",
-		fontWeight: 700,
-		size: "18px",
-		marginLeft: "30px"
-	},
-	navbarContents: {
-		display: "flex",
-		justifyContent: "space-between",
-	},
-	description: {
-        minWidth : "350px",
-		fontSize : "15px"
-	}
+    menuButton: {
+        fontFamily: "ubuntu",
+        fontWeight: 500,
+        size: "18px",
+        marginLeft: "30px",
+    },
+    navbarContents: {
+        display: "flex",
+        justifyContent: "space-between",
+    },
+    description: {
+		marginTop: "10px",
+        minWidth: "350px",
+        fontSize: "15px",
+    },
 }));
 
 const navData = [
@@ -47,22 +55,23 @@ const navData = [
 ];
 
 const Navbar = () => {
-    const { navbar, navbarContents, logo, menuButton, description } = useStyles();
+    const { navbar, navbarContents, logo, menuButton, description } =
+        useStyles();
     const display = () => {
         return (
-			//className={} OK! className="" 아님!
+            //className={} OK! className="" 아님!
             <Toolbar className={navbarContents}>
-                {TogetherDoDesc} {TogetherDoLogo} 
-                <div style={{minWidth : "350px"}}>{getMenuButtons()}</div>
+                {TogetherDoDesc} {TogetherDoLogo}
+                <div style={{ minWidth: "350px" }}>{getMenuButtons()}</div>
             </Toolbar>
         );
     };
 
-	const TogetherDoDesc = (
-		<label className={description}>
-			Do something together with your mates 
-		</label>
-	)
+    const TogetherDoDesc = (
+        <label className={description}>
+            Do something together with your mates
+        </label>
+    );
 
     const TogetherDoLogo = (
         <Typography variant="h6" component="h1" className={logo}>
@@ -79,7 +88,7 @@ const Navbar = () => {
                         color: "inherit",
                         to: href,
                         component: RouterLink,
-						className: menuButton
+                        className: menuButton,
                     }}
                 >
                     {label}

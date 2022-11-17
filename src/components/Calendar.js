@@ -1,16 +1,66 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+
 import "../styles/Calendar.css";
 import "../styles/Modal.css";
 import FullCalendar from "@fullcalendar/react"; // must go before plugins
 import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
-import interactionPlugin from "@fullcalendar/interaction";
+import interactionPlugin, {Draggable} from "@fullcalendar/interaction";
 import momentPlugin from "@fullcalendar/moment";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import TodayModal from "./TodayModal";
 import { format } from "date-fns";
+import { Col, Row } from "reactstrap";
 
 
 const Calendar = () => {
+    const [extraEvent, setExtraEvent] = useState();
+    const extraEventRef = useRef("");  
+    const [extraEventArr, setExtraEventArr] = useState([
+    { title: "운동", id: 0, start : `2022-11-06T10:00`, end : `2022-11-06T11:00`, backgroundColor : 'grey', borderColor : 'grey' },
+    { title: "알바", id: 1, start : `2022-11-07T10:00`, end : `2022-11-06T11:00`, backgroundColor : 'grey', borderColor : 'grey'},
+    { title: "일기쓰기", id: 2, start : `2022-11-08T10:00`, end : `2022-11-06T11:00`, backgroundColor : 'grey', borderColor : 'grey' }
+  ])
+
+  const [extraEventID, setExtraEventID] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("extraEventID");
+      if (saved !== null) {
+        console.log(JSON.parse(saved))
+        return JSON.parse(saved);
+      } else {
+        return parseInt(3);
+      }
+    }
+  });
+    
+    useEffect(()=> {
+      let draggableEl = document.getElementById("external-events");
+      new Draggable(draggableEl, {
+      itemSelector: ".fc-event",
+      eventData: function(eventEl) {
+        console.log(eventEl);
+        const eventObj = {
+          title : eventEl.getAttribute("title"),
+          id : eventID,
+          backgroundColor : eventEl.getAttribute("backgroundColor"),
+          borderColor : eventEl.getAttribute("borderColor")
+        }  
+        console.log(eventObj);
+        setExtraEvent(eventObj);
+
+        return {
+          title : eventObj.title,
+          id : eventObj.id,
+          backgroundColor : eventObj.backgroundColor,
+          borderColor : eventObj.borderColor
+        }
+
+      }
+    })
+    },[])
+
+
+    
     //event data
     const [eventArr, setEventArr] = useState(() => {
         if (typeof window !== "undefined") {
@@ -31,9 +81,36 @@ const Calendar = () => {
     //selected Date
     const [dateInfo, setDateInfo] = useState("");
     // 체크된 아이템을 담을 배열 {dateInfo : 날짜, id : eventID}
-    const [checkItems, setCheckItems] = useState([]);
+    const [checkItems, setCheckItems] = useState(() => {
+        if (typeof window !== "undefined") {
+          const saved = localStorage.getItem("checkItems");
+          if (saved !== null) {
+            console.log(JSON.parse(saved))
+            return JSON.parse(saved);
+          } else {
+            return [];
+          }
+        }
+      });
     //진도율 체크
     const [progress, setProgress] = useState(0);
+    //ID값 갱신
+    const [eventID, setEventID ]= useState(() => {
+        if (typeof window !== "undefined") {
+          const saved = localStorage.getItem("eventID");
+          if (saved !== null) {
+            console.log(JSON.parse(saved))
+            return JSON.parse(saved);
+          } else {
+            return parseInt(0);
+          }
+        }
+      });
+      
+    //정렬 기능
+    const [sortSelected, setSortSelected] = useState("");
+
+
 
     const closeTodayModal = () => {
         setTodayModalOpen(false);
@@ -48,7 +125,27 @@ const Calendar = () => {
         const todayCheckItems = checkItems.filter(item => item.dateInfo === dateInfo)
         const completed = todayEvents.length == 0 ? 0 : (todayCheckItems.length/todayEvents.length)*100;
         console.log(completed)
-        return completed.toFixed();
+        return completed.toFixed(1);
+    }
+
+    const handleExtraEventDrop = (info) => {
+      console.log(info)
+      console.log(extraEvent)
+
+      let date = new Date(`${info.date}`); //info에서 drop된 날짜의 시간정보 가져오기
+      const dateInfo = format(date, "YYYY-MM-DD"); //날짜 포맷 바꿔주기
+      console.log(dateInfo)
+
+      const newEvent = {...extraEvent, start : `${dateInfo}T10:00`, end : `${dateInfo}T11:00`}
+      console.log(newEvent)
+      setEventArr([...eventArr, newEvent]);
+      setEventID(parseInt(eventID) + 1);
+
+    }
+
+    const handleEventReceive = (info) => {
+      console.log(info)
+      info.event.remove()
     }
 
     //날짜 클릭 시
@@ -60,7 +157,8 @@ const Calendar = () => {
 
     // 이벤트(일정) 클릭 시
     const handleEventClick = (info) => {
-        console.log("event click");
+        console.log(`이벤트 클릭`);
+        console.log(info)
     };
     // 이벤트(일정) 드래그 시작 시
     const handleEventDragStart = (info) => {
@@ -113,18 +211,98 @@ const Calendar = () => {
     }
     useEffect(()=> {
         localStorage.setItem("events", JSON.stringify(eventArr));
-    },[eventArr])
-
+        localStorage.setItem("eventID", JSON.stringify(eventID));
+        localStorage.setItem("checkItems", JSON.stringify(checkItems));
+        localStorage.setItem("extraEventID", JSON.stringify(extraEventID))
+    },[eventArr, eventID, checkItems, extraEventID])
 
     useEffect(() => {
         const data = localStorage.getItem("events");
         if (data) {
           setEventArr(JSON.parse(data));
         }
-      }, []);
+        const id = localStorage.getItem("eventID");
+        if(id) {
+            setEventID(parseInt(id));
+        }
+        const check_data = localStorage.getItem("checkItems");
+        if (check_data) {
+          setCheckItems(JSON.parse(check_data));
+        }
+        const extra_id = localStorage.getItem("extraEventID");
+        if(extra_id) {
+          setExtraEventID(parseInt(extra_id));
+        }
+      }, []); 
+
+      const extraEventDelete = (event) => {
+          console.log(event);
+          const newExtraEventArr = extraEventArr.filter(ex=>ex.id != event.id)
+          setExtraEventArr(newExtraEventArr)
+      }
+
+      const extraEventAdd = () => {
+        if(extraEventRef.current.value == "") {
+          alert("일정을 입력하세요")
+          return;
+        }
+
+        const newTitle = extraEventRef.current.value;
+        const eventObj = {
+          id: extraEventID,
+          title: newTitle,
+          start: `2022-11-06T10:00`,
+          end: `2022-11-06T11:00`,
+          backgroundColor : 'grey',
+          borderColor : 'grey'
+      };
+
+      setExtraEventArr([...extraEventArr, eventObj]);
+      setExtraEventID(parseInt(extraEventID)+1);
+      extraEventRef.current.value="";
+      }
 
     return (
         <div className="calendar-contents">
+          <Row>
+          <Col lg={3} sm={3} md={3}>
+          <div
+              id="external-events"
+              style={{
+                padding: "10px",
+                width: "80%",
+                height: "auto",
+                maxHeight: "-webkit-fill-available",
+                borderStyle :  'solid'
+              }}
+            >
+              <p align="center">
+                <strong>빠른 일정 추가</strong>
+              </p>
+              <div className ="extra-event-list" style={{rowGap : '20px'}} >
+              {extraEventArr.map(event => (
+                <div key = {event.id} className="extra-event-obj" style={{display:'grid', gridTemplateColumns: '4fr 1fr'}}>
+                  <div className="fc-event" style = {{backgroundColor : 'grey', borderRadius: '5px', margin : '1em 0'}}
+                    key={event.id}
+                    title={event.title}
+                    id={event.id}
+                    start={event.start}
+                    end={event.end}
+                    backgroundcolor={event.backgroundColor}
+                    bordercolor={event.borderColor}
+                  >
+                  {event.title}
+                  </div>
+                  <button className="close" onClick={()=>extraEventDelete(event)}>x</button>
+                  </div>
+              ))}
+              <textarea style={{width: '100%', height: '3em', resize: 'none'}} ref={extraEventRef}/>
+              <button onClick={()=>extraEventAdd()}>추가</button>
+              </div>
+            </div>
+            </Col>
+
+          <Col lg={9} sm={9} md={9}>
             <FullCalendar
                 plugins={[
                     dayGridPlugin,
@@ -144,10 +322,12 @@ const Calendar = () => {
                 contentHeight={600}
                 selectable={true}
                 editable={true}
+                droppable={true}
                 dayMaxEvents={true}
                 eventDragStart={handleEventDragStart}
                 eventDrop={handleEventDrop}   
-
+                drop={handleExtraEventDrop}
+                eventReceive={handleEventReceive}
                 eventDisplay={'block'}
                 eventTextColor={'black'}
             />
@@ -162,7 +342,13 @@ const Calendar = () => {
                 progress={progress}
                 setProgress={setProgress}
                 progressCal= {progressCal}
+                eventID = {eventID}
+                setEventID = {setEventID}
+                sortSelected={sortSelected}
+                setSortSelected={setSortSelected}
             />
+            </Col>
+        </Row>
         </div>
     );
 };
