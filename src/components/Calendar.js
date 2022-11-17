@@ -92,6 +92,17 @@ const Calendar = () => {
           }
         }
       });
+	  const [pinnedItems, setPinnedItems] = useState(() => {
+        if (typeof window !== "undefined") {
+          const saved = localStorage.getItem("pinnedItems");
+          if (saved !== null) {
+            console.log(JSON.parse(saved))
+            return JSON.parse(saved);
+          } else {
+            return [];
+          }
+        }
+      });
     //진도율 체크
     const [progress, setProgress] = useState(0);
     //ID값 갱신
@@ -214,6 +225,7 @@ const Calendar = () => {
         localStorage.setItem("events", JSON.stringify(eventArr));
         localStorage.setItem("eventID", JSON.stringify(eventID));
         localStorage.setItem("checkItems", JSON.stringify(checkItems));
+		localStorage.setItem("pinnedItems", JSON.stringify(pinnedItems));
         localStorage.setItem("extraEventID", JSON.stringify(extraEventID))
     },[eventArr, eventID, checkItems, extraEventID])
 
@@ -229,6 +241,10 @@ const Calendar = () => {
         const check_data = localStorage.getItem("checkItems");
         if (check_data) {
           setCheckItems(JSON.parse(check_data));
+        }
+		const pinned_data = localStorage.getItem("pinnedItems");
+        if (pinned_data) {
+          setPinnedItems(JSON.parse(check_data));
         }
         const extra_id = localStorage.getItem("extraEventID");
         if(extra_id) {
@@ -347,6 +363,8 @@ const Calendar = () => {
                 setEventID = {setEventID}
                 sortSelected={sortSelected}
                 setSortSelected={setSortSelected}
+				pinnedItems={pinnedItems}
+				setPinnedItems={setPinnedItems}
             />
             </Col>
         </Row>
