@@ -5,39 +5,20 @@ import { solarToLunar } from "../module/LunarCalendar";
 import "../styles/Modal.css";
 
 const TodayModal = (props) => {
-    const {
-        open,
-        close,
-        header,
-        setEventArr,
-        eventArr,
-        checkItems,
-        setCheckItems,
-        progress,
-        setProgress,
-        eventID,
-        setEventID,
-        sortSelected,
-        setSortSelected,
-        pinnedItems,
-        setPinnedItems,
-    } = props;
+    const { open, close, header, setEventArr, eventArr, checkItems, setCheckItems, 
+        progress, setProgress, eventID, setEventID, sortSelected, setSortSelected,
+        pinnedItems,setPinnedItems} = props;
     //색상커스텀 useState
-    const [isPinkPicked, setIsPinkPicked] = useState(false);
-    const [isPurplePicked, setIsPurplePicked] = useState(false);
-    const [isBluePicked, setIsBluePicked] = useState(false);
-    const [isGrBluePicked, setIsGrBluePicked] = useState(false);
-    const [isGreenPicked, setIsGreenPicked] = useState(false);
-    const [isYellowPicked, setIsYellowPicked] = useState(false);
-    const [isOrangePicked, setIsOrangePicked] = useState(false);
-    const [isGreyPicked, setIsGreyPicked] = useState(false);
+    const [isPinkPicked , setIsPinkPicked] = useState(false);
+    const [isPurplePicked , setIsPurplePicked] = useState(false);
+    const [isBluePicked , setIsBluePicked] = useState(false);
+    const [isGrBluePicked , setIsGrBluePicked] = useState(false);
+    const [isGreenPicked , setIsGreenPicked] = useState(false);
+    const [isYellowPicked , setIsYellowPicked] = useState(false);
+    const [isOrangePicked , setIsOrangePicked] = useState(false);
+    const [isGreyPicked , setIsGreyPicked] = useState(false);
     //이벤트 수정할 때 (edit modal) 선택한 이벤트 객체를 저장
-    const [defaultData, setDefaultData] = useState({
-        id: 0,
-        title: "",
-        start: "",
-        end: "",
-    });
+    const [defaultData, setDefaultData] = useState({id : 0, title : '', start : '', end : ''});
 
     //노타임
     const [noTime, setNoTime] = useState(false);
@@ -80,6 +61,7 @@ const TodayModal = (props) => {
         setIsOrangePicked(false);
         setIsGreyPicked(false);
 
+         // 버튼색 : 핑크
         if(color === '#f5c6e1') { setIsPinkPicked(true); }
         else if (color === '#c59bef') { setIsPurplePicked(true); }
         else if (color === '#90b9df'){setIsBluePicked(true); }
@@ -110,7 +92,7 @@ const TodayModal = (props) => {
         console.log("defaultData 입니다.", defaultData);
 
     };
-    }
+    
     const noTimeClicked = () => {
         if (noTime === false) {
             setNoTime(true);
@@ -184,26 +166,9 @@ const TodayModal = (props) => {
         setCheckItems(newCheckItems);
     };
 
-    const handleImportant = (id) => {
-        // setImportantEvents(eventArr.filter((event) => event.id === id));
-        // console.log(importantEvents);
-        // let eventSorting = [...importantEvents, eventArr.filter((event) => event.id != id)];
-        // setEventArr(eventSorting);
-        //console.log(eventArr);
-    };
+
     //중요 이벤트 설정
     const handlePin = (id) => {
-        // console.log("id = ", id);
-        // console.log("important = ", important);
-
-        // if (important === false) {
-        // 	console.log("pinned false");
-        // 	setPinnedItems(pinnedItems.filter(el => (el.id != id)));
-        // } else {
-        // 	console.log("pinned true");
-        //     setPinnedItems(prev => [...prev, { id : id, important : !important}])
-        // }
-
         console.log("handlePin");
 
         console.log(pinnedItems);
@@ -250,74 +215,35 @@ const TodayModal = (props) => {
         }
     };
 
-    useEffect(() => {
-        const todayEvents = eventArr.filter(
-            (event) => event.start.substring(0, 10) === header
-        );
-        const todayCheckItems = checkItems.filter(
-            (item) => item.dateInfo === header
-        );
-        const completed =
-            todayEvents.length == 0
-                ? 0
-                : (todayCheckItems.length / todayEvents.length) * 100;
-        setProgress(completed.toFixed(1));
-        console.log(
-            `오늘의 일정 개수 : ${todayEvents.length}, 오늘의 체크된 개수 : ${todayCheckItems.length}`
-        );
-    }, [checkItems, eventArr]);
+    useEffect(()=> {
+        const todayEvents = eventArr.filter(event=>event.start.substring(0,10) === header)
+        const todayCheckItems = checkItems.filter(item => item.dateInfo === header)
+        const completed = todayEvents.length == 0 ? 0 : (todayCheckItems.length/todayEvents.length)*100;
+        setProgress(completed.toFixed(1))
+        console.log(`오늘의 일정 개수 : ${todayEvents.length}, 오늘의 체크된 개수 : ${todayCheckItems.length}`)
+    }, [checkItems, eventArr])
 
-    const todayEventArr = eventArr.filter(
-        (event) => event.start.substring(0, 10) === header
-    );
+    const todayEventArr = eventArr.filter(event => event.start.substring(0, 10) === header);
 
     //날짜 클릭 시 해당 날짜의 일정 목록을 checkbox 및 button을 이용하여 todo-list 구현
     
-    const eventButtons =
-        todayEventArr.length == 0
-            ? "일정이 없습니다."
-            : todayEventArr.map((event) => {
+    const eventButtons = todayEventArr.length == 0 ? "일정이 없습니다." : todayEventArr.map((event) => {
                   const start = event.start.substring(11, 16); //시간정보만 가져오기
                   const end = event.end.substring(11, 16); //시간정보만 가져오기
                   return (
                       <div className="modal-event-object" key={event.id}>
                           {/* 체크박스, css효과를 주기 위해 label로 감쌈 */}
                           <label className="checkbox_container">
-                              <input
-                                  type="checkbox"
-                                  onChange={(e) =>
-                                      handleSingleCheck(
-                                          e.target.checked,
-                                          event.id
-                                      )
-                                  }
-                                  checked={
-                                      checkItems
-                                          .map((item) => item.id)
-                                          .includes(event.id)
-                                          ? true
-                                          : false
-                                  }
+                              <input type="checkbox" onChange={(e) => handleSingleCheck(e.target.checked, event.id)}
+                                  checked={checkItems.map((item) => item.id).includes(event.id) ? true : false}
                               ></input>
                           </label>
                           {/* 이벤트 제목 */}
-                          <button
-                              className="event-button"
-                              style={{ backgroundColor: event.backgroundColor }}
-                              onClick={() => eventClick(event)}
-                          >
-                              {" "}
-                              {`${start}-${end} ${event.title}`}
-                          </button>
+                          <button className="event-button" style={{ backgroundColor: event.backgroundColor }} onClick={() => eventClick(event)}
+                          key={event.id}>{(start=="") ? `${event.title}` : `${start}-${end} ${event.title}`}</button>
                           {/* 삭제버튼 */}
-                          <button
-                              className="delete-button"
-                              onClick={() => deleteEvent(event.id)}
-                          >
-                              &times;
-                          </button>
-                          <img
-                              alt="pin"
+                          <button className='delete-button' onClick={()=>deleteEvent(event.id)}>&times;</button>
+                          <img alt="pin"
                               id={`pin-${event.id}`}
                               src={
                                   pinnedItems
@@ -421,9 +347,20 @@ const TodayModal = (props) => {
 
     useEffect(() => {
         setSortSelected("time");
+        //일정 시작시간에 맞춰 sorting하기
         let eventSorting = [...eventArr];
-        eventSorting.sort((a, b) => new Date(a.start) - new Date(b.start));
-        setEventArr(eventSorting);
+        //핀되어있는 요소
+        let pinnedEvent = eventSorting.filter(
+            (el) => pinnedItems.filter((pin) => pin.id == el.id).length == 1
+        );
+        let unPinnedEvent = eventSorting.filter(
+            (el) => pinnedItems.filter((pin) => pin.id == el.id).length == 0
+        );
+        pinnedEvent.sort((a, b) => new Date(a.start) - new Date(b.start));
+        unPinnedEvent.sort((a, b) => new Date(a.start) - new Date(b.start));
+
+        setEventArr([...pinnedEvent, ...unPinnedEvent]);
+
     }, [open]);
 
     const lunarHeader = (dateInfo) => {
@@ -455,47 +392,23 @@ const TodayModal = (props) => {
                         <div className="modal-event-top">
                             {/* 체크박스 all check */}
                             <div className="checkbox-all">
-                                <input
-                                    type="checkbox"
-                                    name="select-all"
-                                    onChange={(e) =>
-                                        handleAllCheck(e.target.checked)
-                                    }
+                                <input type="checkbox" name="select-all" onChange={(e) =>handleAllCheck(e.target.checked)}
                                     // 데이터 개수와 체크된 아이템의 개수가 다를 경우 선택 해제 (하나라도 해제 시 선택 해제)
                                     //해당날짜의 event가 하나도 없을 때 선택 해제
                                     //checkItems의 날짜가 header 이고 eventArr.dateInfo가 header인거의 length가 서로 다를때
-                                    checked={
-                                        checkItems.filter(
-                                            (el) => el.dateInfo == header
-                                        ).length ==
-                                            eventArr.filter(
-                                                (el) =>
-                                                    el.start.substring(0, 10) ==
-                                                    header
-                                            ).length &&
-                                        eventArr.filter(
-                                            (event) =>
-                                                event.start.substring(0, 10) ===
-                                                header
-                                        ).length !== 0
-                                            ? true
-                                            : false
+                                    checked={checkItems.filter((el) => el.dateInfo == header).length ==
+                                        eventArr.filter((el) =>el.start.substring(0, 10) ==header).length 
+                                        &&
+                                        eventArr.filter((event) =>event.start.substring(0, 10) ===header).length !== 0
+                                        ? true : false
                                     }
                                 />
                                 <label>TODO-LIST</label>
                             </div>
-                            <select
-                                className="select-box"
-                                value={sortSelected}
-                                onChange={(e) => handleSelectChange(e)}
-                            >
+                            <select className="select-box" value={sortSelected} onChange={(e) => handleSelectChange(e)} >
                                 <option value="time">시간 순</option>
-                                <option value="completed">
-                                    완료된 항목 순
-                                </option>
-                                <option value="incomplete">
-                                    미완료된 항목 순
-                                </option>
+                                <option value="completed">완료된 항목 순</option>
+                                <option value="incomplete">미완료된 항목 순</option>
                             </select>
                         </div>
 
@@ -519,72 +432,33 @@ const TodayModal = (props) => {
                         <span>Color</span>
                     </div>
                     <div className="modal-color-div">
+                    <div 
+                            onClick={()=>changeColor("#f5c6e1")} 
+                            className = {isPinkPicked ? "modal-pink-picked-div" :"modal-pink-div"}></div>
+                        <div 
+                            onClick={()=>changeColor("#c59bef")} 
+                            className = {isPurplePicked ? "modal-purple-picked-div" :"modal-purple-div"}></div>
+
+                        <div 
+                            onClick={()=>changeColor("#90b9df")} 
+                            className = {isBluePicked ? "modal-blue-picked-div" :"modal-blue-div"}></div>
+                         <div 
+                            onClick={()=>changeColor("#86e3c6")} 
+                            className = {isGrBluePicked ? "modal-grblue-picked-div" :"modal-grblue-div"}></div>
                         <div
-                            onClick={() => changeColor("#f5c6e1")}
-                            className={
-                                isPinkPicked
-                                    ? "modal-pink-picked-div"
-                                    : "modal-pink-div"
-                            }
-                        ></div>
-                        <div
-                            onClick={() => changeColor("#c59bef")}
-                            className={
-                                isPurplePicked
-                                    ? "modal-purple-picked-div"
-                                    : "modal-purple-div"
-                            }
-                        ></div>
+                            onClick={()=>changeColor("#8cf1a4")} 
+                            className = {isGreenPicked ? "modal-green-picked-div" :"modal-green-div"}></div>                        
 
                         <div
-                            onClick={() => changeColor("#90b9df")}
-                            className={
-                                isBluePicked
-                                    ? "modal-blue-picked-div"
-                                    : "modal-blue-div"
-                            }
-                        ></div>
+                            onClick={()=>changeColor("#e6ec8f")} 
+                            className = {isYellowPicked ? "modal-yellow-picked-div" :"modal-yellow-div"}></div>                        
                         <div
-                            onClick={() => changeColor("#86e3c6")}
-                            className={
-                                isGrBluePicked
-                                    ? "modal-grblue-picked-div"
-                                    : "modal-grblue-div"
-                            }
-                        ></div>
+                            onClick={()=>changeColor("#febd7b")} 
+                            className = {isOrangePicked ? "modal-orange-picked-div" :"modal-orange-div"}></div>                        
                         <div
-                            onClick={() => changeColor("#8cf1a4")}
-                            className={
-                                isGreenPicked
-                                    ? "modal-green-picked-div"
-                                    : "modal-green-div"
-                            }
-                        ></div>
+                            onClick={()=>changeColor("#BDBDBD")} 
+                            className = {isGreyPicked ? "modal-grey-picked-div" :"modal-grey-div"}></div>                        
 
-                        <div
-                            onClick={() => changeColor("#e6ec8f")}
-                            className={
-                                isYellowPicked
-                                    ? "modal-yellow-picked-div"
-                                    : "modal-yellow-div"
-                            }
-                        ></div>
-                        <div
-                            onClick={() => changeColor("#febd7b")}
-                            className={
-                                isOrangePicked
-                                    ? "modal-orange-picked-div"
-                                    : "modal-orange-div"
-                            }
-                        ></div>
-                        <div
-                            onClick={() => changeColor("#BDBDBD")}
-                            className={
-                                isGreyPicked
-                                    ? "modal-grey-picked-div"
-                                    : "modal-grey-div"
-                            }
-                        ></div>
                     </div>
 
                     <div>
@@ -625,6 +499,7 @@ const TodayModal = (props) => {
             </Modal>
         </div>
     );
-};
+                    };
+                    
 
 export default TodayModal;
