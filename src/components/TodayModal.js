@@ -329,8 +329,17 @@ const TodayModal = (props) => {
         if (sortSelected == "time") {
             //일정 시작시간에 맞춰 sorting하기
             let eventSorting = [...eventArr];
-            eventSorting.sort((a, b) => new Date(a.start) - new Date(b.start));
-            setEventArr(eventSorting);
+            //핀되어있는 요소
+            let pinnedEvent = eventSorting.filter(
+                (el) => pinnedItems.filter((pin) => pin.id == el.id).length == 1
+            );
+			let unPinnedEvent = eventSorting.filter(
+                (el) => pinnedItems.filter((pin) => pin.id == el.id).length == 0
+            );
+            pinnedEvent.sort((a, b) => new Date(a.start) - new Date(b.start));
+            unPinnedEvent.sort((a, b) => new Date(a.start) - new Date(b.start));
+
+            setEventArr([...pinnedEvent, ...unPinnedEvent]);
             //checkItem도 같이 여기서 정렬을 해줄까..? checkitem은 dateInfo랑 id값을가짐
         } else if (sortSelected == "completed") {
             //checkItem먼저 출력한 뒤, eventArr 엔 있는데 checkItem에 없는 애들 출력해줘야함....
@@ -365,7 +374,7 @@ const TodayModal = (props) => {
             setEventArr([...eventIncomplete, ...eventCompleted]);
             console.log([...eventIncomplete, ...eventCompleted]);
         }
-    }, [sortSelected, eventArr.length, checkItems.length]);
+    }, [sortSelected, eventArr.length, checkItems.length, pinnedItems.length]);
 
     useEffect(() => {
         setSortSelected("time");
