@@ -45,10 +45,6 @@ const TodayModal = (props) => {
     const [modalOpen, setModalOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
 
-    //중요 이벤트 설정
-    const [important, setImportant] = useState(false);
-    const [importantEvent, setImportantEvent] = useState({});
-
     useEffect(() => {
         console.log("렌더링 됐습니다.");
     }, [progress]);
