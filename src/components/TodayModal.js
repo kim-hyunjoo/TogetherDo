@@ -39,8 +39,12 @@ const TodayModal = (props) => {
         end: "",
     });
 
+    //노타임
+    const [noTime, setNoTime] = useState(false);
+
     //수정, 저장 버튼을 한번 눌렀을 시 비활성화하기 위한 useState
     const [disable, setDisable] = useState(false);
+    const [noTimeDisable, setNoTimeDisable] = useState(false);
     //modal, edit modal
     const [modalOpen, setModalOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
@@ -76,24 +80,14 @@ const TodayModal = (props) => {
         setIsOrangePicked(false);
         setIsGreyPicked(false);
 
-        // 버튼색 : 핑크
-        if (color === "#f5c6e1") {
-            setIsPinkPicked(true);
-        } else if (color === "#c59bef") {
-            setIsPurplePicked(true);
-        } else if (color === "#90b9df") {
-            setIsBluePicked(true);
-        } else if (color === "#86e3c6") {
-            setIsGrBluePicked(true);
-        } else if (color === "#8cf1a4") {
-            setIsGreenPicked(true);
-        } else if (color === "#e6ec8f") {
-            setIsYellowPicked(true);
-        } else if (color === "#febd7b") {
-            setIsOrangePicked(true);
-        } else if (color === "#BDBDBD") {
-            setIsGreyPicked(true);
-        }
+        if(color === '#f5c6e1') { setIsPinkPicked(true); }
+        else if (color === '#c59bef') { setIsPurplePicked(true); }
+        else if (color === '#90b9df'){setIsBluePicked(true); }
+        else if (color === '#86e3c6'){setIsGrBluePicked(true); }
+        else if (color === '#8cf1a4'){setIsGreenPicked(true); }
+        else if (color === '#e6ec8f'){setIsYellowPicked(true); }
+        else if (color === '#febd7b'){setIsOrangePicked(true); }
+        else if (color === '#BDBDBD'){setIsGreyPicked(true); }
     };
 
     //이벤트를 수정하기 위해 모달 내에서 이벤트를 클릭했을 때 실행
@@ -114,27 +108,48 @@ const TodayModal = (props) => {
 
         console.log("event 입니다.", event);
         console.log("defaultData 입니다.", defaultData);
-    };
 
+    };
+    }
+    const noTimeClicked = () => {
+        if (noTime === false) {
+            setNoTime(true);
+            setNoTimeDisable(true);
+        } else {
+            setNoTime(false);
+            setNoTimeDisable(false);
+        }
+        console.log(noTime);
+    }
+/*
+    useEffect(()=>{
+        startTimeRef.current = "";
+        endTimeRef.current = "";
+        eventRef.current = "";
+    }, [disable])
+*/
     //모달 저장or수정 버튼 클릭시 이벤트
     const onSaveEvent = (editMode) => {
         //저장하려고 할 때 startTimeRef, endTimeRef, eventRef 하나라도 비어있을 시 경고창
         //console.log(startTimeRef.current);
-        if (startTimeRef.current.value == "") {
-            alert("시작 시간을 입력하세요");
-            return;
-        }
-        if (endTimeRef.current.value == "") {
-            alert("종료 시간을 입력하세요");
-            return;
-        }
-        if (eventRef.current.value == "") {
-            alert("일정을 입력하세요");
-            return;
-        }
 
-        const startTime = `${header}T${startTimeRef.current.value}`;
-        const endTime = `${header}T${endTimeRef.current.value}`;
+        if(noTime == false) {
+            if(startTimeRef.current.value == "") {
+                alert("시작 시간을 입력하세요")
+                return;
+            }
+            if(endTimeRef.current.value == "") {
+                alert("종료 시간을 입력하세요")
+                return;
+            }
+            if(eventRef.current.value == "") {
+                alert("일정을 입력하세요")
+                return;
+            }
+        }
+        
+        const startTime = noTime ? `${header}` : `${header}T${startTimeRef.current.value}`;
+        const endTime = noTime ? `${header}` : `${header}T${endTimeRef.current.value}`;
         const eventContent = eventRef.current.value;
         //edit mode의 경우 선택된 이벤트의 ID 그대로 저장, 아닐 경우 새로운 eventID 부여
         const eventId = editMode == true ? defaultData.id : eventID;
@@ -156,7 +171,9 @@ const TodayModal = (props) => {
             setEventArr([...eventArr, eventObj]);
             setEventID(parseInt(eventID) + 1); //새로 생성되는 이벤트에 부여할 eventID 갱신
         }
-        setDisable(true); //수정,저장 버튼 비활성화
+        setDisable(true);//수정,저장 버튼 비활성화
+        setNoTime(false);
+        setNoTimeDisable(false);
     };
 
     //이벤트 삭제
@@ -255,6 +272,7 @@ const TodayModal = (props) => {
     );
 
     //날짜 클릭 시 해당 날짜의 일정 목록을 checkbox 및 button을 이용하여 todo-list 구현
+    
     const eventButtons =
         todayEventArr.length == 0
             ? "일정이 없습니다."
@@ -572,19 +590,12 @@ const TodayModal = (props) => {
                     <div>
                         <span>Time</span>
                     </div>
-                    <div className="modal-time-div">
-                        <input
-                            type="time"
-                            step="300"
-                            ref={startTimeRef}
-                            defaultValue={editMode ? defaultData.start : null}
-                        />
-                        <input
-                            type="time"
-                            step="300"
-                            ref={endTimeRef}
-                            defaultValue={editMode ? defaultData.end : null}
-                        />
+
+                    <div className="modal-time-div">                      
+                        <input type="time" step="300" ref={startTimeRef} defaultValue={editMode ? defaultData.start : null} disabled={noTimeDisable}/>
+                        <input type="time" step="300" ref={endTimeRef} defaultValue={editMode ? defaultData.end : null} disabled={noTimeDisable}/>
+                        <input type="button" onClick={()=>noTimeClicked()} value = "시간X"/>
+
                     </div>
                     <div>
                         <span>Input</span>
