@@ -147,8 +147,7 @@ const Calendar = () => {
     if(extra_id) setExtraEventID(parseInt(extra_id));
     
     const pinned_data = localStorage.getItem("pinnedItems");
-        if (pinned_data) {
-          setPinnedItems(JSON.parse(pinned_data));
+    if (pinned_data) setPinnedItems(JSON.parse(pinned_data));
   }, []); 
 
   const closeTodayModal = () => {
@@ -244,24 +243,11 @@ const Calendar = () => {
       return;
     }
 
-      const extraEventDelete = (event) => {
-          console.log(event);
-          const newExtraEventArr = extraEventArr.filter(ex=>ex.id != event.id)
-          setExtraEventArr(newExtraEventArr)
-      }
-
-      const extraEventAdd = () => {
-        if(extraEventRef.current.value == "") {
-          alert("일정을 입력하세요")
-          return;
-        }
-
+     
         const newTitle = extraEventRef.current.value;
         const eventObj = {
           id: extraEventID,
           title: newTitle,
-          start: `2022-11-06T10:00`,
-          end: `2022-11-06T11:00`,
           backgroundColor : 'grey',
           borderColor : 'grey'
       };
@@ -353,6 +339,7 @@ const Calendar = () => {
       </Col>
     </Row>
   </div>
-);};
+);}
+
 
 export default Calendar;
