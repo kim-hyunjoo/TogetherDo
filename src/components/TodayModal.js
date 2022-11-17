@@ -24,6 +24,10 @@ const TodayModal = (props) => {
     const [modalOpen, setModalOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
     
+	//중요 이벤트 설정
+    const [important, setImportant] = useState({});
+    const [importantEvents, setImportantEvents] = useState([]);
+
         
     useEffect(()=> {
         console.log("렌더링 됐습니다.");
@@ -138,6 +142,27 @@ const TodayModal = (props) => {
         const newCheckItems = checkItems.filter(item => item.id != id)
         setCheckItems(newCheckItems);
     };
+
+	//중요 이벤트 설정
+    const handlePin = (id) => {
+		console.log("id = ", id);
+        if (important === false) {
+            document.getElementById(`pin-${id}`).src = "images/pin.png";
+            setImportant(!important);
+            handleImportant(id);
+        } else {
+            document.getElementById(`pin-${id}`).src = "images/pin_black.png";
+            setImportant(!important);
+        }
+    };
+
+    const handleImportant = (id) => {
+        setImportantEvents(eventArr.filter((event) => event.id === id));
+        console.log(importantEvents);
+		// let eventSorting = [...importantEvents, eventArr.filter((event) => event.id != id)];
+		// setEventArr(eventSorting);
+        //console.log(eventArr);
+    };
     
      // 체크박스 단일 선택
     const handleSingleCheck = (checked, id) => {
@@ -197,7 +222,20 @@ const TodayModal = (props) => {
                 <button className='event-button' style={{backgroundColor : event.backgroundColor}} onClick={()=>eventClick(event)}> {`${start}-${end} ${event.title}`}</button>
                 {/* 삭제버튼 */}
                 <button className='delete-button' onClick={()=>deleteEvent(event.id)}>&times;</button>
-            </div>
+				<img
+                        alt="pin"
+                        id={`pin-${event.id}`}
+                        src={
+							(important.id === event.id &&
+                            important.bool === false)
+                                ? "images/pin_black.png"
+                                : "images/pin.png"
+                        }
+                        width="40px"
+                        height="40px"
+                        onClick={() => handlePin(event.id)}
+                    />
+			</div>
         )
     }); 
 
