@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+
 import "../styles/Calendar.css";
 import "../styles/Modal.css";
 import FullCalendar from "@fullcalendar/react"; // must go before plugins
@@ -10,7 +11,6 @@ import TodayModal from "./TodayModal";
 import { format } from "date-fns";
 import { Col, Row } from "reactstrap";
 
-   
 
 const Calendar = () => {
     const [extraEvent, setExtraEvent] = useState();
@@ -209,7 +209,6 @@ const Calendar = () => {
         })   
         
     }
-
     useEffect(()=> {
         localStorage.setItem("events", JSON.stringify(eventArr));
         localStorage.setItem("eventID", JSON.stringify(eventID));
