@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import Modal from "./Modal";
 import ProgressBar from "./ProgressBar";
+import {solarToLunar} from "../module/LunarCalendar";
 import "../styles/Modal.css";
 
 const TodayModal = (props) => {   
@@ -256,7 +257,18 @@ const TodayModal = (props) => {
 
     useEffect(()=>{
         setSortSelected("time");
+        let eventSorting = [...eventArr];
+        eventSorting.sort((a, b) => new Date(a.start) - new Date(b.start))
+        setEventArr(eventSorting);
     }, [open])
+
+    const lunarHeader = (dateInfo) => {
+        const [solYear, solMonth, solDay] = dateInfo.split('-');
+        console.log(solMonth)
+        let {lunYear, lunMonth, lunDay} = solarToLunar(solYear, solMonth, solDay)
+        return `음${lunMonth}.${lunDay}`
+    }
+
 
     return (
         // 모달이 열릴때 openModal 클래스가 생성된다.
@@ -264,7 +276,8 @@ const TodayModal = (props) => {
             {open ? (
                 <section>
                     <header>
-                        {header}
+                        <div className = "date-header">{header}</div>
+                        <div className="lunar-header">{lunarHeader(header)}</div>
                         <button className="close" onClick={close}>
                             &times;
                         </button>
