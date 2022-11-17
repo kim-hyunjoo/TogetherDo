@@ -12,7 +12,7 @@ import { Footer, Header } from "antd/lib/layout/layout";
 import { Route, Routes } from "react-router-dom";
 
 const App = () => (
-    <div>
+    <div className="content-wrapper">
         <Layout className="layout">
             <Header className="header">
                 <Navbar />
