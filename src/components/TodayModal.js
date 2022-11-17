@@ -111,6 +111,7 @@ const TodayModal = (props) => {
     const onSaveEvent = (editMode) => {
         //저장하려고 할 때 startTimeRef, endTimeRef, eventRef 하나라도 비어있을 시 경고창
         //console.log(startTimeRef.current);
+        
         if(noTime == false) {
             if(startTimeRef.current.value == "") {
                 alert("시작 시간을 입력하세요")
