@@ -13,29 +13,33 @@ import { Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
 const App = () => {
     const [loginChecked, setLoginChecked] = useState(false);
-    return( 
-        <div>
-        {loginChecked ?
-        <Layout className="layout">
-            <Header className="header">
-                <Navbar />
-            </Header>
-            <Content className="content">
-                <Routes>
-                    <Route path="/" element={<Main />} />
-                    <Route path="/home" element={<Main />} />
-                    <Route path="/friends" element={<Friends />} />
-                    <Route path="/mypage" element={<MyPage />} />
-                </Routes>
-            </Content>
-            <Footer className="footer">
-                TogetherDo ©2022 Created by ReactMaster
-            </Footer>
-        </Layout> : <Login setLoginChecked = {setLoginChecked}/>
-        }
+    return (
+        <div className="content-wrapper">
+            {loginChecked ? (
+                <Layout className="layout">
+                    <Header className="header">
+                        <Navbar />
+                    </Header>
+                    <Content className="content">
+                        <Routes>
+                            <Route path="/" element={<Main />} />
+                            <Route path="/home" element={<Main />} />
+                            <Route path="/friends" element={<Friends />} />
+                            <Route path="/mypage" element={<MyPage />} />
+                        </Routes>
+                    </Content>
+                    <Footer
+                        className="footer"
+                        style={{ background: "lightgray" }}
+                    >
+                        TogetherDo ©2022 Created by ReactMaster
+                    </Footer>
+                </Layout>
+            ) : (
+                <Login setLoginChecked={setLoginChecked} />
+            )}
         </div>
-    )
-}
-
+    );
+};
 
 export default App;

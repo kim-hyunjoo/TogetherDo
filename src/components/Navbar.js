@@ -7,6 +7,7 @@ import {
 } from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
 import React from "react";
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(() => ({
     navbar: {
@@ -15,7 +16,7 @@ const useStyles = makeStyles(() => ({
         paddingLeft: "80px",
     },
     logo: {
-        fontFamily: "ubuntu",
+        fontFamily: "ubuntu-bold",
 		fontSize: "25px",
         fontWeight: 600,
         color: "#FFFEFE",
@@ -23,7 +24,7 @@ const useStyles = makeStyles(() => ({
         paddingRight: "60px",
     },
     menuButton: {
-        fontFamily: "ubuntu",
+        fontFamily: "ubuntu-medium",
         fontWeight: 500,
         size: "18px",
         marginLeft: "30px",
@@ -33,6 +34,7 @@ const useStyles = makeStyles(() => ({
         justifyContent: "space-between",
     },
     description: {
+        fontFamily: "ubuntu-light",
 		marginTop: "10px",
         minWidth: "350px",
         fontSize: "15px",
@@ -74,9 +76,11 @@ const Navbar = () => {
     );
 
     const TogetherDoLogo = (
-        <Typography variant="h6" component="h1" className={logo}>
-            TogetherDo
-        </Typography>
+        <Link to="/" style={{ textDecoration: 'none' }}>
+            <Typography variant="h6" component="h1" className={logo}>
+                TogetherDo
+            </Typography>
+        </Link>
     );
 
     const getMenuButtons = () => {
