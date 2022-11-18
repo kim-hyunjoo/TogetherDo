@@ -47,3 +47,11 @@
 	padding-bottom: 80px;
 	column-gap: 40px;
 }
+.Wrapper {
+	margin-top: 1rem;
+}
+.Label {
+	font-size: 1rem;
+	color: gray;
+	margin-bottom: 0.25rem;
+}
