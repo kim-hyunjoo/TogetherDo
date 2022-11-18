@@ -10,7 +10,7 @@ import Navbar from "./components/Navbar";
 import { Layout } from "antd";
 import { Footer, Header } from "antd/lib/layout/layout";
 import { Route, Routes } from "react-router-dom";
-import Login from "./pages/login";
+import Login from "./pages/Login";
 const App = () => {
     const [loginChecked, setLoginChecked] = useState(false);
     return( 

@@ -1,46 +1,51 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import LoginForm from "./LoginForm";
+import SignUpForm from "./SignUpForm";
+import "../styles/Login.css"
 
 const Login = (props) => {
 	const{ setLoginChecked } = props;
+  const [loginUser, setLoginUser] = useState({
+    email: '',
+    passward: '',
+  });
+	const [changed, setChanged] = useState(true);
+	const [saveUser, setSaveUser] = useState(() => {
+        if (typeof window !== "undefined") {
+          const saved = localStorage.getItem("users");
+          if (saved !== null) {
+            //console.log(JSON.parse(saved))
+            return JSON.parse(saved);
+          } else {
+            return [];
+          }
+        }
+    });
+	useEffect(()=> {
+        localStorage.setItem("users", JSON.stringify(saveUser));
+ 	},[saveUser])
+	useEffect(() => {
+    const data = localStorage.getItem("users");
+    if (data) {
+      setSaveUser(JSON.parse(data));
+    }
+	}, []);
 
-	const [loginInfo, setLoginInfo] = useState({
-		ID: "",
-		PASSWARD: "",
-	});
-	
-	const { ID, PASSWARD } = loginInfo;
-	const userList =[
-		{
-			ID : "qkrwodbs43",
-			PASSWARD : "1234"
-		}
-	];
-	const onChange = (e) => {
-		const { ID, value } = e.target;
-
-		setLoginInfo({
-			...loginInfo,
-			[ID]: value,
-		});
-	};
-
-	const loginClicked = () => {
-		if(loginInfo == userList) {
-		}
-		setLoginChecked(true);
-	};
-	const createAccount = () => {
-
-	};
-	return (	
-		<div>
-			<h1>login</h1>
-			<input name = "ID" onChange={()=>onChange()} value={ID} placeholder="아이디" />
-			<input name = "PASSWARD" onChange={()=>onChange()} value={PASSWARD}placeholder="비밀번호" />
-			<button onClick={()=>loginClicked()}>로그인</button>
-			<button onClick={()=>createAccount()}>회원가입</button>
-		</div>
-	);
-};
+  return (
+  changed ? 
+  <LoginForm
+    loginUser={loginUser}
+    saveUser={saveUser}
+    setLoginUser={setLoginUser}
+    setLoginChecked = {setLoginChecked}
+    setChanged={setChanged}
+  /> :
+  <SignUpForm 
+    setSaveUser={setSaveUser} 
+    saveUser = {saveUser} 
+    setChanged={setChanged}
+  />
+  )
+}
 
 export default Login;
