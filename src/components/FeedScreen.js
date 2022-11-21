@@ -12,7 +12,7 @@ const FeedScreen = () => {
           .then(result => setFeedInfoList(result));
     }, []);
 
-    const userList = feedInfoList.map(v => (<FeedSection key={v.id} id={v.user_name} img={v.imageUrls} content={<Calendar/>}/>));
+    const userList = feedInfoList.map(v => (<FeedSection key={v.id} id={v.user_name} img={v.imageUrls} content={<Calendar />}/>));
     //const followList = feedInfoList.map
 	return (
         <div>

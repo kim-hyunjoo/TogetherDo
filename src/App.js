@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import "./styles/Layout.css";
 import "antd/dist/antd.css";
@@ -13,6 +13,33 @@ import { Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
 const App = () => {
     const [loginChecked, setLoginChecked] = useState(false);
+    const [saveUser, setSaveUser] = useState(() => {
+        if (typeof window !== "undefined") {
+          const saved = localStorage.getItem("users");
+          if (saved !== null) {
+            //console.log(JSON.parse(saved))
+            return JSON.parse(saved);
+          } else {
+            return [];
+          }
+        }
+    });
+    const [loginUser, setLoginUser] = useState({
+        email: '',
+        passward: '',
+    });
+    
+    
+        
+        useEffect(()=> {
+            localStorage.setItem("users", JSON.stringify(saveUser));
+         },[saveUser])
+        useEffect(() => {
+        const data = localStorage.getItem("users");
+        if (data) {
+          setSaveUser(JSON.parse(data));
+        }
+        }, []);
     return (
         <div className="content-wrapper">
             {loginChecked ? (
@@ -22,8 +49,8 @@ const App = () => {
                     </Header>
                     <Content className="content">
                         <Routes>
-                            <Route path="/" element={<Main />} />
-                            <Route path="/home" element={<Main />} />
+                            <Route path="/" element={<Main loginUser={loginUser.email}/>} />
+                            <Route path="/home" element={<Main loginUser={loginUser.email}/>} />
                             <Route path="/friends" element={<Friends />} />
                             <Route path="/mypage" element={<MyPage />} />
                         </Routes>
@@ -36,7 +63,12 @@ const App = () => {
                     </Footer>
                 </Layout>
             ) : (
-                <Login setLoginChecked={setLoginChecked} />
+                <Login 
+                setLoginChecked={setLoginChecked} 
+                saveUser={saveUser} 
+                setSaveUser={setSaveUser}
+                loginUser={loginUser}
+                setLoginUser={setLoginUser} />
             )}
         </div>
     );

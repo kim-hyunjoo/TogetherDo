@@ -10,8 +10,20 @@ import TodayModal from "./TodayModal";
 import { format } from "date-fns";
 import { Col, Row } from "reactstrap";
 
-
-const Calendar = () => {
+const Calendar = (props) => {
+  //friends에서도 볼려면 
+  const { loginUser } = props; //현재 로그인 된 USER의 이메일 정보
+  useEffect(()=> {
+    const data = JSON.parse(localStorage.getItem("users"));
+    //const data = JSON.parse(saved);
+    data.map(item => {
+      if (item.email == loginUser) {
+        console.log(`찾음 : ${item.email}`)
+        //추가해줄때, 삭제해줄때,
+      }
+        
+    })
+  },[])
   //extra event data
   const [extraEvent, setExtraEvent] = useState(); //현재 extraEvent쪽에서 드래그 하고 있는 extra event 객체
   const [extraEventArr, setExtraEventArr] = useState(() => {//빠른 일정 추가를 위한 extra events 모음
@@ -119,6 +131,9 @@ const Calendar = () => {
     })
   },[])
 
+  //test
+  
+
   useEffect(()=> { //eventArr, eventID, checkItems, extraEventID값 변경 시 localStorage에 업데이트
     localStorage.setItem("events", JSON.stringify(eventArr));
     localStorage.setItem("eventID", JSON.stringify(eventID));
@@ -126,6 +141,19 @@ const Calendar = () => {
     localStorage.setItem("extraEventArr", JSON.stringify(extraEventArr));
     localStorage.setItem("extraEventID", JSON.stringify(extraEventID));
     localStorage.setItem("pinnedItems", JSON.stringify(pinnedItems));
+
+    const test = 
+    {email : loginUser, 
+    data : 
+    { events : eventArr,
+      eventID : eventID,
+      extraEventArr : extraEventArr ,
+      extraEventID : extraEventID,
+      checkItems : checkItems,
+      pinnedItems : pinnedItems} 
+    }
+    //test
+    localStorage.setItem("test", JSON.stringify(test));
   },[eventArr, eventID, checkItems, extraEventID, extraEventArr, pinnedItems])
       
 	 
@@ -272,10 +300,9 @@ const Calendar = () => {
                   key={event.id}
                   title={event.title}
                   id={event.id}
-                  start={event.start}
-                  end={event.end}
                   backgroundcolor={event.backgroundColor}
                   bordercolor={event.borderColor}
+                  onClick={()=>console.log(event.title)}
                 >
                 {event.title}
               </div>
