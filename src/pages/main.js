@@ -1,16 +1,13 @@
 import React from "react";
 import "../styles/Layout.css";
 import Calendar from "../components/Calendar";
-import ExternalCalendar from "../components/ExternalCalendar";
-import SideMenu from "../components/SideMenu";
 
-const Main = () => {
-    
+const Main = (props) => {
+    const { loginUser, userData, saveUser, setSaveUser }= props;
     return (    
     <div className="mainhomescreen">
         <div className="homescreen">
-            {/*<SideMenu />*/}
-            <Calendar />
+            <Calendar loginUser={loginUser} userData={userData} saveUser={saveUser} setSaveUser={setSaveUser}/>
         </div>
     </div>
     )

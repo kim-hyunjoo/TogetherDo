@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import "./styles/Layout.css";
 import "antd/dist/antd.css";
@@ -13,6 +13,48 @@ import { Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
 const App = () => {
     const [loginChecked, setLoginChecked] = useState(false);
+    const [saveUser, setSaveUser] = useState(() => {
+        if (typeof window !== "undefined") {
+          const saved = localStorage.getItem("users");
+          if (saved !== null) {
+            console.log(JSON.parse(saved))
+            return JSON.parse(saved);
+          } else {
+            return [];
+          }
+        }
+    });
+    const [loginUser, setLoginUser] = useState({
+        email: '',
+        passward: '',
+    });
+
+    const [userData, setUserData] = useState(()=> {
+        console.log(saveUser)
+        const user = saveUser.find(user=>user.email == loginUser)
+        return user;
+    });
+    
+        
+    useEffect(()=> {
+        localStorage.setItem("users", JSON.stringify(saveUser));
+    },[saveUser])
+
+    useEffect(() => {
+    const data = localStorage.getItem("users");
+    if (data) {
+        setSaveUser(JSON.parse(data));
+    }
+    }, []);
+
+    useEffect(()=> {
+        console.log(loginUser);
+        console.log(saveUser);
+        const user = saveUser.find(user=>user.email == loginUser.email)
+        console.log(user);
+        setUserData(user);
+    },[loginUser])
+
     return (
         <div className="content-wrapper">
             {loginChecked ? (
@@ -22,10 +64,10 @@ const App = () => {
                     </Header>
                     <Content className="content">
                         <Routes>
-                            <Route path="/" element={<Main />} />
-                            <Route path="/home" element={<Main />} />
-                            <Route path="/friends" element={<Friends />} />
-                            <Route path="/mypage" element={<MyPage />} />
+                            <Route path="/" element={<Main loginUser={loginUser.email} userData={userData} saveUser={saveUser} setSaveUser={setSaveUser}/>} />
+                            <Route path="/home" element={<Main loginUser={loginUser.email} userData={userData} saveUser={saveUser} setSaveUser={setSaveUser}/>} />
+                            <Route path="/friends" element={<Friends loginUser={loginUser.email} userData={userData} saveUser={saveUser} setSaveUser={setSaveUser}/>} />
+                            <Route path="/mypage" element={<MyPage loginUser={loginUser.email} saveUser={saveUser}/>} />
                         </Routes>
                     </Content>
                     <Footer
@@ -36,7 +78,12 @@ const App = () => {
                     </Footer>
                 </Layout>
             ) : (
-                <Login setLoginChecked={setLoginChecked} />
+                <Login 
+                setLoginChecked={setLoginChecked} 
+                saveUser={saveUser} 
+                setSaveUser={setSaveUser}
+                loginUser={loginUser}
+                setLoginUser={setLoginUser} />
             )}
         </div>
     );

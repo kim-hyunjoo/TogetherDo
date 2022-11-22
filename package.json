@@ -6,6 +6,7 @@
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@fullcalendar/daygrid": "^5.11.3",
+    "@fullcalendar/google-calendar": "^5.11.3",
     "@fullcalendar/interaction": "^5.11.3",
     "@fullcalendar/moment": "^5.11.3",
     "@fullcalendar/react": "^5.11.2",

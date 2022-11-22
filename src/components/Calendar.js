@@ -10,16 +10,22 @@ import TodayModal from "./TodayModal";
 import { format } from "date-fns";
 import { Col, Row } from "reactstrap";
 
-
-const Calendar = () => {
+const Calendar = (props) => {
+  //friends에서도 볼려면 
+  const { loginUser, userData, saveUser, setSaveUser } = props; //현재 로그인 된 USER의 이메일 정보
+  
   //extra event data
   const [extraEvent, setExtraEvent] = useState(); //현재 extraEvent쪽에서 드래그 하고 있는 extra event 객체
   const [extraEventArr, setExtraEventArr] = useState(() => {//빠른 일정 추가를 위한 extra events 모음
     if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("extraEventArr");
-      if (saved !== null) {
-        console.log(JSON.parse(saved))
-        return JSON.parse(saved);
+      const saved = JSON.parse(localStorage.getItem("users"));
+      console.log(loginUser);
+      console.log(saved);
+      const data = saved.find(item=>item.email == loginUser);
+      console.log(data)
+      const arr = data.data.extraEventArr;
+      if (arr !== null) {  
+        return arr;
       } else {
         return [];
       }
@@ -28,10 +34,11 @@ const Calendar = () => {
   const extraEventRef = useRef(""); //사용자에게 입력받아 extraEventArr에 추가하기 위한 ref
   const [extraEventID, setExtraEventID] = useState(() => { //각 extraEvent에 부여되는 ID값, localStorage에서 불러오기
     if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("extraEventID");
-      if (saved !== null) {
-        console.log(JSON.parse(saved))
-        return JSON.parse(saved);
+      const saved = JSON.parse(localStorage.getItem("users"));
+      const data = saved.find(item=>item.email == loginUser);
+      const id = data.data.extraEventID;
+      if (id !== null) {
+        return parseInt(id);
       } else {
         return parseInt(0);
       }
@@ -41,10 +48,11 @@ const Calendar = () => {
   //Calendar event data
   const [eventArr, setEventArr] = useState(() => { //localStorage에서 불러오기
     if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("events");
-      if (saved !== null) {
-        console.log(JSON.parse(saved))
-        return JSON.parse(saved);
+      const saved = JSON.parse(localStorage.getItem("users"));
+      const data = saved.find(item=>item.email == loginUser);
+      const arr = data.data.events;
+      if (arr !== null) {
+        return arr;
       } else {
         return [];
       }
@@ -54,10 +62,11 @@ const Calendar = () => {
   //event ID값 갱신
   const [eventID, setEventID ]= useState(() => {
     if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("eventID");
-      if (saved !== null) {
-        console.log(JSON.parse(saved))
-        return JSON.parse(saved);
+      const saved = JSON.parse(localStorage.getItem("users"));
+      const data = saved.find(item=>item.email == loginUser);
+      const id = data.data.eventID;
+      if (id !== null) {
+        return parseInt(id);
       } else {
         return parseInt(0);
       }
@@ -67,10 +76,11 @@ const Calendar = () => {
   // 체크된 아이템을 담을 배열 {dateInfo : 날짜, id : eventID}
   const [checkItems, setCheckItems] = useState(() => {
     if (typeof window !== "undefined") { //localStorage에서 불러오기
-      const saved = localStorage.getItem("checkItems");
-      if (saved !== null) {
-        console.log(JSON.parse(saved))
-        return JSON.parse(saved);
+      const saved = JSON.parse(localStorage.getItem("users"));
+      const data = saved.find(item=>item.email == loginUser);
+      const arr = data.data.checkItems;
+      if (arr !== null) {
+        return arr;
       } else {
         return [];
       }
@@ -79,13 +89,14 @@ const Calendar = () => {
   
    const [pinnedItems, setPinnedItems] = useState(() => {
         if (typeof window !== "undefined") {
-          const saved = localStorage.getItem("pinnedItems");
-          if (saved !== null) {
-            console.log(JSON.parse(saved))
-            return JSON.parse(saved);
+          const saved = JSON.parse(localStorage.getItem("users"));
+          const data = saved.find(item=>item.email == loginUser);
+          const arr = data.data.pinnedItems;
+          if (arr !== null) {
+            return arr;
           } else {
-            return [];
-          }
+           return [];
+      }
         }
       });
       
@@ -119,18 +130,56 @@ const Calendar = () => {
     })
   },[])
 
+  //test
+  
+
   useEffect(()=> { //eventArr, eventID, checkItems, extraEventID값 변경 시 localStorage에 업데이트
+    /*
     localStorage.setItem("events", JSON.stringify(eventArr));
     localStorage.setItem("eventID", JSON.stringify(eventID));
     localStorage.setItem("checkItems", JSON.stringify(checkItems));
     localStorage.setItem("extraEventArr", JSON.stringify(extraEventArr));
     localStorage.setItem("extraEventID", JSON.stringify(extraEventID));
     localStorage.setItem("pinnedItems", JSON.stringify(pinnedItems));
+
+    const test = 
+    {email : loginUser, 
+    data : 
+    { events : eventArr,
+      eventID : eventID,
+      extraEventArr : extraEventArr ,
+      extraEventID : extraEventID,
+      checkItems : checkItems,
+      pinnedItems : pinnedItems} 
+    }
+    //test
+    localStorage.setItem("test", JSON.stringify(test));
+    */
+    const data = saveUser.find(user=>user.email == loginUser);
+   const newData = {
+    ...data,
+    data : {
+        extraEventArr,
+        extraEventID,
+        events : eventArr,
+        eventID,
+        checkItems,
+        pinnedItems
+        }
+    }
+    //기존꺼 삭제후 다시 기입???
+    console.log(saveUser)
+    const newSaveUser =  saveUser.filter(user=>user.email != loginUser);
+    setSaveUser([...newSaveUser,newData]);
+    console.log([...newSaveUser,newData])
+   localStorage.setItem("users", JSON.stringify(saveUser))
+
   },[eventArr, eventID, checkItems, extraEventID, extraEventArr, pinnedItems])
       
 	 
     
   useEffect(() => { //처음 렌더링 시 localStorage에서 값 불러오기
+/*
     const data = localStorage.getItem("events");
     if (data) setEventArr(JSON.parse(data));
 
@@ -148,6 +197,23 @@ const Calendar = () => {
     
     const pinned_data = localStorage.getItem("pinnedItems");
     if (pinned_data) setPinnedItems(JSON.parse(pinned_data));
+*/
+
+    const saved = JSON.parse(localStorage.getItem("users"));
+    const userData = saved.find(item=>item.email == loginUser).data;
+    //const arr = userData.data.pinnedItems;
+    console.log(userData)
+
+    if(userData) {
+      setEventArr(userData.events);
+      setEventID(userData.eventID);
+      setCheckItems(userData.checkItems);
+      setPinnedItems(userData.pinnedItems);
+      setExtraEventArr(userData.extraEventArr);
+      setExtraEventID(userData.extraEventID);
+    }
+    
+
   }, []); 
 
   const closeTodayModal = () => {
@@ -169,7 +235,7 @@ const Calendar = () => {
   const handleExtraEventDrop = (info) => {
     let date = new Date(`${info.date}`); //extra event가 drop된 날짜 정보 가져오기
     const dateInfo = format(date, "YYYY-MM-DD"); //날짜 포맷 바꿔주기
-    const newEvent = {...extraEvent, start : `${dateInfo}`, end : `${dateInfo}`} // 기존 extraEvent 객체에 start, end 속성 부여
+    const newEvent = {...extraEvent, id : eventID, start : `${dateInfo}`, end : `${dateInfo}`} // 기존 extraEvent 객체에 start, end 속성 부여
     setEventArr([...eventArr, newEvent]); //캘린더 eventArr에 추가
     setEventID(parseInt(eventID) + 1); // eventID 값 갱신
   }
@@ -272,10 +338,9 @@ const Calendar = () => {
                   key={event.id}
                   title={event.title}
                   id={event.id}
-                  start={event.start}
-                  end={event.end}
                   backgroundcolor={event.backgroundColor}
                   bordercolor={event.borderColor}
+                  onClick={()=>console.log(event.title)}
                 >
                 {event.title}
               </div>

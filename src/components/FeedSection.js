@@ -7,7 +7,7 @@ import "../styles/Feed.css"
 const FeedSection = (props) => {
     const { key, id, img, content} = props;
 	return (
-        <div>
+        <div key={key}>
         <Layout>
             <Header className="header">
                 <img width = "70px" height= "70px" src = {img} />
