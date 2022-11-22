@@ -5,7 +5,7 @@ import Member from './Member';
 const RightBar = (props) => {
   const { content } = props;
   console.log("content : ",content);
-  const userList = content.map(v => <Member id = {v.id} name = {v.user_name} img={v.imageUrls}/>);
+  const userList = content.map(v => <Member key={v.email} id = {v.email} name = {v.userName} img={v.profile}/>);
   return (
     <div className="mainRight">
       <div className="feedBox">

@@ -56,6 +56,7 @@ const LoginForm = (props) => {
         console.log("clicked!!");
     }
     useEffect(()=>{
+        console.log(loginUser)
         if(saveUser.length == 0){
             console.log("회원가입한 유저가 없습니다 회원가입을 먼저 해주십시오");
         }else{

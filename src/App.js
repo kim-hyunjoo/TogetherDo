@@ -17,7 +17,7 @@ const App = () => {
         if (typeof window !== "undefined") {
           const saved = localStorage.getItem("users");
           if (saved !== null) {
-            //console.log(JSON.parse(saved))
+            console.log(JSON.parse(saved))
             return JSON.parse(saved);
           } else {
             return [];
@@ -28,18 +28,33 @@ const App = () => {
         email: '',
         passward: '',
     });
-    
+
+    const [userData, setUserData] = useState(()=> {
+        console.log(saveUser)
+        const user = saveUser.find(user=>user.email == loginUser)
+        return user;
+    });
     
         
-        useEffect(()=> {
-            localStorage.setItem("users", JSON.stringify(saveUser));
-         },[saveUser])
-        useEffect(() => {
-        const data = localStorage.getItem("users");
-        if (data) {
-          setSaveUser(JSON.parse(data));
-        }
-        }, []);
+    useEffect(()=> {
+        localStorage.setItem("users", JSON.stringify(saveUser));
+    },[saveUser])
+
+    useEffect(() => {
+    const data = localStorage.getItem("users");
+    if (data) {
+        setSaveUser(JSON.parse(data));
+    }
+    }, []);
+
+    useEffect(()=> {
+        console.log(loginUser);
+        console.log(saveUser);
+        const user = saveUser.find(user=>user.email == loginUser.email)
+        console.log(user);
+        setUserData(user);
+    },[loginUser])
+
     return (
         <div className="content-wrapper">
             {loginChecked ? (
@@ -49,10 +64,10 @@ const App = () => {
                     </Header>
                     <Content className="content">
                         <Routes>
-                            <Route path="/" element={<Main loginUser={loginUser.email}/>} />
-                            <Route path="/home" element={<Main loginUser={loginUser.email}/>} />
-                            <Route path="/friends" element={<Friends />} />
-                            <Route path="/mypage" element={<MyPage />} />
+                            <Route path="/" element={<Main loginUser={loginUser.email} userData={userData} saveUser={saveUser} setSaveUser={setSaveUser}/>} />
+                            <Route path="/home" element={<Main loginUser={loginUser.email} userData={userData} saveUser={saveUser} setSaveUser={setSaveUser}/>} />
+                            <Route path="/friends" element={<Friends loginUser={loginUser.email} userData={userData} saveUser={saveUser} setSaveUser={setSaveUser}/>} />
+                            <Route path="/mypage" element={<MyPage loginUser={loginUser.email} saveUser={saveUser}/>} />
                         </Routes>
                     </Content>
                     <Footer

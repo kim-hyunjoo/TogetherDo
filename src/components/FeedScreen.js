@@ -4,15 +4,26 @@ import Calendar from "./Calendar";
 import RightBar from "./RightBar";
 import "../styles/Layout.css";
 
-const FeedScreen = () => {
+const FeedScreen = (props) => {
+    const {loginUser, userData, saveUser, setSaveUser} = props
+    /*
     const [feedInfoList, setFeedInfoList] = useState([]);
     useEffect(() => {
         fetch('/data/UserData.json')
           .then(response => response.json())
           .then(result => setFeedInfoList(result));
-    }, []);
+    }, []);*/
 
-    const userList = feedInfoList.map(v => (<FeedSection key={v.id} id={v.user_name} img={v.imageUrls} content={<Calendar />}/>));
+    //각각의 loginUser, userData가 달라야함... 
+    const newUserList =saveUser.filter(user=>user.email != loginUser);
+    const userList = newUserList.map(v => {
+        const data = v.data;
+        const email = v.email;
+        console.log(data);
+        console.log(email);
+        console.log(saveUser); //갑자기 이상한 객체가 들어옴..
+        return (<FeedSection key={v.email} id={v.userName} img={v.profile} 
+        content={<Calendar loginUser={email} userData={data} saveUser={saveUser} setSaveUser={setSaveUser} />}/>)});
     //const followList = feedInfoList.map
 	return (
         <div>
@@ -23,7 +34,7 @@ const FeedScreen = () => {
                 <header>
                     팔로우한 친구목록
                 </header>
-                <RightBar content={feedInfoList}/>
+                <RightBar content={saveUser.filter(user=>user.email != loginUser)}/>
             </div>
         </div>
         
