@@ -1,20 +1,26 @@
-.container {
-    padding: 20
-}
+
 .title {
     font-size: 16;
     font-weight: bold;
-    
 }
 /* .content {
     font-size: 13;
     font-weight: bold;
 } */
 .header{
-    justify-content: space-between;
+    display: flex;
+    justify-content: center;
     background-color: transparent;
     height: 100px;
 }
+
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 30px;
+
+}
+
 .footer2 {
     padding: 40px 40px;
 }

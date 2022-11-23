@@ -1,0 +1,29 @@
+.guest-book { 
+    
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    background-color: white;
+    border : 3px solid;
+    border-color: #BCC0F2;
+    width : 400px;
+    border-radius: 10px;
+    padding : 20px;
+}
+
+.guest-header {
+    display: flex;
+    justify-content: center;
+    background-color: white;
+    height: 40px;
+
+    border-bottom: 1px solid;
+}
+
+.guest-main {
+    display: flex;
+    overflow: scroll;
+}
+
+.guest-footer {
+
+}
