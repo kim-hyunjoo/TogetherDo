@@ -9,10 +9,11 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import TodayModal from "./TodayModal";
 import { format } from "date-fns";
 import { Col, Row } from "reactstrap";
+import SideBar from "./SideBar";
 
 const Calendar = (props) => {
   //friends에서도 볼려면 
-  const { loginUser, userData, saveUser, setSaveUser } = props; //현재 로그인 된 USER의 이메일 정보
+  const { loginUser, isFriends = false, userData, saveUser, setSaveUser } = props; //현재 로그인 된 USER의 이메일 정보
   
   //extra event data
   const [extraEvent, setExtraEvent] = useState(); //현재 extraEvent쪽에서 드래그 하고 있는 extra event 객체
@@ -109,6 +110,7 @@ const Calendar = (props) => {
 
   useEffect(()=> { //extra EventArr에 Draggable 속성을 추가해줌
     let draggableEl = document.getElementById("external-events");
+    if (!draggableEl) return;
     new Draggable(draggableEl, { //extra Event 하나를 드래그 해서 캘린더에 넣을 때 발생한다
       itemSelector: ".extra-event-block",
       eventData: function(eventEl) {
@@ -323,34 +325,21 @@ const Calendar = (props) => {
     extraEventRef.current.value="";
   }
 
+  useEffect(()=> {
+    console.log(`isFriends : ${isFriends}`)
+  })
+
   return (
     <div className="calendar-contents">
       <Row>
-        <Col lg={3} sm={3} md={3} className = "side-bar">  
-          <div id="external-events">
-            <p align="center">
-              <strong>* 자주 쓰는 일정 *</strong>
-            </p>
-          <div className ="extra-event-list">
-            {extraEventArr.map(event => (
-              <div key={event.id} className="extra-event-obj">
-                <div className="extra-event-block"
-                  key={event.id}
-                  title={event.title}
-                  id={event.id}
-                  backgroundcolor={event.backgroundColor}
-                  bordercolor={event.borderColor}
-                  onClick={()=>console.log(event.title)}
-                >
-                {event.title}
-              </div>
-              <button className="close" onClick={()=>extraEventDelete(event)}>&times;</button>
-            </div>
-            ))}
-            <textarea className="extra-event-input" ref={extraEventRef}/>
-            <button className="extra-event-add" onClick={()=>extraEventAdd()}>추가</button>
-          </div>
-        </div>
+        <Col lg={3} sm={3} md={3} className = "side-bar">
+          {isFriends ? null : <SideBar 
+          extraEventArr = {extraEventArr}
+          extraEventDelete={extraEventDelete}
+          extraEVentAdd={extraEventAdd}
+          extraEventRef={extraEventRef}
+          />}  
+          
       </Col>
 
       <Col lg={9} sm={9} md={9}>
@@ -361,24 +350,29 @@ const Calendar = (props) => {
             momentPlugin,
             timeGridPlugin,
           ]}
+
           initialView="dayGridMonth"
           headerToolbar={{
             start: "",
             center: "prev title next",
             end: "today",
           }}
-          dateClick={handleDateClick}
-          eventClick={handleEventClick}
+          dateClick={isFriends ? null : handleDateClick}
+          eventClick={isFriends ? null : handleEventClick}
           events={eventArr}
           contentHeight={600}
-          selectable={true}
-          editable={true}
-          droppable={true}
+
+        
+          selectable={isFriends ? false : true}
+          editable={isFriends ? false : true}
+          droppable={isFriends ? false : true}
+
+
           dayMaxEvents={true}
-          eventDragStart={handleEventDragStart}
-          eventDrop={handleEventDrop}   
-          drop={handleExtraEventDrop}
-          eventReceive={handleEventReceive}
+          eventDragStart={isFriends ? null : handleEventDragStart}
+          eventDrop={isFriends ? null : handleEventDrop}   
+          drop={isFriends ? null : handleExtraEventDrop}
+          eventReceive={isFriends ? null : handleEventReceive}
           eventDisplay={'block'}
           eventTextColor={'black'}
         />
