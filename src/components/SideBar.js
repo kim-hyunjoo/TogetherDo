@@ -2,11 +2,12 @@ import ExtraEvent from "./ExtraEvent";
 
 const SideBar = (props) => {
     const {extraEventArr, extraEventDelete, extraEventAdd, extraEventRef} = props;
+    console.log(extraEventAdd)
  return(
     <ExtraEvent 
     extraEventArr = {extraEventArr}
     extraEventDelete={extraEventDelete}
-    extraEVentAdd={extraEventAdd}
+    extraEventAdd={extraEventAdd}
     extraEventRef={extraEventRef}
     />
     //오늘 안한 중요한 일!!!

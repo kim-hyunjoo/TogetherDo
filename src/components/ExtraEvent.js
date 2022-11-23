@@ -1,5 +1,7 @@
 const ExtraEvent = (props) => {
-    const {extraEventArr, extraEventDelete, extraEventAdd, extraEventRef} = props;
+    const {extraEventArr, extraEventDelete, extraEventAdd , extraEventRef} = props;
+    console.log(extraEventAdd)
+    
     return (
         <div id="external-events">
             <p align="center">
