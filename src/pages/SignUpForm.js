@@ -57,7 +57,9 @@ const SignUpForm = (props) => {
             events : [],
             eventID : 0,
             checkItems : [],
-            pinnedItems : []
+            pinnedItems : [],
+            followers : [],
+            comments : []
             }
         }
         setSaveUser([...saveUser, newData]);

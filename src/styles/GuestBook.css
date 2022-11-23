@@ -1,7 +1,4 @@
 .guest-book { 
-    
-    display: grid;
-    grid-template-rows: 1fr 1fr;
     background-color: white;
     border : 3px solid;
     border-color: #BCC0F2;
@@ -15,15 +12,45 @@
     justify-content: center;
     background-color: white;
     height: 40px;
-
     border-bottom: 1px solid;
 }
 
 .guest-main {
-    display: flex;
+    height : 70%;
+    width: 100%;
+    padding-top : 20px;
+    padding-bottom: 20px;
     overflow: scroll;
+    border-bottom: 1px solid;
+}
+
+.comment-div {
+    display: flex;
+    gap : 10px
+}
+
+.comment-user {
+    background-color : #BCC0F2;
+    color : white;
+    border-radius: 10px ;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.comment-date {
+    font-size : 12px;
+    color : rgb(156, 156, 156);
 }
 
 .guest-footer {
-
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    column-gap: 10px;
+    justify-content: right;
+    padding-top : 20px;
 }
+
+.guest-footer>textarea {
+    height: 60px;
+}
+

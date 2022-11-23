@@ -9,13 +9,14 @@
 } */
 .header{
     display: flex;
-    justify-content: center;
+    
     background-color: transparent;
     height: 100px;
 }
 
 .container {
     display: grid;
+    justify-content: center;
     grid-template-columns: 1fr 1fr;
     column-gap: 30px;
 

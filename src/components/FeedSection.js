@@ -7,11 +7,11 @@ import Calendar from "./Calendar";
 
 const FeedSection = (props) => {
     const { id, img,
-    loginUser, isFriends, userData, saveUser, setSaveUser} = props;
+    loginUser, user, isFriends, userData, saveUser, setSaveUser} = props;
 
     useEffect(()=> {console.log(props)},[])
 	return (
-        <div key={loginUser}>
+        <div key={user}>
         <Layout>
             <Header className="header">
                 <img width = "70px" height= "70px" src = {img} />
@@ -19,9 +19,9 @@ const FeedSection = (props) => {
             </Header>
             <Content className="container">
                 <div className="friend-calendar">
-                <Calendar loginUser={loginUser} isFriends={isFriends} userData={userData} saveUser={saveUser} setSaveUser={setSaveUser} />
+                <Calendar loginUser={user} isFriends={isFriends} userData={userData} saveUser={saveUser} setSaveUser={setSaveUser} />
                 </div>
-                <GuestBook/>
+                <GuestBook loginUser={loginUser} user={user} saveUser={saveUser} setSaveUser={setSaveUser} />
             </Content>
             <Footer className="footer2" />
         </Layout>

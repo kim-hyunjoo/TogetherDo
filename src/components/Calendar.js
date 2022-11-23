@@ -20,10 +20,7 @@ const Calendar = (props) => {
   const [extraEventArr, setExtraEventArr] = useState(() => {//빠른 일정 추가를 위한 extra events 모음
     if (typeof window !== "undefined") {
       const saved = JSON.parse(localStorage.getItem("users"));
-      console.log(loginUser);
-      console.log(saved);
       const data = saved.find(item=>item.email == loginUser);
-      console.log(data)
       const arr = data.data.extraEventArr;
       if (arr !== null) {  
         return arr;
@@ -157,10 +154,12 @@ const Calendar = (props) => {
     //test
     localStorage.setItem("test", JSON.stringify(test));
     */
-    const data = saveUser.find(user=>user.email == loginUser);
+  const data = saveUser.find(user=>user.email == loginUser);
+  console.log(data)
    const newData = {
     ...data,
     data : {
+        ...data.data,
         extraEventArr,
         extraEventID,
         events : eventArr,
@@ -332,17 +331,19 @@ const Calendar = (props) => {
   return (
     <div className="calendar-contents">
       <Row>
+      {isFriends ? null :
         <Col lg={3} sm={3} md={3} className = "side-bar">
-          {isFriends ? null : <SideBar 
+           <SideBar 
           extraEventArr = {extraEventArr}
           extraEventDelete={extraEventDelete}
-          extraEVentAdd={extraEventAdd}
+          extraEventAdd={extraEventAdd}
           extraEventRef={extraEventRef}
-          />}  
+          /> 
           
-      </Col>
+      </Col>}
 
-      <Col lg={9} sm={9} md={9}>
+      
+      <Col lg={isFriends ? 12 : 9} sm={isFriends ? 12 : 9} md={isFriends ? 12 : 9}>
         <FullCalendar
           plugins={[
             dayGridPlugin,

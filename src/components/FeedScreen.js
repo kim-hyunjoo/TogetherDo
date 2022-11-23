@@ -14,8 +14,9 @@ const FeedScreen = (props) => {
         return (
         <FeedSection 
         id={v.userName} 
-        img={v.profile} 
-        loginUser={email} 
+        img={v.profile}
+        loginUser={loginUser} 
+        user={email}
         isFriends={true} 
         userData={data} 
         saveUser={saveUser} 
