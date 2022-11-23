@@ -28,13 +28,13 @@ const App = () => {
         email: '',
         passward: '',
     });
-
+   
     const [userData, setUserData] = useState(()=> {
         console.log(saveUser)
         const user = saveUser.find(user=>user.email == loginUser)
         return user;
     });
-    
+
         
     useEffect(()=> {
         localStorage.setItem("users", JSON.stringify(saveUser));

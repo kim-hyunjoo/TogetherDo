@@ -23,14 +23,15 @@ const FeedScreen = (props) => {
         console.log(email);
         console.log(saveUser); //갑자기 이상한 객체가 들어옴..
         return (<FeedSection key={v.email} id={v.userName} img={v.profile} 
-        content={<Calendar loginUser={email} userData={data} saveUser={saveUser} setSaveUser={setSaveUser} />}/>)});
+        content={<Calendar loginUser={email} isFriends={true} userData={data} saveUser={saveUser} setSaveUser={setSaveUser} />}/>)});
     //const followList = feedInfoList.map
 	return (
-        <div>
-            <div>
+        <div className = "friends-main">
+            <div className="main-feed">
                 {userList}
             </div>
-            <div className= "right">
+            
+            <div className= "follow-list">
                 <header>
                     팔로우한 친구목록
                 </header>
