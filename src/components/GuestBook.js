@@ -21,19 +21,9 @@ const GuestBook = (props) => {
       })
 
       useEffect(()=> {
-        const data = saveUser.find(us=>us.email == user);
-        const newData = {
-         ...data,
-         data : {
-            ...data.data,
-            comments : commentArr
-            }
-         }
-         //기존꺼 삭제후 다시 기입???
-         console.log(saveUser)
-         const newSaveUser =  saveUser.filter(us=>us.email != user);
-         setSaveUser([...newSaveUser,newData]);
-         console.log([...newSaveUser,newData])
+         //그 달력의 주인user와 같은걸 찾으면 데이터 바꿔주기...
+         const data = saveUser.map(it => it.email == user ? { ...it, data : { ...it.data, comments : commentArr} } : it)
+         setSaveUser(data);
         localStorage.setItem("users", JSON.stringify(saveUser))
     },[commentArr])
 
