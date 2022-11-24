@@ -76,7 +76,7 @@ const GuestBook = (props) => {
             ref={commentRef} 
             placeholder="댓글을 남겨주세요"
             />
-            <button
+            <button className="comment-upload-button"
             onClick={()=>onSaveComment()}
             >등록</button>
         </div>

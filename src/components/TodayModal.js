@@ -7,7 +7,7 @@ import "../styles/Modal.css";
 const TodayModal = (props) => {
     const { open, close, header, setEventArr, eventArr, checkItems, setCheckItems, 
         progress, setProgress, eventID, setEventID, sortSelected, setSortSelected,
-        pinnedItems,setPinnedItems} = props;
+        pinnedItems,setPinnedItems, isFriends} = props;
     //색상커스텀 useState
     const [isPinkPicked , setIsPinkPicked] = useState(false);
     const [isPurplePicked , setIsPurplePicked] = useState(false);
@@ -234,13 +234,20 @@ const TodayModal = (props) => {
                           <label className="checkbox_container">
                               <input type="checkbox" onChange={(e) => handleSingleCheck(e.target.checked, event.id)}
                                   checked={checkItems.map((item) => item.id).includes(event.id) ? true : false}
+                                  disabled={isFriends ? true : false}
                               ></input>
                           </label>
                           {/* 이벤트 제목 */}
-                          <button className="event-button" style={{ backgroundColor: event.backgroundColor }} onClick={() => eventClick(event)}
+                          <button className="event-button" style={{ backgroundColor: event.backgroundColor }} 
+                          onClick={() => eventClick(event)} disabled={isFriends ? true : false}
                           key={event.id}>{(start=="") ? `${event.title}` : `${start}-${end} ${event.title}`}</button>
                           {/* 삭제버튼 */}
-                          <button className='delete-button' onClick={()=>deleteEvent(event.id)}>&times;</button>
+                          <button className='delete-button' onClick={()=>deleteEvent(event.id)}
+                          disabled={isFriends ? true : false}
+                          >&times;</button>
+                          <button style={{backgroundColor : "white" , width : "40px", height : "40px"}} 
+                          onClick={() => handlePin(event.id)}
+                              disabled={isFriends ? true : false}>
                           <img alt="pin"
                               id={`pin-${event.id}`}
                               src={
@@ -252,8 +259,10 @@ const TodayModal = (props) => {
                               }
                               width="40px"
                               height="40px"
-                              onClick={() => handlePin(event.id)}
+                              
                           />
+                          </button>
+                          
                       </div>
                   );
               });
@@ -400,6 +409,7 @@ const TodayModal = (props) => {
                                         eventArr.filter((event) =>event.start.substring(0, 10) ===header).length !== 0
                                         ? true : false
                                     }
+                                    disabled={isFriends ? true : false}
                                 />
                                 <label>TODO-LIST</label>
                             </div>
@@ -417,7 +427,7 @@ const TodayModal = (props) => {
                         </div>
                     </main>
                     <footer>
-                        <button className="add-event" onClick={openModal}>
+                        <button className="add-event" onClick={openModal} disabled={isFriends ? true : false}>
                             일정 추가
                         </button>
                     </footer>
