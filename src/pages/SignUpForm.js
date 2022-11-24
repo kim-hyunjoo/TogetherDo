@@ -58,6 +58,7 @@ const SignUpForm = (props) => {
             eventID : 0,
             checkItems : [],
             pinnedItems : [],
+            followings : [],
             followers : [],
             comments : []
             }
