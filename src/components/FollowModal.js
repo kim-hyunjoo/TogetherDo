@@ -8,6 +8,10 @@ const FollowModal = (props) => {
     
     const searchRef = useRef("");
     const searchUser = () => {
+        if(searchRef.current.value=="") {
+            alert("검색어를 입력해주세요");
+            return;
+        }
         //이름 찾아서 출력시켜주기
         //본인은 제외시키기!!
         const list = saveUser.filter(user=>user.userName.includes(searchRef.current.value)).filter(user=>user.email != loginUser);    

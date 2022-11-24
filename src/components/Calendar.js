@@ -349,7 +349,7 @@ const Calendar = (props) => {
             center: "prev title next",
             end: "today",
           }}
-          dateClick={isFriends ? null : handleDateClick}
+          dateClick={handleDateClick}
           eventClick={isFriends ? null : handleEventClick}
           events={eventArr}
           contentHeight={600}
@@ -387,6 +387,7 @@ const Calendar = (props) => {
           setSortSelected={setSortSelected}
           pinnedItems={pinnedItems}
 				  setPinnedItems={setPinnedItems}
+          isFriends={isFriends}
         />
       </Col>
     </Row>
