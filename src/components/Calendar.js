@@ -154,25 +154,16 @@ const Calendar = (props) => {
     //test
     localStorage.setItem("test", JSON.stringify(test));
     */
-  const data = saveUser.find(user=>user.email == loginUser);
-  console.log(data)
-   const newData = {
-    ...data,
-    data : {
-        ...data.data,
-        extraEventArr,
+    //그 달력의 주인user와 같은걸 찾으면 데이터 바꿔주기...
+    const data = saveUser.map(it => it.email == loginUser ? 
+      { ...it, 
+        data : { ...it.data, extraEventArr,
         extraEventID,
         events : eventArr,
         eventID,
         checkItems,
-        pinnedItems
-        }
-    }
-    //기존꺼 삭제후 다시 기입???
-    console.log(saveUser)
-    const newSaveUser =  saveUser.filter(user=>user.email != loginUser);
-    setSaveUser([...newSaveUser,newData]);
-    console.log([...newSaveUser,newData])
+        pinnedItems} } : it)
+    setSaveUser(data);
    localStorage.setItem("users", JSON.stringify(saveUser))
 
   },[eventArr, eventID, checkItems, extraEventID, extraEventArr, pinnedItems])
@@ -362,6 +353,7 @@ const Calendar = (props) => {
           eventClick={isFriends ? null : handleEventClick}
           events={eventArr}
           contentHeight={600}
+          
 
         
           selectable={isFriends ? false : true}

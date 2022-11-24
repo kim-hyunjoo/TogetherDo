@@ -1,0 +1,58 @@
+.follow-search {
+    display: grid;
+    grid-template-columns: 5fr 1fr;
+    column-gap: 10px;
+    width : 100%;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 1px solid;
+    padding-top : 10px;
+    padding-bottom: 20px;
+    padding-left : 20px;
+    padding-right: 20px;
+}
+
+.follow-userlist {
+    padding-top : 20px;
+    height : 250px;
+    overflow: scroll;
+    text-align: center;
+}
+
+.user-div {
+    display : grid;
+    padding-left : 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    grid-template-columns: 1fr 2fr 1fr;
+    column-gap: 10px;
+}
+.user-name {
+    background-color : #bcc0f2;
+    color : white;
+    border-radius: 10px ;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: center;
+}
+.user-email {
+    font-size : 13px;
+    color : grey;
+}
+
+.user-follow-button {
+    height : 25px;
+    border-radius: 10px ;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: center;
+    background-color: #ffacc5;
+}
+
+
+.search-button {
+    border-radius: 10px ;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: center;
+}

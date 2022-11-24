@@ -16,8 +16,9 @@
 
 .container {
     display: grid;
+
     justify-content: center;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 5fr 4fr;
     column-gap: 30px;
 
 }
