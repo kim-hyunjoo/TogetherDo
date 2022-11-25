@@ -59,7 +59,7 @@ const EventAddModal = (props) => {
 
                     <div className="modal-time-div">                      
                         <input type="time" step="300" ref={startTimeRef} defaultValue={editMode ? defaultData.start : null} disabled={noTimeDisable}/>
-                        <input type="time" step="300" ref={endTimeRef} defaultValue={editMode ? defaultData.end : null} disabled={noTimeDisable}/>
+                        <input type="time"  step="300" ref={endTimeRef} defaultValue={editMode ? defaultData.end : null} disabled={noTimeDisable}/>
                         <input type="button" onClick={()=>noTimeClicked()} value = "시간X"/>
 
                     </div>

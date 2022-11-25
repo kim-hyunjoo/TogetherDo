@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import FeedSection from "./FeedSection";
-import RightBar from "./RightBar";
 import "../styles/Layout.css";
 import FollowModal from "./FollowModal";
 
