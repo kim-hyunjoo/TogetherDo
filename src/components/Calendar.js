@@ -114,14 +114,19 @@ const Calendar = (props) => {
         const eventObj = {
           title : eventEl.getAttribute("title"),
           id : eventID,
+          start : eventEl.getAttribute("startTime"),
+          end : eventEl.getAttribute("endTime"),
           backgroundColor : eventEl.getAttribute("backgroundColor"),
           borderColor : eventEl.getAttribute("borderColor")
         }  
+        console.log(eventObj)
         setExtraEvent(eventObj); 
 
         return {
           title : eventObj.title,
           id : eventObj.id,
+          start : eventObj.start,
+          end : eventObj.end,
           backgroundColor : eventObj.backgroundColor,
           borderColor : eventObj.borderColor
         }
@@ -225,9 +230,16 @@ const Calendar = (props) => {
 
   //extra Event가 Calendar에 drop 했을 시
   const handleExtraEventDrop = (info) => {
+    console.log(info);
     let date = new Date(`${info.date}`); //extra event가 drop된 날짜 정보 가져오기
     const dateInfo = format(date, "YYYY-MM-DD"); //날짜 포맷 바꿔주기
-    const newEvent = {...extraEvent, id : eventID, start : `${dateInfo}`, end : `${dateInfo}`} // 기존 extraEvent 객체에 start, end 속성 부여
+    console.log(extraEvent)
+    
+    const newEvent = {
+      ...extraEvent, 
+      id : eventID, 
+      start : extraEvent.start ? `${dateInfo}T${extraEvent.start}` : `${dateInfo}`, 
+      end : extraEvent.end ? `${dateInfo}T${extraEvent.end}` : `${dateInfo}`} // 기존 extraEvent 객체에 start, end 속성 부여
     setEventArr([...eventArr, newEvent]); //캘린더 eventArr에 추가
     setEventID(parseInt(eventID) + 1); // eventID 값 갱신
   }
@@ -326,9 +338,10 @@ const Calendar = (props) => {
         <Col lg={3} sm={3} md={3} className = "side-bar">
            <SideBar 
           extraEventArr = {extraEventArr}
+          setExtraEventArr = {setExtraEventArr}
           extraEventDelete={extraEventDelete}
-          extraEventAdd={extraEventAdd}
-          extraEventRef={extraEventRef}
+          extraEventID={extraEventID}
+          setExtraEventID={setExtraEventID}
           /> 
           
       </Col>}

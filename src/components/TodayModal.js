@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import Modal from "./Modal";
+import EventAddModal from "./EventAddModal";
 import ProgressBar from "./ProgressBar";
 import { solarToLunar } from "../module/LunarCalendar";
 import "../styles/Modal.css";
@@ -29,10 +29,6 @@ const TodayModal = (props) => {
     //modal, edit modal
     const [modalOpen, setModalOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
-
-    useEffect(() => {
-        console.log("렌더링 됐습니다.");
-    }, [progress]);
 
     //이벤트 속성 값을 저장하기 위한 useRefs
     const startTimeRef = useRef("");
@@ -103,13 +99,7 @@ const TodayModal = (props) => {
         }
         console.log(noTime);
     }
-/*
-    useEffect(()=>{
-        startTimeRef.current = "";
-        endTimeRef.current = "";
-        eventRef.current = "";
-    }, [disable])
-*/
+
     //모달 저장or수정 버튼 클릭시 이벤트
     const onSaveEvent = (editMode) => {
         //저장하려고 할 때 startTimeRef, endTimeRef, eventRef 하나라도 비어있을 시 경고창
@@ -434,77 +424,29 @@ const TodayModal = (props) => {
                 </section>
             ) : null}
 
-            <Modal open={modalOpen} close={closeModal} header={header}>
-                <div className="modal-main-div">
-                    <div>
-                        <span>Color</span>
-                    </div>
-                    <div className="modal-color-div">
-                    <div 
-                            onClick={()=>changeColor("#f5c6e1")} 
-                            className = {isPinkPicked ? "modal-pink-picked-div" :"modal-pink-div"}></div>
-                        <div 
-                            onClick={()=>changeColor("#c59bef")} 
-                            className = {isPurplePicked ? "modal-purple-picked-div" :"modal-purple-div"}></div>
-
-                        <div 
-                            onClick={()=>changeColor("#90b9df")} 
-                            className = {isBluePicked ? "modal-blue-picked-div" :"modal-blue-div"}></div>
-                         <div 
-                            onClick={()=>changeColor("#86e3c6")} 
-                            className = {isGrBluePicked ? "modal-grblue-picked-div" :"modal-grblue-div"}></div>
-                        <div
-                            onClick={()=>changeColor("#8cf1a4")} 
-                            className = {isGreenPicked ? "modal-green-picked-div" :"modal-green-div"}></div>                        
-
-                        <div
-                            onClick={()=>changeColor("#e6ec8f")} 
-                            className = {isYellowPicked ? "modal-yellow-picked-div" :"modal-yellow-div"}></div>                        
-                        <div
-                            onClick={()=>changeColor("#febd7b")} 
-                            className = {isOrangePicked ? "modal-orange-picked-div" :"modal-orange-div"}></div>                        
-                        <div
-                            onClick={()=>changeColor("#BDBDBD")} 
-                            className = {isGreyPicked ? "modal-grey-picked-div" :"modal-grey-div"}></div>                        
-
-                    </div>
-
-                    <div>
-                        <span>Time</span>
-                    </div>
-
-                    <div className="modal-time-div">                      
-                        <input type="time" step="300" ref={startTimeRef} defaultValue={editMode ? defaultData.start : null} disabled={noTimeDisable}/>
-                        <input type="time" step="300" ref={endTimeRef} defaultValue={editMode ? defaultData.end : null} disabled={noTimeDisable}/>
-                        <input type="button" onClick={()=>noTimeClicked()} value = "시간X"/>
-
-                    </div>
-                    <div>
-                        <span>Input</span>
-                    </div>
-                    <div className="modal-input-div">
-                        <textarea
-                            ref={eventRef}
-                            placeholder="할일을 입력하세요"
-                            className="modal-textarea"
-                            defaultValue={editMode ? defaultData.title : null}
-                        />
-                    </div>
-                </div>
-                <div className="modal-save-div">
-                    <button
-                        type="button"
-                        className="modal-button"
-                        onClick={() => onSaveEvent(editMode)}
-                        disabled={disable}
-                        style={{
-                            backgroundColor: `${disable ? "gray" : "green"}`,
-                        }}
-                    >
-                        {editMode ? "수 정" : "저 장"}
-                    </button>
-                </div>
-            </Modal>
+            <EventAddModal 
+            open={modalOpen} 
+            close={closeModal} 
+            header={header}
+            changeColor={changeColor}
+            isBluePicked={isBluePicked}
+            isGrBluePicked={isGrBluePicked}
+            isGreenPicked={isGreenPicked}
+            isGreyPicked={isGreyPicked}
+            isOrangePicked={isOrangePicked}
+            isPinkPicked={isPinkPicked}
+            isPurplePicked={isPurplePicked}
+            isYellowPicked={isYellowPicked}
+            startTimeRef={startTimeRef}
+            endTimeRef={endTimeRef}
+            defaultData={defaultData}
+            editMode={editMode}
+            noTimeDisable={noTimeDisable}
+            noTimeClicked={noTimeClicked}
+            eventRef={eventRef}
+            onSaveEvent={onSaveEvent}
+            disable={disable}
+            />
         </div>
     );
                     };
