@@ -197,31 +197,38 @@ justify-content: left;
 text-align: center;
 font-weight: bold;
 
-column-gap: 10px;
-padding-left : 20px;
+column-gap: 20px;
+padding-left : 24px;
 padding-bottom : 5px;
 }
 .checkbox-all > label {
 padding-top : 7px;
 }
 
+.checkbox {
+  margin-top : 12px;
+}
 .modal-event-list {
-display : grid;
-justify-content: left;
-grid-template-rows: 1fr 1fr;
-padding-left : 20px;
-padding-top : 20px;
-padding-bottom: 20px;
-row-gap: 10px;
+  display : grid;
+  justify-content: left;
+
+  padding-left : 20px;
+  padding-top : 20px;
+  padding-bottom: 20px;
+  row-gap: 10px;
 }
 
 .modal-event-object {
-display : flex;
+display : grid;
+grid-template-columns: 1fr 15fr 1fr 1fr;
+justify-content: center;
+text-align: center;
 column-gap: 10px;
+
 }
 
 .event-button {
-border-radius: 5px;
+border-radius: 10px;
 }
 
 .modal-progress-bar {
@@ -234,11 +241,10 @@ padding-bottom : 5px;
 }
 
 .delete-button {  
-position: relative;
-top : 3px;
-display : flex;
 justify-content: center;
 align-items: center;
+text-align: center;
+margin-top: 9px;
 color: #fff;
 background-color: #acacac;
 border-radius: 10px;

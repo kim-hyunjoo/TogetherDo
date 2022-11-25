@@ -222,7 +222,7 @@ const TodayModal = (props) => {
                       <div className="modal-event-object" key={event.id}>
                           {/* 체크박스, css효과를 주기 위해 label로 감쌈 */}
                           <label className="checkbox_container">
-                              <input type="checkbox" onChange={(e) => handleSingleCheck(e.target.checked, event.id)}
+                              <input className="checkbox" type="checkbox" onChange={(e) => handleSingleCheck(e.target.checked, event.id)}
                                   checked={checkItems.map((item) => item.id).includes(event.id) ? true : false}
                                   disabled={isFriends ? true : false}
                               ></input>

@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
-import ExtraEventAddModal from "./ExtraEventAddModal";
+import EventAddModal from "./EventAddModal";
+import "../styles/ExtraEvent.css"
 
 const ExtraEvent = (props) => {
     const {extraEventArr, setExtraEventArr, extraEventDelete, extraEventID, setExtraEventID} = props;
@@ -149,7 +150,7 @@ const ExtraEvent = (props) => {
             <button className="extra-event-add" onClick={()=>openModal()}>추가</button>
           </div>
         </div>
-        <ExtraEventAddModal 
+        <EventAddModal 
         open={modalOpen} 
         close={closeModal} 
         header={header}
