@@ -3,11 +3,22 @@ import React, { useState, useEffect, useRef } from "react";
 import "../styles/MyPage.css";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import FollowModal from "./FollowModal";
 
 
 const Profile = (props) => {
     const {loginUser, setLoginUser, userData, setUserData, saveUser, setSaveUser} = props;
     const [flip, setFlip] = useState(false);
+    const [followModalOpen, setFollowModalOpen] = useState(false);
+    const [header, setHeader] = useState("");
+
+    const openFollowModal = (header) => {
+        setFollowModalOpen(true);
+        setHeader(header);
+    }
+    const closeFollowModal = () => {
+        setFollowModalOpen(false);
+    }
     const changeName = useRef("");
     const changeEmail = useRef("");
 
@@ -21,20 +32,21 @@ const Profile = (props) => {
 
     //입력 폼 채워서 Complete버튼 클릭시 localStorage에 저장
     function onClickComplete() {
-        if( saveUser.find(it=> it.email == changeEmail.current.value) ) {
+        //정보가 안바뀌었을때
+        if(loginUser != changeEmail.current.value && saveUser.find(it=> it.email == changeEmail.current.value) ) {
             alert("이미 등록된 이메일입니다.")
             return;
         }
-        console.log(changeName.current.value)
 
-        console.log("1111111", saveUser);
         const data1 = saveUser.map(it => it.email == loginUser ? 
             { ...it, 
             userName: changeName.current.value, 
-            email : changeEmail.current.value, 
+            email : changeEmail.current.value,
             data : { ...it.data} } 
             : it)
         setSaveUser(data1);
+        setLoginUser({email : changeEmail.current.value});
+        //이메일이 바뀐경우=>이때는 문제가 읍네.. 왜일까..
         if (loginUser != changeEmail.current.value) { 
             //팔로우,팔로잉 데이터 변경
             const data2 = data1.map(user =>  {
@@ -46,10 +58,11 @@ const Profile = (props) => {
             })
             setSaveUser(data2);
             setLoginUser({email : changeEmail.current.value});
-
         }
+
         localStorage.setItem("users", JSON.stringify(saveUser)); 
         flippingCard();  
+        setUserData(saveUser.find(user=>user.email==loginUser))
     }
 
     const flippingCard = () => {
@@ -59,7 +72,6 @@ const Profile = (props) => {
 
     
     if (!userData) return null;
-    
     return (
         <div className="flip-card-wrapper">
             <div className="show-flip-card">
@@ -110,11 +122,11 @@ const Profile = (props) => {
                                                 <small>Todos</small>
                                             </div>
                                             <div className="col-lg-4 col-md-4 m-t-20">
-                                                <h3 className="m-b-0">{userData.data.followers.length}</h3>
+                                                <h3 className="m-b-0" style={{cursor : "pointer"}} onClick={()=>openFollowModal("followers")}>{userData.data.followers.length}</h3>
                                                 <small>Followers</small>
                                             </div>
                                             <div className="col-lg-4 col-md-4 m-t-20">
-                                                <h3 className="m-b-0">{userData.data.followings.length}</h3>
+                                                <h3 className="m-b-0" style={{cursor : "pointer"}} onClick={()=>openFollowModal("followings")}>{userData.data.followings.length}</h3>
                                                 <small>Following</small>
                                             </div>
                                         </div>
@@ -175,6 +187,8 @@ const Profile = (props) => {
                                                         />
                                                     </td>
                                                 </tr>
+
+                                            
                                             </tbody>
                                         </table>
 
@@ -224,6 +238,10 @@ const Profile = (props) => {
                     </div>
                 </div>
             </div>
+            <FollowModal open={followModalOpen} close={closeFollowModal} header={header}
+            loginUser={changeEmail.current.value} saveUser={saveUser} setSaveUser={setSaveUser} isMypage={true}
+            userData={userData}
+            />
         </div>
     );
 };
