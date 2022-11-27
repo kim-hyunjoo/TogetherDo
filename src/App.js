@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useReducer, useInsertionEffect } from "react";
 import "./App.css";
 import "./styles/Layout.css";
 import "antd/dist/antd.css";
@@ -24,10 +24,9 @@ const App = () => {
           }
         }
     });
-    const [loginUser, setLoginUser] = useState({
-        email: '',
-        passward: '',
-    });
+    const [loginUser, setLoginUser] = useState(()=> {
+        return {email: '', passward: ''}
+    } );
    
     const [userData, setUserData] = useState(()=> {
         console.log(saveUser)
@@ -35,10 +34,16 @@ const App = () => {
         return user;
     });
 
+    useEffect(()=> {
+        setUserData(saveUser.find(user=>user.email == loginUser));
+        console.log(saveUser.find(user=>user.email == loginUser))
+    },[loginUser, saveUser])
         
     useEffect(()=> {
         localStorage.setItem("users", JSON.stringify(saveUser));
     },[saveUser])
+
+    useEffect(() => console.log(userData))
 
     useEffect(() => {
     const data = localStorage.getItem("users");
@@ -55,6 +60,9 @@ const App = () => {
         setUserData(user);
     },[loginUser])
 
+    useEffect(()=> {
+        console.log(loginUser)
+    })
     return (
         <div className="content-wrapper">
             {loginChecked ? (
@@ -67,7 +75,7 @@ const App = () => {
                             <Route path="/" element={<Main loginUser={loginUser.email} userData={userData} saveUser={saveUser} setSaveUser={setSaveUser}/>} />
                             <Route path="/home" element={<Main loginUser={loginUser.email} userData={userData} saveUser={saveUser} setSaveUser={setSaveUser}/>} />
                             <Route path="/friends" element={<Friends loginUser={loginUser.email} userData={userData} saveUser={saveUser} setSaveUser={setSaveUser}/>} />
-                            <Route path="/mypage" element={<MyPage loginUser={loginUser.email} saveUser={saveUser} userData={userData} setSaveUser={setSaveUser}/>} />
+                            <Route path="/mypage" element={<MyPage loginUser={loginUser.email} setLoginUser={setLoginUser} saveUser={saveUser} userData={userData} setUserData={setUserData} setSaveUser={setSaveUser}/>} />
                         </Routes>
                     </Content>
                     <Footer

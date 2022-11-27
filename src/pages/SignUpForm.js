@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import styled from 'styled-components';
 import "../styles/Login.css"
 import { Link } from 'react-router-dom';
+import { BorderStyle } from "@material-ui/icons";
 
 
 const SubmitWrapper = styled.div`
@@ -72,12 +73,13 @@ const SignUpForm = (props) => {
         console.log("clicked!!");
     }
 
-    const profiles = 
-    [ {id : 1, url : "images/profile1.PNG"},
-    {id : 2, url : "images/profile2.jpg"},
-    {id : 3, url : "images/profile3.jpg"},
-    {id : 4, url : "images/profile4.jpg"},
-    {id : 5, url : "images/profile5.png"}];
+    const profiles = [
+        { id: 1, url: "images/profile1.png" },
+        { id: 2, url: "images/profile2.png" },
+        { id: 3, url: "images/profile3.jpeg" },
+        { id: 4, url: "images/profile4.jpeg" },
+        { id: 5, url: "images/profile5.png" },
+    ];
 
     return (
         <div className="Positioner">
@@ -154,11 +156,18 @@ const SignUpForm = (props) => {
                                     {profiles.map(profile => {
                                         return (
                                         <div className="profile" key={profile.id}>
-                                            <input className="Input" id="profile"type="radio" value={profile.id}
+                                            <input className="Input" id="profile" type="radio" value={profile.id} defaultChecked={profile.id == 1 ? true : false}
                                             {...register("profile", 
                                             {required: "프로필 설정은 필수입력입니다.",
                                             })}></input>
-                                            <img width="70px" height= "70px" src={profile.url}></img>
+                                            <img alt="profile" sizes="110%" width="70px" height= "70px" 
+                                            style={{
+                                                borderRadius: "50%",
+                                                borderWidth: "2px",
+                                                borderColor: "#BCC0F2",
+                                                borderStyle: "solid",
+                                            }}
+                                            src={profile.url}></img>
                                         </div>
                                         )
                                     })}

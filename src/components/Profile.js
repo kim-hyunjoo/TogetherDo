@@ -1,70 +1,19 @@
 /* eslint-disable */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../styles/MyPage.css";
 import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
 
-const jobs = [
-    {
-        value: "Student",
-        label: "Student",
-    },
-    {
-        value: "Developer",
-        label: "Developer",
-    },
-    {
-        value: "Designer",
-        label: "Designer",
-    },
-    {
-        value: "Project Manager",
-        label: "Project Manager",
-    },
-];
-
-const SelectJob = () => {
-    const [job, setJob] = React.useState("Student");
-
-    const handleChange = (event) => {
-        setJob(event.target.value);
-    };
-
-    return (
-        <Box
-            component="form"
-            sx={{
-                "& .MuiTextField-root": { m: 1, width: "25ch" },
-            }}
-            noValidate
-            autoComplete="off"
-        >
-            <div>
-                <TextField
-                    id="outlined-select-job"
-                    select
-                    label="Select"
-                    value={job}
-                    onChange={handleChange}
-                    size="small"
-                >
-                    {jobs.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                        </MenuItem>
-                    ))}
-                </TextField>
-            </div>
-        </Box>
-    );
-};
 
 const Profile = (props) => {
-    const {loginUser, userData, saveUser, setSaveUser} = props;
-    const [user, setUser] = useState(userData);
+    const {loginUser, setLoginUser, userData, setUserData, saveUser, setSaveUser} = props;
     const [flip, setFlip] = useState(false);
+    const changeName = useRef("");
+    const changeEmail = useRef("");
+
+    useEffect(() => {
+        setUserData(saveUser.find(user=>user.email == loginUser))
+    },[])
 
     function onClickEdit() {
         flippingCard();
@@ -72,58 +21,45 @@ const Profile = (props) => {
 
     //입력 폼 채워서 Complete버튼 클릭시 localStorage에 저장
     function onClickComplete() {
+        if( saveUser.find(it=> it.email == changeEmail.current.value) ) {
+            alert("이미 등록된 이메일입니다.")
+            return;
+        }
+        console.log(changeName.current.value)
 
         console.log("1111111", saveUser);
-        const data = saveUser.map(it => it.email == loginUser ? 
+        const data1 = saveUser.map(it => it.email == loginUser ? 
             { ...it, 
-            userName: changeName, 
-            email : changeEmail , 
+            userName: changeName.current.value, 
+            email : changeEmail.current.value, 
             data : { ...it.data} } 
             : it)
-        setSaveUser(data);
-        localStorage.setItem("users", JSON.stringify(saveUser));
-            /*
-        setSaveUser({
-            ...saveUserData,
-            userName: changeName,
-            email: changeEmail,
-        });*/
-        setUser({ ...user, userName: changeName, email: changeEmail });
-        flippingCard();
-        // localStorage.setItem(userData.email, JSON.stringify(changeEmail));
+        setSaveUser(data1);
+        if (loginUser != changeEmail.current.value) { 
+            //팔로우,팔로잉 데이터 변경
+            const data2 = data1.map(user =>  {
+                return {...user, data : {...user.data, 
+                    followers : user.data.followers.map(it => it == loginUser ? changeEmail.current.value : it ),
+                    followings : user.data.followings.map(it => it == loginUser ? changeEmail.current.value : it )
+                }}
+                
+            })
+            setSaveUser(data2);
+            setLoginUser({email : changeEmail.current.value});
+
+        }
+        localStorage.setItem("users", JSON.stringify(saveUser)); 
+        flippingCard();  
     }
 
     const flippingCard = () => {
         if (flip == true) setFlip(false);
         else setFlip(true);
-        //const flipCard = document.querySelectorAll(".flip-card");
-        //console.log(flipCard);
-        //flipCard.classList.toggle("is-flipped");
-        /*
-        [...flipCard].forEach((card) => {
-            crad.addEventListener("click", function () {
-                card.classList.toggle("is-flipped");
-            });
-        });
-        */
     };
-/*
-    useEffect(() => {
-        const getUser = () => {
-            try {
-                setUser(userData.user);
-                console.log(userData.user);
-            } catch (e) {
-                console.log(e);
-            }
-        };
-        getUser();
-    }, [userData.user]);
-*/
-    const [changeName, setChangeName] = useState(user.userName);
-    const [changeEmail, setChangeEmail] = useState(user.email);
 
+    
     if (!userData) return null;
+    
     return (
         <div className="flip-card-wrapper">
             <div className="show-flip-card">
@@ -140,18 +76,18 @@ const Profile = (props) => {
                                     <div className="card-body profile-in text-center">
                                         <div className="pro-img">
                                             <img
-                                                src={user.profile}
+                                                src={userData.profile}
                                                 alt="user"
                                             />
                                         </div>
                                         <h3 className="m-b-0">
-                                            {user.userName}
+                                            {userData.userName}
                                         </h3>
                                         <p
                                             className="email"
                                             style={{ color: "#BCC0F2" }}
                                         >
-                                            {user.email}
+                                            {userData.email}
                                         </p>
                                         <p>Web Front-End Developer</p>
                                         <Button
@@ -170,15 +106,15 @@ const Profile = (props) => {
                                         </Button>
                                         <div className="row text-center m-t-20">
                                             <div className="col-lg-4 col-md-4 m-t-20">
-                                                <h3 className="m-b-0">20</h3>
+                                                <h3 className="m-b-0">{userData.data.events.length}</h3>
                                                 <small>Todos</small>
                                             </div>
                                             <div className="col-lg-4 col-md-4 m-t-20">
-                                                <h3 className="m-b-0">3</h3>
+                                                <h3 className="m-b-0">{userData.data.followers.length}</h3>
                                                 <small>Followers</small>
                                             </div>
                                             <div className="col-lg-4 col-md-4 m-t-20">
-                                                <h3 className="m-b-0">6</h3>
+                                                <h3 className="m-b-0">{userData.data.followings.length}</h3>
                                                 <small>Following</small>
                                             </div>
                                         </div>
@@ -199,7 +135,7 @@ const Profile = (props) => {
                                     <div className="card-body profile-in text-center">
                                         <img
                                             className="profile-set-img"
-                                            src={user.profile}
+                                            src={userData.profile}
                                             alt="user"
                                         />
 
@@ -212,17 +148,12 @@ const Profile = (props) => {
                                                     </td>
                                                     <td>
                                                         <TextField
+                                                            inputRef={changeName}
                                                             id="outlined-basic"
                                                             label={
-                                                                user.userName
+                                                                userData.userName
                                                             }
-                                                            value={changeName}
-                                                            onChange={(e) =>
-                                                                setChangeName(
-                                                                    e.target
-                                                                        .value
-                                                                )
-                                                            }
+                                                            defaultValue={userData.userName}
                                                             variant="outlined"
                                                             size="small"
                                                         />
@@ -235,26 +166,13 @@ const Profile = (props) => {
                                                     </td>
                                                     <td>
                                                         <TextField
+                                                            inputRef={changeEmail}
                                                             id="outlined-basic"
-                                                            label={user.email}
-                                                            onChange={(e) =>
-                                                                setChangeEmail(
-                                                                    e.target
-                                                                        .value
-                                                                )
-                                                            }
-                                                            value={changeEmail}
+                                                            label={userData.email}
+                                                            defaultValue={userData.email}
                                                             variant="outlined"
                                                             size="small"
                                                         />
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td className="form-header">
-                                                        <h6>직업</h6>
-                                                    </td>
-                                                    <td>
-                                                        <SelectJob />
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -277,6 +195,7 @@ const Profile = (props) => {
                                                         borderRadius: "3px",
                                                     }}
                                                     type="reset"
+                                                    onClick={()=>setFlip(false)}
                                                 >
                                                     Cancel
                                                 </Button>
