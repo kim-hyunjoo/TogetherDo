@@ -2,15 +2,15 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import "./styles/Layout.css";
 import "antd/dist/antd.css";
-import Main from "./pages/Main";
+import Main from "./pages/main";
 import { Content } from "antd/lib/layout/layout";
-import Friends from "./pages/Friends";
-import MyPage from "./pages/Mypage";
+import Friends from "./pages/friends";
+import MyPage from "./pages/mypage";
 import Navbar from "./components/Navbar";
 import { Layout } from "antd";
 import { Footer, Header } from "antd/lib/layout/layout";
 import { Route, Routes } from "react-router-dom";
-import Login from "./pages/Login";
+import Login from "./pages/login";
 const App = () => {
     const [loginChecked, setLoginChecked] = useState(false);
     const [saveUser, setSaveUser] = useState(() => {

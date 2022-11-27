@@ -221,24 +221,26 @@ const TodayModal = (props) => {
                   return (
                       <div className="modal-event-object" key={event.id}>
                           {/* 체크박스, css효과를 주기 위해 label로 감쌈 */}
-                          <label className="checkbox_container">
-                              <input className="checkbox" type="checkbox" onChange={(e) => handleSingleCheck(e.target.checked, event.id)}
+                          
+                          <div className="checkboxwrap">
+                              <input className="checkbox" id="chkb" type="checkbox" onChange={(e) => handleSingleCheck(e.target.checked, event.id)}
                                   checked={checkItems.map((item) => item.id).includes(event.id) ? true : false}
-                                  disabled={isFriends ? true : false}
+                                  disabled={isFriends ? true  : false}
                               ></input>
-                          </label>
+                              <label htmlFor="chkb">&nbsp;</label>
+                          </div>
                           {/* 이벤트 제목 */}
-                          <button className="event-button" style={{ backgroundColor: event.backgroundColor }} 
+                          <button id="chk" className="event-button" style={{ backgroundColor: event.backgroundColor }} 
                           onClick={() => eventClick(event)} disabled={isFriends ? true : false}
                           key={event.id}>{(start=="") ? `${event.title}` : `${start}-${end} ${event.title}`}</button>
-                          {/* 삭제버튼 */}
+                          {/* 삭제버튼 */ }
                           <button className='delete-button' onClick={()=>deleteEvent(event.id)}
                           disabled={isFriends ? true : false}
                           >&times;</button>
                           <button style={{backgroundColor : "white" , width : "40px", height : "40px"}} 
                           onClick={() => handlePin(event.id)}
                               disabled={isFriends ? true : false}>
-                          <img alt="pin"
+                          <img alt="pin" className="pinImg"
                               id={`pin-${event.id}`}
                               src={
                                   pinnedItems
@@ -388,8 +390,8 @@ const TodayModal = (props) => {
                     <main>
                         <div className="modal-event-top">
                             {/* 체크박스 all check */}
-                            <div className="checkbox-all">
-                                <input type="checkbox" name="select-all" onChange={(e) =>handleAllCheck(e.target.checked)}
+                            <div className="checkboxwrap">
+                                <input id="chk" type="checkbox" className="checkbox" name="select-all" onChange={(e) =>handleAllCheck(e.target.checked)}
                                     // 데이터 개수와 체크된 아이템의 개수가 다를 경우 선택 해제 (하나라도 해제 시 선택 해제)
                                     //해당날짜의 event가 하나도 없을 때 선택 해제
                                     //checkItems의 날짜가 header 이고 eventArr.dateInfo가 header인거의 length가 서로 다를때
@@ -401,7 +403,7 @@ const TodayModal = (props) => {
                                     }
                                     disabled={isFriends ? true : false}
                                 />
-                                <label>TODO-LIST</label>
+                                <label htmlFor="chk" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TodoList</label>
                             </div>
                             <select className="select-box" value={sortSelected} onChange={(e) => handleSelectChange(e)} >
                                 <option value="time">시간 순</option>
