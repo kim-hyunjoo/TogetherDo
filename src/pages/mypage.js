@@ -10,7 +10,7 @@ const MyPage = (props) => {
 
 	return (
 		<div >
-			<Profile user={userData} />
+			<Profile user={userData} saveUser={saveUser}/>
 			{/* <h1>{userData.userName}님의 마이페이지 입니다.</h1>
 			<p>프로필 사진</p>
 			<img width="70px" height= "70px" src={userData.profile}></img>
