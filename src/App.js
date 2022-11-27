@@ -67,7 +67,7 @@ const App = () => {
                             <Route path="/" element={<Main loginUser={loginUser.email} userData={userData} saveUser={saveUser} setSaveUser={setSaveUser}/>} />
                             <Route path="/home" element={<Main loginUser={loginUser.email} userData={userData} saveUser={saveUser} setSaveUser={setSaveUser}/>} />
                             <Route path="/friends" element={<Friends loginUser={loginUser.email} userData={userData} saveUser={saveUser} setSaveUser={setSaveUser}/>} />
-                            <Route path="/mypage" element={<MyPage loginUser={loginUser.email} saveUser={saveUser} userData={userData}/>} />
+                            <Route path="/mypage" element={<MyPage loginUser={loginUser.email} saveUser={saveUser} userData={userData} setSaveUser={setSaveUser}/>} />
                         </Routes>
                     </Content>
                     <Footer

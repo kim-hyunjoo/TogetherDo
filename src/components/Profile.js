@@ -61,9 +61,10 @@ const SelectJob = () => {
     );
 };
 
-const Profile = (userData, saveUserData) => {
-    const [user, setUser] = useState("");
-    const [saveUser, setSaveUser] = useState("");
+const Profile = (props) => {
+    const {loginUser, userData, saveUser, setSaveUser} = props;
+    const [user, setUser] = useState(userData);
+    const [flip, setFlip] = useState(false);
 
     function onClickEdit() {
         flippingCard();
@@ -71,29 +72,42 @@ const Profile = (userData, saveUserData) => {
 
     //입력 폼 채워서 Complete버튼 클릭시 localStorage에 저장
     function onClickComplete() {
-        console.log("1111111", saveUserData);
+
+        console.log("1111111", saveUser);
+        const data = saveUser.map(it => it.email == loginUser ? 
+            { ...it, 
+            userName: changeName, 
+            email : changeEmail , 
+            data : { ...it.data} } 
+            : it)
+        setSaveUser(data);
+        localStorage.setItem("users", JSON.stringify(saveUser));
+            /*
         setSaveUser({
             ...saveUserData,
             userName: changeName,
             email: changeEmail,
-        });
-        setUser({ userName: changeName, email: changeEmail });
-        localStorage.setItem("users", JSON.stringify(saveUser));
-        console.log("2222222", userData);
+        });*/
+        setUser({ ...user, userName: changeName, email: changeEmail });
         flippingCard();
         // localStorage.setItem(userData.email, JSON.stringify(changeEmail));
     }
 
     const flippingCard = () => {
-        const flipCard = document.querySelectorAll(".flip-card");
-        console.log(flipCard);
+        if (flip == true) setFlip(false);
+        else setFlip(true);
+        //const flipCard = document.querySelectorAll(".flip-card");
+        //console.log(flipCard);
+        //flipCard.classList.toggle("is-flipped");
+        /*
         [...flipCard].forEach((card) => {
-            card.addEventListener("click", function () {
+            crad.addEventListener("click", function () {
                 card.classList.toggle("is-flipped");
             });
         });
+        */
     };
-
+/*
     useEffect(() => {
         const getUser = () => {
             try {
@@ -105,7 +119,7 @@ const Profile = (userData, saveUserData) => {
         };
         getUser();
     }, [userData.user]);
-
+*/
     const [changeName, setChangeName] = useState(user.userName);
     const [changeEmail, setChangeEmail] = useState(user.email);
 
@@ -113,7 +127,7 @@ const Profile = (userData, saveUserData) => {
     return (
         <div className="flip-card-wrapper">
             <div className="show-flip-card">
-                <div className="flip-card">
+                <div className= {flip ? "flip-card is-flipped" : "flip-card"}>
                     <div className="card-face card-front">
                         <div className="profile-wrapper">
                             <div className="col-md-8">
@@ -179,7 +193,7 @@ const Profile = (userData, saveUserData) => {
                                 <div className="card">
                                     <img
                                         className="back-card-img-top"
-                                        src="images/niniz-back.jpeg"
+                                        src={"images/niniz-back.jpeg"}
                                         alt="img"
                                     />
                                     <div className="card-body profile-in text-center">
@@ -191,17 +205,7 @@ const Profile = (userData, saveUserData) => {
 
                                         <table>
                                             <tbody>
-                                                <tr>
-                                                    <td className="form-header">
-                                                        <h6>프로필 변경</h6>
-                                                    </td>
-                                                    <td>
-                                                        <input
-                                                            type="file"
-                                                            className="form-control"
-                                                        />
-                                                    </td>
-                                                </tr>
+                                            
                                                 <tr>
                                                     <td className="form-header">
                                                         <h6>이름</h6>
@@ -288,7 +292,7 @@ const Profile = (userData, saveUserData) => {
                                                         fontFamily:
                                                             "ubuntu-regular",
                                                     }}
-                                                    onClick={onClickComplete}
+                                                    onClick={()=>onClickComplete()}
                                                 >
                                                     Complete
                                                 </Button>
