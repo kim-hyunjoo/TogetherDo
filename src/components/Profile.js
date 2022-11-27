@@ -61,16 +61,24 @@ const SelectJob = () => {
     );
 };
 
-const Profile = (userData) => {
+const Profile = (userData, saveUserData) => {
     const [user, setUser] = useState("");
+    const [saveUser, setSaveUser] = useState("");
+
     function onClickEdit() {
         flippingCard();
     }
 
+    //입력 폼 채워서 Complete버튼 클릭시 localStorage에 저장
     function onClickComplete() {
-        console.log("1111111", userData);
-        localStorage.setItem(userData.userName, changeName);
-        //userData.userName = changeName;
+        console.log("1111111", saveUserData);
+        setSaveUser({
+            ...saveUserData,
+            userName: changeName,
+            email: changeEmail,
+        });
+        setUser({ userName: changeName, email: changeEmail });
+        localStorage.setItem("users", JSON.stringify(saveUser));
         console.log("2222222", userData);
         flippingCard();
         // localStorage.setItem(userData.email, JSON.stringify(changeEmail));
