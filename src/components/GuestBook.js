@@ -3,7 +3,7 @@ import { format } from "date-fns";
 import {useEffect, useRef, useState} from "react"
 import "../styles/GuestBook.css"
 const GuestBook = (props) => {
-    const {loginUser, user, saveUser, setSaveUser} = props;
+    const {loginUser, user, saveUser, setSaveUser, isSideBar=false} = props;
     const commentRef = useRef("");
     const [commentArr, setCommentArr] = useState(() => {
         if (typeof window !== "undefined") {
@@ -65,21 +65,24 @@ const GuestBook = (props) => {
 
     return (
     <div className="guest-book">
-        <div className="guest-header">
+        <div className="guest-header" style={isSideBar ? {height : "30px"} : {height : "40px"}}>
             * Comment *
         </div>
-        <div className="guest-main">
+        <div className="guest-main" style={isSideBar ? {height : "240px"} : {height : " 80%"}}>
             {commentArr.length == 0 ? "첫 번째 댓글을 달아주세요" : commentDiv}
         </div>
+        {isSideBar ? null : 
         <div className="guest-footer">
-            <textarea 
-            ref={commentRef} 
-            placeholder="댓글을 남겨주세요"
-            />
-            <button className="comment-upload-button"
-            onClick={()=>onSaveComment()}
-            >등록</button>
-        </div>
+        <textarea 
+        ref={commentRef} 
+        placeholder="댓글을 남겨주세요"
+        />
+        <button className="comment-upload-button"
+        onClick={()=>onSaveComment()}
+        >등록</button>
+    </div>
+        }
+        
     </div>
     )
 }

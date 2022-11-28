@@ -342,6 +342,10 @@ const Calendar = (props) => {
           extraEventDelete={extraEventDelete}
           extraEventID={extraEventID}
           setExtraEventID={setExtraEventID}
+          loginUser = {loginUser}
+          user={loginUser}
+          saveUser={saveUser}
+          setSaveUser={setSaveUser}
           /> 
           
       </Col>}
@@ -365,8 +369,8 @@ const Calendar = (props) => {
           dateClick={handleDateClick}
           eventClick={isFriends ? null : handleEventClick}
           events={eventArr}
-          contentHeight={"auto"}
-          
+          contentHeight={650}
+          dayMaxEvents={true}
 
         
           selectable={isFriends ? false : true}
@@ -374,7 +378,7 @@ const Calendar = (props) => {
           droppable={isFriends ? false : true}
 
 
-          dayMaxEvents={true}
+          
           eventDragStart={isFriends ? null : handleEventDragStart}
           eventDrop={isFriends ? null : handleEventDrop}   
           drop={isFriends ? null : handleExtraEventDrop}
