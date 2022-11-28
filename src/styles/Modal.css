@@ -178,12 +178,13 @@ margin-top: 20px;
 }
 
 .modal-event-top {
-display: flex;
-column-gap: 120px;
+display: grid;
+grid-template-columns: 1fr 5fr 2fr;
+column-gap: 10px;
 border-bottom: 1px solid #dee2e6;
-justify-content: left;
+justify-content: center;
 text-align: center;
-
+padding-bottom: 15px;
 }
 
 .select-box {
@@ -191,23 +192,37 @@ height: 30px;
 border-radius: 7px;
 text-align: center;
 }
+
+/*
 .checkbox-all {
-display : flex;
 justify-content: left;
 text-align: center;
 font-weight: bold;
+}
+*/
 
-column-gap: 20px;
-padding-left : 24px;
-padding-bottom : 5px;
+
+ .checkbox_container .checkbox + .showCheckbox {
+  display: inline-block;
+  background: url("../../public/images/unchecked.png") 0 0 no-repeat; 
+  background-size: cover; 
+  width: 22px; 
+  height: 22px; 
+  cursor:pointer;
+  vertical-align: top;
+  margin-top : 7px;
 }
-.checkbox-all > label {
-padding-top : 7px;
+.checkbox_container .checkbox:checked + .showCheckbox {
+  background: url("../../public/images//chkBox.png") 0 0 no-repeat; 
+  background-size: cover;
 }
 
-.checkbox {
-  margin-top : 12px;
+
+.checkbox_container > label {
+  width : 22px;
+  height: 22px;
 }
+
 .modal-event-list {
   display : grid;
   justify-content: left;

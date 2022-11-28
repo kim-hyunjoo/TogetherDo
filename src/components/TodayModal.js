@@ -221,12 +221,15 @@ const TodayModal = (props) => {
                   return (
                       <div className="modal-event-object" key={event.id}>
                           {/* 체크박스, css효과를 주기 위해 label로 감쌈 */}
-                          <label className="checkbox_container">
-                              <input className="checkbox" type="checkbox" onChange={(e) => handleSingleCheck(e.target.checked, event.id)}
+                          <div className="checkbox_container">
+                                <label>
+                                <input style={{display : "none"}}className="checkbox" type="checkbox" onChange={(e) => handleSingleCheck(e.target.checked, event.id)}
                                   checked={checkItems.map((item) => item.id).includes(event.id) ? true : false}
                                   disabled={isFriends ? true : false}
-                              ></input>
-                          </label>
+                                ></input>
+                              <div className="showCheckbox"></div>
+                              </label>
+                          </div>
                           {/* 이벤트 제목 */}
                           <button className="event-button" style={{ backgroundColor: event.backgroundColor }} 
                           onClick={() => eventClick(event)} disabled={isFriends ? true : false}
@@ -388,8 +391,9 @@ const TodayModal = (props) => {
                     <main>
                         <div className="modal-event-top">
                             {/* 체크박스 all check */}
-                            <div className="checkbox-all">
-                                <input type="checkbox" name="select-all" onChange={(e) =>handleAllCheck(e.target.checked)}
+                            <div className="checkbox_container" style={{textAlign : "right"}}>     
+                                <label>
+                                <input style={{display : "none"}} className="checkbox" type="checkbox" name="select-all" onChange={(e) =>handleAllCheck(e.target.checked)}
                                     // 데이터 개수와 체크된 아이템의 개수가 다를 경우 선택 해제 (하나라도 해제 시 선택 해제)
                                     //해당날짜의 event가 하나도 없을 때 선택 해제
                                     //checkItems의 날짜가 header 이고 eventArr.dateInfo가 header인거의 length가 서로 다를때
@@ -401,8 +405,11 @@ const TodayModal = (props) => {
                                     }
                                     disabled={isFriends ? true : false}
                                 />
-                                <label>TODO-LIST</label>
+                                <div style={{width :"100%", height :"100%" }} className="showCheckbox"></div>
+                                </label> 
+                                          
                             </div>
+                            <div style={{marginTop : "5px"}}>TODO-LIST</div>
                             <select className="select-box" value={sortSelected} onChange={(e) => handleSelectChange(e)} >
                                 <option value="time">시간 순</option>
                                 <option value="completed">완료된 항목 순</option>
