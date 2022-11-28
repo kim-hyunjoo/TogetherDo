@@ -17,7 +17,6 @@
 }
 .Logo {
     color: white;
-    font-family: 'Rajdhani';
     font-size: 2.4rem;
     letter-spacing: 5px;
     text-decoration: none;
@@ -71,4 +70,13 @@
 .errors{
     display: flex;
     justify-content: space-between;
+}
+
+@import url("//fonts.googleapis.com/earlyaccess/nanumgothic.css" );
+input[type=password]{
+	font-family: 'Rajdhani', sans-serif !important;
+}
+input[type=password]::placeholder {
+	font-family: 'Rajdhani';
+
 }

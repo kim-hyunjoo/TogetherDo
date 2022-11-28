@@ -75,7 +75,7 @@ const LoginForm = (props) => {
             <div className="ShadowedBox">
                 <div className="LogoWrapper">
                     <div className="Logo">
-                        TogetherDo
+                        Together Do
                     </div>
                 </div>
                 <div className="Contents">
