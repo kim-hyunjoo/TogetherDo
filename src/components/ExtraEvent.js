@@ -125,7 +125,7 @@ const ExtraEvent = (props) => {
     return (
       <>
         <div id="external-events">
-            <p align="center">
+            <p align="center" style={{height : "10px"}}>
               <strong>* 자주 쓰는 일정 *</strong>
             </p>
           <div className ="extra-event-list">
@@ -147,8 +147,9 @@ const ExtraEvent = (props) => {
               <button className="close" onClick={()=>extraEventDelete(event)}>&times;</button>
             </div>
             ))}
-            <button className="extra-event-add" onClick={()=>openModal()}>추가</button>
+            
           </div>
+          <button className="extra-event-add" onClick={()=>openModal()}>추가</button>
         </div>
         <EventAddModal 
         open={modalOpen} 
