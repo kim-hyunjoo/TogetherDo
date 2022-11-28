@@ -2,15 +2,11 @@ import React, { useState, useEffect } from "react";
 import Profile from "../components/Profile";
 
 const MyPage = (props) => {
-	const {loginUser, saveUser} = props;
-	const [userData, setUserData] = useState(()=> {
-		const user = saveUser.find(user=>user.email == loginUser)
-		return user;
-	});
+	const {loginUser, setLoginUser, userData,setUserData, saveUser, setSaveUser} = props;
 
 	return (
 		<div >
-			<Profile user={userData} />
+			<Profile loginUser={loginUser} setLoginUser={setLoginUser} userData={userData} setUserData={setUserData} saveUser={saveUser} setSaveUser={setSaveUser}/>
 			{/* <h1>{userData.userName}님의 마이페이지 입니다.</h1>
 			<p>프로필 사진</p>
 			<img width="70px" height= "70px" src={userData.profile}></img>

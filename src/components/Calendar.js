@@ -365,7 +365,7 @@ const Calendar = (props) => {
           dateClick={handleDateClick}
           eventClick={isFriends ? null : handleEventClick}
           events={eventArr}
-          contentHeight={600}
+          contentHeight={"auto"}
           
 
         

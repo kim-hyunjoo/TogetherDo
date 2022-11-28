@@ -3,7 +3,7 @@ import "../styles/Modal.css";
 import "../styles/FollowModal.css";
 const FollowModal = (props) => {
     // 열기, 닫기, 모달 헤더 텍스트를 부모로부터 받아옴
-    const { open, close, header, loginUser, saveUser, setSaveUser } = props;
+    const { open, close, header, loginUser, saveUser, setSaveUser, isMypage, userData } = props;
     const [list, setList] = useState([]);
     
     const searchRef = useRef("");
@@ -54,8 +54,57 @@ const FollowModal = (props) => {
                 }
             </div>
         )})
-
+        
     
+    
+    //followers에서 email값으로 saveUser에서 찾아서 이름 이메일 찾아줘야함,,
+    let followers = (open==true &&isMypage) ? userData.data.followers.map(it=> {
+        const email = it;
+        const userName = saveUser.find(user=>user.email == it).userName;
+        return (
+            <div key={email} className="user-div">
+                <p className = "user-name">{userName}</p>
+                <p className = "user-email">{email}</p>
+            </div>
+        )
+    }) : null;
+
+    let followings =  (open==true && isMypage) ? userData.data.followings.map(it=> {
+        const email = it;
+        const userName = saveUser.find(user=>user.email == it).userName;
+        return (
+            <div key={email} className="user-div">
+                <p className = "user-name">{userName}</p>
+                <p className = "user-email">{email}</p>
+            </div>
+        )
+    }): null;
+
+    useEffect(()=> {
+        followers = (open==true &&isMypage) ? userData.data.followers.map(it=> {
+            const email = it;
+            const userName = saveUser.find(user=>user.email == it).userName;
+            return (
+                <div key={email} className="user-div">
+                    <p className = "user-name">{userName}</p>
+                    <p className = "user-email">{email}</p>
+                </div>
+            )
+        }) : null;
+        followings =  (open==true && isMypage) ? userData.data.followings.map(it=> {
+            const email = it;
+            const userName = saveUser.find(user=>user.email == it).userName;
+            return (
+                <div key={email} className="user-div">
+                    <p className = "user-name">{userName}</p>
+                    <p className = "user-email">{email}</p>
+                </div>
+            )
+        }): null;
+
+    },[saveUser])
+
+
     return (
         // 모달이 열릴때 openModal 클래스가 생성된다.
         <div className={open ? "openModal modal" : "modal"}>
@@ -68,12 +117,15 @@ const FollowModal = (props) => {
                         </button>
                     </header>
                     <main>
+                        {isMypage ? null : 
                         <div className = "follow-search">
                             <input type = "text" ref={searchRef}></input>
                             <button className="search-button" onClick={()=>searchUser()}>검색</button>
                         </div>
+                        }
+                        
                         <div className="follow-userlist">
-                            {userList}
+                            { isMypage ? ( header == "followers" ? followers : followings) : userList}
                         </div>
                     </main>
                     <footer>
