@@ -6,7 +6,7 @@ Unlike the previous TO DO list, this project is based on the monthly calendar.
 
 In the project directory, you can run:
 
-### `npm start`
+### `npm start --save --legacy-peer-deps`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
