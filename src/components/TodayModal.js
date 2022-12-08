@@ -99,6 +99,14 @@ const TodayModal = (props) => {
         }
         console.log(noTime);
     }
+    
+    //이벤트 삭제
+    const deleteEvent = (id) => {
+        const newEventArr = eventArr.filter((event) => event.id != id); //id를 이용하여 삭제
+        setEventArr(newEventArr);
+        const newCheckItems = checkItems.filter((item) => item.id != id);
+        setCheckItems(newCheckItems);
+    };
 
     //모달 저장or수정 버튼 클릭시 이벤트
     const onSaveEvent = (editMode) => {
@@ -146,62 +154,7 @@ const TodayModal = (props) => {
         setNoTimeDisable(false);
     };
 
-    //이벤트 삭제
-    const deleteEvent = (id) => {
-        const newEventArr = eventArr.filter((event) => event.id != id); //id를 이용하여 삭제
-        setEventArr(newEventArr);
-        const newCheckItems = checkItems.filter((item) => item.id != id);
-        setCheckItems(newCheckItems);
-    };
-
-
-    //중요 이벤트 설정
-    const handlePin = (id) => {
-        console.log("handlePin");
-
-        console.log(pinnedItems);
-        if (pinnedItems.filter((el) => el.id == id).length == 0) {
-            setPinnedItems((prev) => [...prev, { dateInfo: header, id: id }]);
-        } else {
-            setPinnedItems(pinnedItems.filter((el) => el.id != id));
-        }
-    };
-
-    // 체크박스 단일 선택
-    const handleSingleCheck = (checked, id) => {
-        console.log(checkItems);
-        if (checked) {
-            // 단일 선택 시 체크된 아이템을 배열에 추가
-            setCheckItems((prev) => [...prev, { dateInfo: header, id: id }]);
-        } else {
-            // 단일 선택 해제 시 체크된 아이템을 제외한 배열 (필터)
-            setCheckItems(checkItems.filter((el) => el.id != id));
-        }
-    };
-
-    // 체크박스 전체 선택
-    const handleAllCheck = (checked) => {
-        const idArray = [];
-        if (checked) {
-            // 전체 선택 클릭 시 해당 날짜(dateInfo) 모든 아이템(id)를 담은 배열로 checkItems 상태 업데이트
-            const newEventArr = eventArr.filter(
-                (event) => event.start.substring(0, 10) == header
-            ); //오늘날짜인것들만..
-            console.log(newEventArr);
-            newEventArr.forEach((el) =>
-                idArray.push({ dateInfo: header, id: el.id })
-            );
-            console.log(idArray);
-            setCheckItems([...idArray]);
-        } else {
-            // 전체 선택 해제 시 checkItems 를 빈 배열로 상태 업데이트
-            // 전체 선택 해제시 그날의 dateInfo에 해당하는 값 제거
-            const newCheckItems = checkItems.filter(
-                (el) => el.dateInfo != header
-            );
-            setCheckItems(newCheckItems);
-        }
-    };
+    
 
     useEffect(()=> {
         const todayEvents = eventArr.filter(event=>event.start.substring(0,10) === header)
@@ -210,60 +163,6 @@ const TodayModal = (props) => {
         setProgress(completed.toFixed(1))
         console.log(`오늘의 일정 개수 : ${todayEvents.length}, 오늘의 체크된 개수 : ${todayCheckItems.length}`)
     }, [checkItems, eventArr])
-
-    const todayEventArr = eventArr.filter(event => event.start.substring(0, 10) === header);
-
-    //날짜 클릭 시 해당 날짜의 일정 목록을 checkbox 및 button을 이용하여 todo-list 구현
-    
-    const eventButtons = todayEventArr.length == 0 ? "일정이 없습니다." : todayEventArr.map((event) => {
-                  const start = event.start.substring(11, 16); //시간정보만 가져오기
-                  const end = event.end.substring(11, 16); //시간정보만 가져오기
-                  return (
-                      <div className="modal-event-object" key={event.id}>
-                          {/* 체크박스, css효과를 주기 위해 label로 감쌈 */}
-                          <div className="checkbox_container">
-                                <label>
-                                <input style={{display : "none"}}className="checkbox" type="checkbox" onChange={(e) => handleSingleCheck(e.target.checked, event.id)}
-                                  checked={checkItems.map((item) => item.id).includes(event.id) ? true : false}
-                                  disabled={isFriends ? true : false}
-                                ></input>
-                              <div className="showCheckbox"></div>
-                              </label>
-                          </div>
-                          {/* 이벤트 제목 */}
-                          <button className="event-button" style={{ backgroundColor: event.backgroundColor }} 
-                          onClick={() => eventClick(event)} disabled={isFriends ? true : false}
-                          key={event.id}>{(start=="") ? `${event.title}` : `${start}-${end} ${event.title}`}</button>
-                          {/* 삭제버튼 */}
-                          <button className='delete-button' onClick={()=>deleteEvent(event.id)}
-                          disabled={isFriends ? true : false}
-                          >&times;</button>
-                          <button style={{backgroundColor : "white" , width : "40px", height : "40px"}} 
-                          onClick={() => handlePin(event.id)}
-                              disabled={isFriends ? true : false}>
-                          <img alt="pin"
-                              id={`pin-${event.id}`}
-                              src={
-                                  pinnedItems
-                                      .map((item) => item.id)
-                                      .includes(event.id)
-                                      ? "images/pin.png"
-                                      : "images/pin_black.png"
-                              }
-                              width="40px"
-                              height="40px"
-                              
-                          />
-                          </button>
-                          
-                      </div>
-                  );
-              });
-
-    const handleSelectChange = (e) => {
-        console.log("select바뀜");
-        setSortSelected(e.target.value);
-    };
 
     useEffect(() => {
         if (sortSelected == "time") {
@@ -344,6 +243,112 @@ const TodayModal = (props) => {
             ]);
         }
     }, [sortSelected, eventArr.length, checkItems.length, pinnedItems.length]);
+
+    const todayEventArr = eventArr.filter(event => event.start.substring(0, 10) === header);
+
+    //중요 이벤트 설정
+    const handlePin = (id) => {
+        console.log("handlePin");
+
+        console.log(pinnedItems);
+        if (pinnedItems.filter((el) => el.id == id).length == 0) {
+            setPinnedItems((prev) => [...prev, { dateInfo: header, id: id }]);
+        } else {
+            setPinnedItems(pinnedItems.filter((el) => el.id != id));
+        }
+    };
+
+    // 체크박스 단일 선택
+    const handleSingleCheck = (checked, id) => {
+        console.log(checkItems);
+        if (checked) {
+            // 단일 선택 시 체크된 아이템을 배열에 추가
+            setCheckItems((prev) => [...prev, { dateInfo: header, id: id }]);
+        } else {
+            // 단일 선택 해제 시 체크된 아이템을 제외한 배열 (필터)
+            setCheckItems(checkItems.filter((el) => el.id != id));
+        }
+    };
+
+    // 체크박스 전체 선택
+    const handleAllCheck = (checked) => {
+        const idArray = [];
+        if (checked) {
+            // 전체 선택 클릭 시 해당 날짜(dateInfo) 모든 아이템(id)를 담은 배열로 checkItems 상태 업데이트
+            const newEventArr = eventArr.filter(
+                (event) => event.start.substring(0, 10) == header
+            ); //오늘날짜인것들만..
+            console.log(newEventArr);
+            newEventArr.forEach((el) =>
+                idArray.push({ dateInfo: header, id: el.id })
+            );
+            console.log(idArray);
+            setCheckItems([...idArray]);
+        } else {
+            // 전체 선택 해제 시 checkItems 를 빈 배열로 상태 업데이트
+            // 전체 선택 해제시 그날의 dateInfo에 해당하는 값 제거
+            const newCheckItems = checkItems.filter(
+                (el) => el.dateInfo != header
+            );
+            setCheckItems(newCheckItems);
+        }
+    };
+
+    
+
+    //날짜 클릭 시 해당 날짜의 일정 목록을 checkbox 및 button을 이용하여 todo-list 구현
+    
+    const eventButtons = todayEventArr.length == 0 ? "일정이 없습니다." : todayEventArr.map((event) => {
+                  const start = event.start.substring(11, 16); //시간정보만 가져오기
+                  const end = event.end.substring(11, 16); //시간정보만 가져오기
+                  return (
+                      <div className="modal-event-object" key={event.id}>
+                          {/* 체크박스, css효과를 주기 위해 label로 감쌈 */}
+                          <div className="checkbox_container">
+                                <label>
+                                <input style={{display : "none"}}className="checkbox" type="checkbox" onChange={(e) => handleSingleCheck(e.target.checked, event.id)}
+                                  checked={checkItems.map((item) => item.id).includes(event.id) ? true : false}
+                                  disabled={isFriends ? true : false}
+                                ></input>
+                              <div className="showCheckbox"></div>
+                              </label>
+                          </div>
+                          {/* 이벤트 제목 */}
+                          <button className="event-button" style={{ backgroundColor: event.backgroundColor }} 
+                          onClick={() => eventClick(event)} disabled={isFriends ? true : false}
+                          key={event.id}>{(start=="") ? `${event.title}` : `${start}-${end} ${event.title}`}</button>
+                          {/* 삭제버튼 */}
+                          <button className='delete-button' onClick={()=>deleteEvent(event.id)}
+                          disabled={isFriends ? true : false}
+                          >&times;</button>
+                          <button style={{backgroundColor : "white" , width : "40px", height : "40px"}} 
+                          onClick={() => handlePin(event.id)}
+                              disabled={isFriends ? true : false}>
+                          <img alt="pin"
+                              id={`pin-${event.id}`}
+                              src={
+                                  pinnedItems
+                                      .map((item) => item.id)
+                                      .includes(event.id)
+                                      ? "images/pin.png"
+                                      : "images/pin_black.png"
+                              }
+                              width="40px"
+                              height="40px"
+                              
+                          />
+                          </button>
+                          
+                      </div>
+                  );
+              });
+
+    const handleSelectChange = (e) => {
+        console.log("select바뀜");
+        setSortSelected(e.target.value);
+    };
+
+   
 
     useEffect(() => {
         setSortSelected("time");

@@ -227,6 +227,7 @@ font-weight: bold;
   display : grid;
   justify-content: left;
   height : 200px;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
   overflow-y: scroll;
   overflow-x: hidden;
   padding-left : 20px;

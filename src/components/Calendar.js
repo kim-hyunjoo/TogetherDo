@@ -105,60 +105,7 @@ const Calendar = (props) => {
   const [progress, setProgress] = useState(0); //진도율 체크
   const [sortSelected, setSortSelected] = useState(""); //정렬 기능
 
-  useEffect(()=> { //extra EventArr에 Draggable 속성을 추가해줌
-    let draggableEl = document.getElementById("external-events");
-    if (!draggableEl) return;
-    new Draggable(draggableEl, { //extra Event 하나를 드래그 해서 캘린더에 넣을 때 발생한다
-      itemSelector: ".extra-event-block",
-      eventData: function(eventEl) {
-        const eventObj = {
-          title : eventEl.getAttribute("title"),
-          id : eventID,
-          start : eventEl.getAttribute("startTime"),
-          end : eventEl.getAttribute("endTime"),
-          backgroundColor : eventEl.getAttribute("backgroundColor"),
-          borderColor : eventEl.getAttribute("borderColor")
-        }  
-        console.log(eventObj)
-        setExtraEvent(eventObj); 
-
-        return {
-          title : eventObj.title,
-          id : eventObj.id,
-          start : eventObj.start,
-          end : eventObj.end,
-          backgroundColor : eventObj.backgroundColor,
-          borderColor : eventObj.borderColor
-        }
-      }
-    })
-  },[])
-
-  //test
-  
-
   useEffect(()=> { //eventArr, eventID, checkItems, extraEventID값 변경 시 localStorage에 업데이트
-    /*
-    localStorage.setItem("events", JSON.stringify(eventArr));
-    localStorage.setItem("eventID", JSON.stringify(eventID));
-    localStorage.setItem("checkItems", JSON.stringify(checkItems));
-    localStorage.setItem("extraEventArr", JSON.stringify(extraEventArr));
-    localStorage.setItem("extraEventID", JSON.stringify(extraEventID));
-    localStorage.setItem("pinnedItems", JSON.stringify(pinnedItems));
-
-    const test = 
-    {email : loginUser, 
-    data : 
-    { events : eventArr,
-      eventID : eventID,
-      extraEventArr : extraEventArr ,
-      extraEventID : extraEventID,
-      checkItems : checkItems,
-      pinnedItems : pinnedItems} 
-    }
-    //test
-    localStorage.setItem("test", JSON.stringify(test));
-    */
     //그 달력의 주인user와 같은걸 찾으면 데이터 바꿔주기...
     const data = saveUser.map(it => it.email == loginUser ? 
       { ...it, 
@@ -176,29 +123,8 @@ const Calendar = (props) => {
 	 
     
   useEffect(() => { //처음 렌더링 시 localStorage에서 값 불러오기
-/*
-    const data = localStorage.getItem("events");
-    if (data) setEventArr(JSON.parse(data));
-
-    const id = localStorage.getItem("eventID");
-    if(id) setEventID(parseInt(id));
-
-    const check_data = localStorage.getItem("checkItems");
-    if (check_data) setCheckItems(JSON.parse(check_data));
-    
-    const extra_arr = localStorage.getItem("extraEventArr");
-    if(extra_arr) setExtraEventArr(JSON.parse(extra_arr));
-
-    const extra_id = localStorage.getItem("extraEventID");
-    if(extra_id) setExtraEventID(parseInt(extra_id));
-    
-    const pinned_data = localStorage.getItem("pinnedItems");
-    if (pinned_data) setPinnedItems(JSON.parse(pinned_data));
-*/
-
     const saved = JSON.parse(localStorage.getItem("users"));
     const userData = saved.find(item=>item.email == loginUser).data;
-    //const arr = userData.data.pinnedItems;
     console.log(userData)
 
     if(userData) {
@@ -209,8 +135,6 @@ const Calendar = (props) => {
       setExtraEventArr(userData.extraEventArr);
       setExtraEventID(userData.extraEventID);
     }
-    
-
   }, []); 
 
   const closeTodayModal = () => {
@@ -261,6 +185,15 @@ const Calendar = (props) => {
       console.log(`이벤트 클릭`);
       console.log(info)
   };
+
+
+
+
+
+
+
+
+  
   // 이벤트(일정) 드래그 시작 시
   const handleEventDragStart = (info) => {
     console.log("event drag start");
@@ -280,8 +213,10 @@ const Calendar = (props) => {
     console.log(`날짜 포맷 바꿔준 뒤 dateInfo : ${dateInfo}`);
     
     //event drop된 날짜로 데이터 변경해주기
-    const startTime = selectedEvent.start.length == 10 ? `${dateInfo}`: `${dateInfo}T${selectedEvent.start.substring(11,16)}`; //종일 event일 경우 날짜만 부여
-    const endTime = selectedEvent.start.length == 10 ? `${dateInfo}`: `${dateInfo}T${selectedEvent.end.substring(11,16)}`;
+    const startTime = selectedEvent.start.length == 10 ? 
+    `${dateInfo}`: `${dateInfo}T${selectedEvent.start.substring(11,16)}`; //종일 event일 경우 날짜만 부여
+    const endTime = selectedEvent.start.length == 10 ? 
+    `${dateInfo}`: `${dateInfo}T${selectedEvent.end.substring(11,16)}`;
     const eventObj = {
       ...selectedEvent,
       start: startTime, //날짜정보만 변경하면 되므로 start,end값만 변경
@@ -296,40 +231,43 @@ const Calendar = (props) => {
       if (item.id == clickedID) {
         item.dateInfo = dateInfo; 
       }
-    })         
-  }
+      })         
+    }
+
+  useEffect(()=> { //extra EventArr에 Draggable 속성을 추가해줌
+    let draggableEl = document.getElementById("external-events");
+    if (!draggableEl) return;
+    new Draggable(draggableEl, { //extra Event 하나를 드래그 해서 캘린더에 넣을 때 발생한다
+      itemSelector: ".extra-event-block",
+      eventData: function(eventEl) {
+        const eventObj = {
+          title : eventEl.getAttribute("title"),
+          id : eventID,
+          start : eventEl.getAttribute("startTime"),
+          end : eventEl.getAttribute("endTime"),
+          backgroundColor : eventEl.getAttribute("backgroundColor"),
+          borderColor : eventEl.getAttribute("borderColor")
+        }  
+        console.log(eventObj)
+        setExtraEvent(eventObj); 
+
+        return {
+          title : eventObj.title,
+          id : eventObj.id,
+          start : eventObj.start,
+          end : eventObj.end,
+          backgroundColor : eventObj.backgroundColor,
+          borderColor : eventObj.borderColor
+        }
+      }
+    })
+  },[])
 
   //extra Event 삭제
   const extraEventDelete = (event) => {
-    console.log(event);
     const newExtraEventArr = extraEventArr.filter(ex=>ex.id != event.id)
     setExtraEventArr(newExtraEventArr)
   }
-
-  //extra Event 추가
-  const extraEventAdd = () => {
-    if(extraEventRef.current.value == "") {
-      alert("일정을 입력하세요")
-      return;
-    }
-
-     
-        const newTitle = extraEventRef.current.value;
-        const eventObj = {
-          id: extraEventID,
-          title: newTitle,
-          backgroundColor : 'grey',
-          borderColor : 'grey'
-      };
-
-    setExtraEventArr([...extraEventArr, eventObj]); //extra EventArr에 추가
-    setExtraEventID(parseInt(extraEventID)+1); //extra EventID 갱신
-    extraEventRef.current.value="";
-  }
-
-  useEffect(()=> {
-    console.log(`isFriends : ${isFriends}`)
-  })
 
   return (
     <div className="calendar-contents">

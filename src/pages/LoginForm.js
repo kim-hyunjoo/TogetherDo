@@ -61,7 +61,7 @@ const LoginForm = (props) => {
             console.log("회원가입한 유저가 없습니다 회원가입을 먼저 해주십시오");
         }else{
             saveUser.map((users) => {
-                if(users.email === loginUser.email && users.passward === loginUser.passward) {
+                if(users.email === loginUser.email && users.password === loginUser.password) {
                     console.log("계정이 일치합니다.");
                     setLoginChecked(true);
                 }else{
@@ -101,10 +101,10 @@ const LoginForm = (props) => {
                                 <label className="Label" htmlFor="email">비밀번호</label>
                                 <input 
                                     className="Input"
-                                    id="passward"
+                                    id="password"
                                     type="password"
                                     placeholder="password"
-                                    {...register("passward", {
+                                    {...register("password", {
                                         required: "비밀번호는 필수입력입니다.",
                                     })}
                                 />

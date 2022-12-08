@@ -21,7 +21,7 @@ const Profile = (props) => {
     }
     const changeName = useRef("");
     const changeEmail = useRef("");
-
+    const changePassword = useRef("");
     useEffect(() => {
         setUserData(saveUser.find(user=>user.email == loginUser))
     },[])
@@ -42,6 +42,7 @@ const Profile = (props) => {
             { ...it, 
             userName: changeName.current.value, 
             email : changeEmail.current.value,
+            password : changePassword.current.value,
             data : { ...it.data} } 
             : it)
         setSaveUser(data1);
@@ -187,7 +188,21 @@ const Profile = (props) => {
                                                         />
                                                     </td>
                                                 </tr>
-
+                                                <tr>
+                                                    <td className="form-header">
+                                                        <h6>비밀번호</h6>
+                                                    </td>
+                                                    <td>
+                                                        <TextField
+                                                            inputRef={changePassword}
+                                                            type="password"
+                                                            id="outlined-basic"
+                                                            defaultValue={userData.password}
+                                                            variant="outlined"
+                                                            size="small"
+                                                        />
+                                                    </td>
+                                                </tr>
                                             
                                             </tbody>
                                         </table>

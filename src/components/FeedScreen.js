@@ -21,16 +21,16 @@ const FeedScreen = (props) => {
     //각자의 객체를 줘야함
     //const newUserList = saveUser.filter(user=>user.email != loginUser);
    
-    let test_list = [];
+    let follow_list = [];
     saveUser.forEach(user => {
         followings.forEach(fo => {
             if(fo == user.email) {
-                test_list.push(user);
+                follow_list.push(user);
             }
         })
     });
-    console.log(test_list);
-    const userList = test_list.map(v => {
+
+    const userList = follow_list.map(v => {
         const data = v.data;
         const email = v.email;
         return (

@@ -128,15 +128,15 @@ const SignUpForm = (props) => {
                             </div>
                             <div>
                                 <div className="errors">
-                                    <label className="Label" htmlFor="passward">비밀번호</label>
-                                    {errors.passward && <small role="alert" className="errorsMsg">{errors.passward.message}</small>}
+                                    <label className="Label" htmlFor="password">비밀번호</label>
+                                    {errors.password && <small role="alert" className="errorsMsg">{errors.password.message}</small>}
                                 </div>
                                 <input 
                                     className="Input"
-                                    id="passward"
+                                    id="password"
                                     type="password"
                                     placeholder="비밀번호"
-                                    {...register("passward", {
+                                    {...register("password", {
                                         required: "비밀번호는 필수입력입니다.",
                                     })}
                                 />
