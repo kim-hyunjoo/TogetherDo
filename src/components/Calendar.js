@@ -121,7 +121,7 @@ const Calendar = (props) => {
   },[eventArr, eventID, checkItems, extraEventID, extraEventArr, pinnedItems])
       
 	 
-    
+     
   useEffect(() => { //처음 렌더링 시 localStorage에서 값 불러오기
     const saved = JSON.parse(localStorage.getItem("users"));
     const userData = saved.find(item=>item.email == loginUser).data;
