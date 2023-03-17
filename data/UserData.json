@@ -1,0 +1,22 @@
+[
+    {
+        "id": "1",
+        "user_name": "크리스탈티",
+        "imageUrls": "/images/CrystalTea.jpeg"
+    },
+    {
+        "id": "2",
+        "user_name": "아이유",
+        "imageUrls": "/images/IU_PIC.jpeg"
+    },
+    {
+        "id": "3",
+        "user_name": "백예린",
+        "imageUrls": "/images/Yerin.jpeg"
+    },
+    {
+        "id": "4",
+        "user_name": "지코",
+        "imageUrls": "/images/ZICO.jpeg"
+    }
+  ]

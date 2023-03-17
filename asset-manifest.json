@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/togetherdo/static/css/main.6a34e9e3.css",
+    "main.js": "/togetherdo/static/js/main.5e4a80ad.js",
+    "static/js/787.21c1c021.chunk.js": "/togetherdo/static/js/787.21c1c021.chunk.js",
+    "static/media/tway_air.ttf": "/togetherdo/static/media/tway_air.2ae99103669383455f35.ttf",
+    "static/media/Ubuntu-Light.ttf": "/togetherdo/static/media/Ubuntu-Light.0dd2d5986e2731a16ee7.ttf",
+    "static/media/Ubuntu-Regular.ttf": "/togetherdo/static/media/Ubuntu-Regular.1cbb1b79a23478cc89ad.ttf",
+    "static/media/Ubuntu-Medium.ttf": "/togetherdo/static/media/Ubuntu-Medium.e37c5546eb1a6efc4818.ttf",
+    "static/media/Ubuntu-Bold.ttf": "/togetherdo/static/media/Ubuntu-Bold.fec2d0f1431a6114a6ce.ttf",
+    "index.html": "/togetherdo/index.html",
+    "main.6a34e9e3.css.map": "/togetherdo/static/css/main.6a34e9e3.css.map",
+    "main.5e4a80ad.js.map": "/togetherdo/static/js/main.5e4a80ad.js.map",
+    "787.21c1c021.chunk.js.map": "/togetherdo/static/js/787.21c1c021.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.6a34e9e3.css",
+    "static/js/main.5e4a80ad.js"
+  ]
+}
