@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Profile from "../components/Profile";
 
-const MyPage = (props) => {
+const MyPage = (props: { loginUser: any; setLoginUser: any; userData: any; setUserData: any; saveUser: any; setSaveUser: any; }) => {
 	const {loginUser, setLoginUser, userData,setUserData, saveUser, setSaveUser} = props;
 
 	return (

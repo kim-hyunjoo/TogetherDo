@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import styled from 'styled-components';
 import "../styles/Login.css"
 import { Link } from 'react-router-dom';
@@ -38,14 +38,22 @@ const StyledLink = styled(Link)`
         color: #495057;
     }
 `;
-const SignUpForm = (props) => {
+
+interface FormValue {
+	userName: string
+  	email: string
+  	password: string
+  	profile : number
+}
+
+const SignUpForm = (props: { saveUser: any; setSaveUser: any; setChanged: any; }) => {
     const { saveUser, setSaveUser, setChanged } = props
     const {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm();
-    const onSubmit = (data) => {
+	} = useForm<FormValue>();
+    const onSubmit = (data: { profile: number; }) => {
         console.log(data);
         const profile = profiles.filter(profile=>profile.id == data.profile)
         const url = profile[0].url;
@@ -179,7 +187,7 @@ const SignUpForm = (props) => {
                             {/* <button className="SubmitWrapper" type="submit">로그인</button> */}
                             </SubmitWrapper>
                             <div className="Aligner">
-                                <StyledLink onClick={login}>로그인</StyledLink>
+                                <StyledLink to="./Login" onClick={login}>로그인</StyledLink>
                             </div>
                         </form>
                     </div>

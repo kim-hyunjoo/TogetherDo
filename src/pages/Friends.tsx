@@ -2,7 +2,7 @@ import React from "react";
 import "../styles/Layout.css";
 import FeedScreen from "../components/FeedScreen";
 
-const Friends = (props) => {
+const Friends = (props: { loginUser: any; userData: any; saveUser: any; setSaveUser: any; }) => {
 	const {loginUser, userData, saveUser, setSaveUser} = props
 	return (
 		<div className="mainscreen">

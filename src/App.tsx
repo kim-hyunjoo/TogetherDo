@@ -30,13 +30,13 @@ const App = () => {
    
     const [userData, setUserData] = useState(()=> {
         console.log(saveUser)
-        const user = saveUser.find(user=>user.email == loginUser)
+        const user = saveUser.find((user: { email: { email: string; passward: string; }; })=>user.email == loginUser)
         return user;
     });
 
     useEffect(()=> {
-        setUserData(saveUser.find(user=>user.email == loginUser));
-        console.log(saveUser.find(user=>user.email == loginUser))
+        setUserData(saveUser.find((user: { email: { email: string; passward: string; }; })=>user.email == loginUser));
+        console.log(saveUser.find((user: { email: { email: string; passward: string; }; })=>user.email == loginUser))
     },[loginUser, saveUser])
         
     useEffect(()=> {
@@ -55,7 +55,7 @@ const App = () => {
     useEffect(()=> {
         console.log(loginUser);
         console.log(saveUser);
-        const user = saveUser.find(user=>user.email == loginUser.email)
+        const user = saveUser.find((user: { email: string; })=>user.email == loginUser.email)
         console.log(user);
         setUserData(user);
     },[loginUser])
